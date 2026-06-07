@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
+import { useBoundLocale } from '@/composables/useBoundLocale';
 
 type ResetPasswordFields = {
     email: string;
@@ -16,12 +18,16 @@ defineProps<{
     email: string;
     token: string;
 }>();
+
+const { t } = useI18n();
+
+useBoundLocale();
 </script>
 
 <template>
     <AuthLayout
-        title="Reset password"
-        subtitle="Set a new password with a valid reset token."
+        :title="t('auth.reset.title')"
+        :subtitle="t('auth.reset.subtitle')"
     >
         <Form
             v-slot="{ errors, processing }"
@@ -31,7 +37,7 @@ defineProps<{
             class="space-y-5"
         >
             <div class="space-y-2">
-                <Label for="email">Email</Label>
+                <Label for="email">{{ t('auth.reset.labels.email') }}</Label>
                 <Input
                     id="email"
                     name="email"
@@ -52,7 +58,7 @@ defineProps<{
             </div>
 
             <div class="space-y-2">
-                <Label for="token">Token</Label>
+                <Label for="token">{{ t('auth.reset.labels.token') }}</Label>
                 <Input
                     id="token"
                     name="token"
@@ -72,7 +78,9 @@ defineProps<{
             </div>
 
             <div class="space-y-2">
-                <Label for="password">New password</Label>
+                <Label for="password">{{
+                    t('auth.reset.labels.new_password')
+                }}</Label>
                 <Input
                     id="password"
                     name="password"
@@ -91,9 +99,9 @@ defineProps<{
                 />
             </div>
 
-            <Button type="submit" class="w-full" :disabled="processing"
-                >Reset password</Button
-            >
+            <Button type="submit" class="w-full" :disabled="processing">{{
+                t('auth.reset.submit')
+            }}</Button>
         </Form>
     </AuthLayout>
 </template>

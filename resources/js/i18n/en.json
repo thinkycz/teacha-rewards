@@ -1,0 +1,79 @@
+{
+    "app": {
+        "name": "Laravel Inertia Stack"
+    },
+    "nav": {
+        "skip_to_main": "Skip to main content",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "logout": "Log out",
+        "primary": "Primary"
+    },
+    "auth": {
+        "login": {
+            "title": "Log in",
+            "subtitle": "Enter your credentials to continue.",
+            "submit": "Log in",
+            "forgot_link": "Forgot password?",
+            "back_link": "Back to login"
+        },
+        "register": {
+            "title": "Create account",
+            "subtitle": "Start with an authenticated Inertia workspace.",
+            "submit": "Register",
+            "login_link": "Log in"
+        },
+        "forgot": {
+            "title": "Forgot password",
+            "subtitle": "Send a new generated password using the core mail flow.",
+            "submit": "Send password"
+        },
+        "reset": {
+            "title": "Reset password",
+            "subtitle": "Set a new password with a valid reset token.",
+            "submit": "Update password",
+            "back_to_profile": "Back to profile",
+            "labels": {
+                "email": "Email",
+                "token": "Token",
+                "new_password": "New password"
+            }
+        },
+        "verify": {
+            "title": "Verify email",
+            "description": "Email verification is powered by the core notification flow. Send a fresh verification message when the current user still needs to verify their address.",
+            "submit": "Send verification email"
+        }
+    },
+    "settings": {
+        "profile": {
+            "title": "Profile settings",
+            "submit": "Save profile",
+            "change_password": "Change password"
+        },
+        "password": {
+            "title": "Password settings",
+            "submit": "Update password",
+            "back_to_profile": "Back to profile"
+        }
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "welcome": "Authenticated user",
+        "settings_heading": "Settings",
+        "settings_description": "The app is using the reference database-token cookie guard.",
+        "manage_profile": "Manage profile"
+    },
+    "fields": {
+        "email": "Email",
+        "password": "Password",
+        "current_password": "Current password",
+        "new_password": "New password",
+        "locale": "Locale"
+    },
+    "locale": {
+        "switcher_label": "Language",
+        "en": "English",
+        "cs": "Čeština"
+    }
+}

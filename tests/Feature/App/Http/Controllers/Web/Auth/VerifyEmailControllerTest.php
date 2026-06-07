@@ -2,68 +2,55 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Http\Controllers\Web\Auth;
-
 use App\Models\User;
 use Database\Factories\UserFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Tests\TestCase;
 use Thinkycz\LaravelCore\Notifications\EmailVerificationNotification;
 use Thinkycz\LaravelCore\Support\Typer;
 
-class VerifyEmailControllerTest extends TestCase
-{
-    use RefreshDatabase;
+\test('guest can view verify email page', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_guest_can_view_verify_email_page(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $response = $this->be($user, 'users')->get('/verify-email', $this->inertiaHeaders());
 
-        $response = $this->be($user, 'users')->get('/verify-email', $this->inertiaHeaders());
+    $response->assertOk();
+    $response->assertJsonPath('component', 'auth/VerifyEmail');
+});
 
-        $response->assertOk();
-        $response->assertJsonPath('component', 'auth/VerifyEmail');
-    }
+\test('authenticated unverified user triggers verification notification', function (): void {
+    Notification::fake();
 
-    public function test_authenticated_unverified_user_triggers_verification_notification(): void
-    {
-        Notification::fake();
+    $user = Typer::assertInstance(UserFactory::new()->unverified()->createOne(), User::class);
 
-        $user = Typer::assertInstance(UserFactory::new()->unverified()->createOne(), User::class);
+    static::assertNull($user->getEmailVerifiedAt());
 
-        static::assertNull($user->getEmailVerifiedAt());
+    $response = $this->be($user, 'users')->post('/verify-email', [], $this->inertiaHeaders());
 
-        $response = $this->be($user, 'users')->post('/verify-email', [], $this->inertiaHeaders());
+    $response->assertOk();
+    $response->assertJsonPath('component', 'auth/VerifyEmail');
+    $response->assertSessionHas('success');
 
-        $response->assertOk();
-        $response->assertJsonPath('component', 'auth/VerifyEmail');
-        $response->assertSessionHas('success');
+    Notification::assertSentTo($user, EmailVerificationNotification::class);
+});
 
-        Notification::assertSentTo($user, EmailVerificationNotification::class);
-    }
+\test('already verified user does not receive another notification', function (): void {
+    Notification::fake();
 
-    public function test_already_verified_user_does_not_receive_another_notification(): void
-    {
-        Notification::fake();
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $user->markEmailAsVerified();
 
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
-        $user->markEmailAsVerified();
+    $response = $this->be($user, 'users')->post('/verify-email', [], $this->inertiaHeaders());
 
-        $response = $this->be($user, 'users')->post('/verify-email', [], $this->inertiaHeaders());
+    $response->assertOk();
+    $response->assertJsonPath('component', 'auth/VerifyEmail');
 
-        $response->assertOk();
-        $response->assertJsonPath('component', 'auth/VerifyEmail');
+    Notification::assertNothingSent();
+});
 
-        Notification::assertNothingSent();
-    }
+\test('guest cannot resend verification', function (): void {
+    Notification::fake();
 
-    public function test_guest_cannot_resend_verification(): void
-    {
-        Notification::fake();
+    $response = $this->post('/verify-email');
 
-        $response = $this->post('/verify-email');
-
-        $response->assertRedirect('/login');
-    }
-}
+    $response->assertRedirect('/login');
+});

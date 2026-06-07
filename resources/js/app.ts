@@ -4,6 +4,8 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { createApp, h } from 'vue';
 import type { DefineComponent } from 'vue';
+import { createAppI18n, isSupportedLocale, SUPPORTED_LOCALES } from './i18n';
+import type { SharedProps } from './types';
 
 createInertiaApp({
     title: (title) =>
@@ -19,8 +21,19 @@ createInertiaApp({
         return page();
     },
     setup({ el, App, props, plugin }) {
+        const initial = props.initialPage.props as unknown as SharedProps;
+        const userLocale = initial.auth?.user?.locale;
+        const appLocale = initial.app?.locale;
+        const requested = userLocale ?? appLocale ?? 'en';
+        const locale = isSupportedLocale(requested) ? requested : 'en';
+
+        void SUPPORTED_LOCALES;
+
+        const i18n = createAppI18n(locale);
+
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(i18n)
             .mount(el);
     },
     progress: {

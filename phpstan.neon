@@ -4,7 +4,6 @@ includes:
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
-    - ./phpstan/hard.neon
 
 parameters:
   level: max
@@ -20,12 +19,8 @@ parameters:
     - ./database
     - ./resources
     - ./packages
-    - ./phpstan/PHPStanRules
     - ./routes
+  excludePaths:
     - ./tests
   stubFiles:
     - ./phpstan.stub
-
-rules:
-    - Thinkycz\PHPStanRules\FunctionRequired
-    - Thinkycz\PHPStanRules\PropertyRequired

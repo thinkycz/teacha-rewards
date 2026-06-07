@@ -2,74 +2,58 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Models;
-
 use App\Models\User;
 use Database\Factories\UserFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Thinkycz\LaravelCore\Support\Typer;
 
-class UserTest extends TestCase
-{
-    use RefreshDatabase;
+\test('email getter returns email', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_email_getter_returns_email(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    static::assertSame($user->getEmail(), $user->assertString('email'));
+});
 
-        static::assertSame($user->getEmail(), $user->assertString('email'));
-    }
+\test('locale getter returns locale', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_locale_getter_returns_locale(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    static::assertSame($user->getLocale(), $user->assertString('locale'));
+});
 
-        static::assertSame($user->getLocale(), $user->assertString('locale'));
-    }
+\test('email verified at getter returns carbon or null', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_email_verified_at_getter_returns_carbon_or_null(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    static::assertNotNull($user->getEmailVerifiedAt());
 
-        static::assertNotNull($user->getEmailVerifiedAt());
+    $unverified = Typer::assertInstance(UserFactory::new()->unverified()->createOne(), User::class);
 
-        $unverified = Typer::assertInstance(UserFactory::new()->unverified()->createOne(), User::class);
+    static::assertNull($unverified->getEmailVerifiedAt());
+});
 
-        static::assertNull($unverified->getEmailVerifiedAt());
-    }
+\test('mark email as unverified clears timestamp', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_mark_email_as_unverified_clears_timestamp(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    static::assertTrue($user->markEmailAsUnverified());
 
-        static::assertTrue($user->markEmailAsUnverified());
+    $user->refresh();
 
-        $user->refresh();
+    static::assertNull($user->getEmailVerifiedAt());
+});
 
-        static::assertNull($user->getEmailVerifiedAt());
-    }
+\test('me resource returns user resource', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_me_resource_returns_user_resource(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $resource = $user->meResource();
 
-        $resource = $user->meResource();
+    static::assertSame($user, $resource->resource);
+});
 
-        static::assertSame($user, $resource->resource);
-    }
+\test('resource delegates to me resource', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_resource_delegates_to_me_resource(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    static::assertSame($user->meResource()->resource, $user->resource()->resource);
+});
 
-        static::assertSame($user->meResource()->resource, $user->resource()->resource);
-    }
+\test('database tokens relationship is defined', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_database_tokens_relationship_is_defined(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
-
-        $this->assertDatabaseCount('database_tokens', 0);
-    }
-}
+    $this->assertDatabaseCount('database_tokens', 0);
+});

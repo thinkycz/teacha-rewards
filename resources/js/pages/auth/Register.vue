@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { Form, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 import Select from '@/components/ui/Select.vue';
+import { useBoundLocale } from '@/composables/useBoundLocale';
+import { useSharedProps } from '@/composables/useSharedProps';
 
 type RegisterFields = {
     email: string;
@@ -13,26 +17,23 @@ type RegisterFields = {
     locale: string;
 };
 
-const props = defineProps<{
-    locales: string[];
-}>();
+const { app } = useSharedProps();
+const { t, te } = useI18n();
 
-const localeLabels: Record<string, string> = {
-    en: 'English',
-    cs: 'Čeština',
-    sk: 'Slovenčina',
-};
+useBoundLocale();
 
-const localeOptions = props.locales.map((value) => ({
-    value,
-    label: localeLabels[value] ?? value,
-}));
+const localeOptions = computed(() =>
+    app.value.locales.map((value: string) => ({
+        value,
+        label: te(`locale.${value}`) ? (t(`locale.${value}`) as string) : value,
+    })),
+);
 </script>
 
 <template>
     <AuthLayout
-        title="Create account"
-        subtitle="Start with an authenticated Inertia workspace."
+        :title="t('auth.register.title')"
+        :subtitle="t('auth.register.subtitle')"
     >
         <Form
             v-slot="{ errors, processing }"
@@ -42,7 +43,7 @@ const localeOptions = props.locales.map((value) => ({
             class="space-y-5"
         >
             <div class="space-y-2">
-                <Label for="email">Email</Label>
+                <Label for="email">{{ t('fields.email') }}</Label>
                 <Input
                     id="email"
                     name="email"
@@ -62,7 +63,7 @@ const localeOptions = props.locales.map((value) => ({
             </div>
 
             <div class="space-y-2">
-                <Label for="password">Password</Label>
+                <Label for="password">{{ t('fields.password') }}</Label>
                 <Input
                     id="password"
                     name="password"
@@ -82,12 +83,12 @@ const localeOptions = props.locales.map((value) => ({
             </div>
 
             <div class="space-y-2">
-                <Label for="locale">Locale</Label>
+                <Label for="locale">{{ t('fields.locale') }}</Label>
                 <Select
                     id="locale"
                     name="locale"
                     :options="localeOptions"
-                    :default-value="locales[0] ?? 'en'"
+                    :default-value="app.locale"
                     required
                 />
                 <FieldError
@@ -101,18 +102,13 @@ const localeOptions = props.locales.map((value) => ({
                 />
             </div>
 
-            <Button type="submit" class="w-full" :disabled="processing"
-                >Register</Button
-            >
+            <Button type="submit" class="w-full" :disabled="processing">{{
+                t('auth.register.submit')
+            }}</Button>
         </Form>
 
         <p class="mt-6 text-center text-sm text-gray-600">
-            Already have an account?
-            <Link
-                href="/login"
-                class="font-medium text-blue-700 hover:text-blue-800"
-                >Log in</Link
-            >
+            {{ t('auth.register.login_link') }}
         </p>
     </AuthLayout>
 </template>

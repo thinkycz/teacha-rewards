@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { LogOut, Settings, UserRound } from '@lucide/vue';
+import { LogOut, UserRound } from '@lucide/vue';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 import Brand from '@/components/ui/Brand.vue';
 import Button from '@/components/ui/Button.vue';
 import FlashAlerts from '@/components/ui/FlashAlerts.vue';
+import { useBoundLocale } from '@/composables/useBoundLocale';
 import { useSharedProps } from '@/composables/useSharedProps';
 
 defineProps<{
@@ -11,6 +15,9 @@ defineProps<{
 }>();
 
 const { auth } = useSharedProps();
+const { t } = useI18n();
+
+useBoundLocale();
 
 const currentPath = computed<string>(() => usePage().url);
 
@@ -21,8 +28,6 @@ function isActive(href: string): boolean {
 function logout(): void {
     router.post('/logout');
 }
-
-import { computed } from 'vue';
 </script>
 
 <template>
@@ -33,7 +38,7 @@ import { computed } from 'vue';
             href="#main"
             class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-blue-700 focus:px-3 focus:py-2 focus:text-sm focus:text-white"
         >
-            Skip to main content
+            {{ t('nav.skip_to_main') }}
         </a>
 
         <header class="border-b border-gray-200 bg-white">
@@ -45,7 +50,10 @@ import { computed } from 'vue';
                     class="text-base font-semibold text-gray-950"
                 />
 
-                <nav class="flex items-center gap-2" aria-label="Primary">
+                <nav
+                    class="flex items-center gap-2"
+                    :aria-label="t('nav.primary')"
+                >
                     <Link
                         href="/dashboard"
                         :aria-current="
@@ -53,7 +61,7 @@ import { computed } from 'vue';
                         "
                         class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                     >
-                        Dashboard
+                        {{ t('nav.dashboard') }}
                     </Link>
                     <Link
                         href="/settings/profile"
@@ -63,11 +71,12 @@ import { computed } from 'vue';
                         class="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                     >
                         <UserRound class="size-4" />
-                        Profile
+                        {{ t('nav.profile') }}
                     </Link>
+                    <LocaleSwitcher v-if="auth.user" />
                     <Button variant="ghost" class="gap-2" @click="logout">
                         <LogOut class="size-4" />
-                        Log out
+                        {{ t('nav.logout') }}
                     </Button>
                 </nav>
             </div>
@@ -83,7 +92,6 @@ import { computed } from 'vue';
                         {{ auth.user.email }}
                     </p>
                 </div>
-                <Settings class="size-5 text-gray-500" aria-hidden="true" />
             </div>
 
             <FlashAlerts />

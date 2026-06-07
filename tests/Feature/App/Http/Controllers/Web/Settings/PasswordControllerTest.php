@@ -2,71 +2,58 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Http\Controllers\Web\Settings;
-
 use App\Models\User;
 use Database\Factories\UserFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Thinkycz\LaravelCore\Support\Resolver;
 use Thinkycz\LaravelCore\Support\Typer;
 
-class PasswordControllerTest extends TestCase
-{
-    use RefreshDatabase;
+\test('authenticated user can view password settings', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_authenticated_user_can_view_password_settings(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $response = $this->be($user, 'users')->get('/settings/password', $this->inertiaHeaders());
 
-        $response = $this->be($user, 'users')->get('/settings/password', $this->inertiaHeaders());
+    $response->assertOk();
+    $response->assertJsonPath('component', 'settings/Password');
+});
 
-        $response->assertOk();
-        $response->assertJsonPath('component', 'settings/Password');
-    }
+\test('authenticated user can update password', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_authenticated_user_can_update_password(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $response = $this->be($user, 'users')->post('/settings/password', [
+        'password' => UserFactory::$password,
+        'new_password' => 'new-password',
+    ], $this->inertiaHeaders());
 
-        $response = $this->be($user, 'users')->post('/settings/password', [
-            'password' => UserFactory::$password,
-            'new_password' => 'new-password',
-        ], $this->inertiaHeaders());
+    $response->assertOk();
+    $response->assertJsonPath('component', 'settings/Password');
 
-        $response->assertOk();
-        $response->assertJsonPath('component', 'settings/Password');
+    $user->refresh();
 
-        $user->refresh();
+    static::assertTrue(Resolver::resolveHasher()->check('new-password', $user->getAuthPassword()));
+});
 
-        static::assertTrue(Resolver::resolveHasher()->check('new-password', $user->getAuthPassword()));
-    }
+\test('password update revokes existing database tokens', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_password_update_revokes_existing_database_tokens(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    Resolver::resolveDatabaseTokenGuard($user->getTable())->login($user);
 
-        Resolver::resolveDatabaseTokenGuard($user->getTable())->login($user);
+    $this->assertDatabaseCount('database_tokens', 1);
 
-        $this->assertDatabaseCount('database_tokens', 1);
+    $this->be($user, 'users')->post('/settings/password', [
+        'password' => UserFactory::$password,
+        'new_password' => 'new-password',
+    ], $this->inertiaHeaders());
 
-        $this->be($user, 'users')->post('/settings/password', [
-            'password' => UserFactory::$password,
-            'new_password' => 'new-password',
-        ], $this->inertiaHeaders());
+    $this->assertDatabaseCount('database_tokens', 0);
+});
 
-        $this->assertDatabaseCount('database_tokens', 0);
-    }
+\test('wrong current password is rejected', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
 
-    public function test_wrong_current_password_is_rejected(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne(), User::class);
+    $response = $this->be($user, 'users')->post('/settings/password', [
+        'password' => 'wrong-password',
+        'new_password' => 'new-password',
+    ]);
 
-        $response = $this->be($user, 'users')->post('/settings/password', [
-            'password' => 'wrong-password',
-            'new_password' => 'new-password',
-        ]);
-
-        $response->assertStatus(422);
-    }
-}
+    $response->assertStatus(422);
+});

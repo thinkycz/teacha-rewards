@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Thinkycz\LaravelCore\Support\Config;
 use Thinkycz\LaravelCore\Support\Resolver;
 use Thinkycz\LaravelCore\Validation\AuthValidity;
 
@@ -30,9 +29,7 @@ class RegisterController
             return Resolver::resolveRedirector()->to('/dashboard');
         }
 
-        return Inertia::render('auth/Register', [
-            'locales' => Config::inject()->assertArray('app.locales'),
-        ]);
+        return Inertia::render('auth/Register');
     }
 
     /**

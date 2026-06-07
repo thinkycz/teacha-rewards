@@ -2,115 +2,99 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Http\Controllers\Api\Me;
-
 use App\Models\User;
 use Database\Factories\UserFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Thinkycz\LaravelCore\Support\Typer;
 
-class MeControllerTest extends TestCase
-{
-    use RefreshDatabase;
+\test('show returns authenticated user', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'me@example.com',
+    ]), User::class);
 
-    public function test_show_returns_authenticated_user(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'me@example.com',
-        ]), User::class);
+    $this->be($user, 'users');
 
-        $this->be($user, 'users');
+    $response = $this->getJson('/api/v1/me/show', ['Accept' => 'application/vnd.api+json']);
 
-        $response = $this->getJson('/api/v1/me/show', ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(200);
+    $response->assertJsonPath('data.attributes.email', 'me@example.com');
+    $response->assertJsonPath('data.type', 'users');
+});
 
-        $response->assertStatus(200);
-        $response->assertJsonPath('data.attributes.email', 'me@example.com');
-        $response->assertJsonPath('data.type', 'users');
-    }
+\test('show requires authentication', function (): void {
+    $response = $this->getJson('/api/v1/me/show', ['Accept' => 'application/vnd.api+json']);
 
-    public function test_show_requires_authentication(): void
-    {
-        $response = $this->getJson('/api/v1/me/show', ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(401);
+});
 
-        $response->assertStatus(401);
-    }
+\test('update can change user email', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'before@example.com',
+    ]), User::class);
 
-    public function test_update_can_change_user_email(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'before@example.com',
-        ]), User::class);
+    $this->be($user, 'users');
 
-        $this->be($user, 'users');
+    $response = $this->postJson('/api/v1/me/update', [
+        'email' => 'after@example.com',
+    ], ['Accept' => 'application/vnd.api+json']);
 
-        $response = $this->postJson('/api/v1/me/update', [
-            'email' => 'after@example.com',
-        ], ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(200);
+    $response->assertJsonPath('data.attributes.email', 'after@example.com');
 
-        $response->assertStatus(200);
-        $response->assertJsonPath('data.attributes.email', 'after@example.com');
+    $user->refresh();
+    static::assertSame('after@example.com', $user->getEmail());
+});
 
-        $user->refresh();
-        static::assertSame('after@example.com', $user->getEmail());
-    }
+\test('update can change user locale', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'me@example.com',
+        'locale' => 'en',
+    ]), User::class);
 
-    public function test_update_can_change_user_locale(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'me@example.com',
-            'locale' => 'en',
-        ]), User::class);
+    $this->be($user, 'users');
 
-        $this->be($user, 'users');
+    $response = $this->postJson('/api/v1/me/update', [
+        'locale' => 'cs',
+    ], ['Accept' => 'application/vnd.api+json']);
 
-        $response = $this->postJson('/api/v1/me/update', [
-            'locale' => 'cs',
-        ], ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(200);
+    $response->assertJsonPath('data.attributes.locale', 'cs');
+});
 
-        $response->assertStatus(200);
-        $response->assertJsonPath('data.attributes.locale', 'cs');
-    }
+\test('update rejects duplicate email', function (): void {
+    Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'taken@example.com',
+    ]), User::class);
 
-    public function test_update_rejects_duplicate_email(): void
-    {
-        Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'taken@example.com',
-        ]), User::class);
+    $user = Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'me@example.com',
+    ]), User::class);
 
-        $user = Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'me@example.com',
-        ]), User::class);
+    $this->be($user, 'users');
 
-        $this->be($user, 'users');
+    $response = $this->postJson('/api/v1/me/update', [
+        'email' => 'taken@example.com',
+    ], ['Accept' => 'application/vnd.api+json']);
 
-        $response = $this->postJson('/api/v1/me/update', [
-            'email' => 'taken@example.com',
-        ], ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(422);
+});
 
-        $response->assertStatus(422);
-    }
+\test('destroy deletes user and logs out', function (): void {
+    $user = Typer::assertInstance(UserFactory::new()->createOne([
+        'email' => 'doomed@example.com',
+    ]), User::class);
 
-    public function test_destroy_deletes_user_and_logs_out(): void
-    {
-        $user = Typer::assertInstance(UserFactory::new()->createOne([
-            'email' => 'doomed@example.com',
-        ]), User::class);
+    $this->be($user, 'users');
 
-        $this->be($user, 'users');
+    $this->assertDatabaseHas('users', ['email' => 'doomed@example.com']);
 
-        $this->assertDatabaseHas('users', ['email' => 'doomed@example.com']);
+    $response = $this->postJson('/api/v1/me/destroy', [], ['Accept' => 'application/vnd.api+json']);
 
-        $response = $this->postJson('/api/v1/me/destroy', [], ['Accept' => 'application/vnd.api+json']);
+    $response->assertStatus(204);
+    $this->assertDatabaseMissing('users', ['email' => 'doomed@example.com']);
+});
 
-        $response->assertStatus(204);
-        $this->assertDatabaseMissing('users', ['email' => 'doomed@example.com']);
-    }
+\test('destroy requires authentication', function (): void {
+    $response = $this->postJson('/api/v1/me/destroy', [], ['Accept' => 'application/vnd.api+json']);
 
-    public function test_destroy_requires_authentication(): void
-    {
-        $response = $this->postJson('/api/v1/me/destroy', [], ['Accept' => 'application/vnd.api+json']);
-
-        $response->assertStatus(401);
-    }
-}
+    $response->assertStatus(401);
+});

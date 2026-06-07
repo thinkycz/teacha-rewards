@@ -8,6 +8,7 @@ export interface AuthUser {
 export interface AppMeta {
     name: string;
     locale: string;
+    locales: string[];
 }
 
 export interface FlashProps {
