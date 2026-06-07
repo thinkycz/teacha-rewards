@@ -26,6 +26,8 @@ Resolver::resolveRouteRegistrar()
         $router->post('reset-password', [App\Http\Controllers\Web\Auth\ResetPasswordController::class, 'store']);
     });
 
+Resolver::resolveRouteRegistrar()->get('email/verify', App\Http\Controllers\Web\Auth\EmailVerificationConfirmController::class);
+
 Resolver::resolveRouteRegistrar()
     ->middleware(App\Http\Middleware\EnsureInertiaUserIsAuthenticated::class)
     ->group(static function (Router $router): void {

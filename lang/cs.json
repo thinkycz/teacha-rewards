@@ -14,5 +14,10 @@
     "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Pokud máte potíže s klepnutím na tlačítko \":actionText\", zkopírujte a vložte\nníže uvedenou adresu URL do vašeho webového prohlížeče:",
     "Go Home": "Domů",
     "Verification code \":code\".": "Ověřovací kód \":code\".",
-    "spa.email_verification_url": "/api/v1/email_verification/verify"
+    "spa.email_verification_url": "/email/verify",
+    "Email already verified.": "E-mail již byl ověřen.",
+    "Email verification is not required for this account.": "Pro tento účet se ověření e-mailu nevyžaduje.",
+    "The verification link is invalid or has expired.": "Ověřovací odkaz je neplatný nebo jeho platnost vypršela.",
+    "Email verified.": "E-mail byl ověřen.",
+    "We can't find a user with that email address.": "Uživatele s touto e-mailovou adresou nelze najít."
 }

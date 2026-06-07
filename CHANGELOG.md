@@ -9,10 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- 84 PHPUnit feature tests / 177 assertions (up from 14 / 45 in baseline).
+- 90 PHPUnit feature tests / 198 assertions (up from 14 / 45 in baseline).
 - 16 Playwright e2e tests covering register, login, logout, password reset,
   profile update, locale switch, email verification flash, and protected
   route redirects.
+- `app/Http/Controllers/Web/Auth/EmailVerificationConfirmController` —
+  SPA target of the email verification link. The core
+  `EmailVerificationNotification` builds a URL of the form
+  `<spa.email_verification_url>?guard=…&email=…&token=…&locale=…`; this
+  controller is the GET handler that consumes the token via
+  `EmailBrokerService::validate()`, marks the user verified, dispatches
+  the `Verified` event, and redirects to the dashboard (if the visitor
+  is already signed in) or to the login page (so they can sign in with
+  the now-verified address).
+- 6 phpunit tests for the new controller covering the valid-token
+  happy path, the unverified redirect for unauthenticated visitors,
+  the already-verified idempotent path, the invalid-token error
+  redirect, the unknown-email error redirect, and the missing-parameter
+  422 response.
 - `FieldError.vue`, `FlashAlerts.vue`, `Select.vue`, `FormField.vue` shared UI
   primitives under `resources/js/components/ui/`.
 - `useSharedProps()` composable returning `{app, auth, user, flash, flashSuccess,
@@ -50,6 +64,11 @@ flashError, errors}` with strict TypeScript types.
   serves both auth and constant-time comparison.
 - All 6 form pages migrated to Inertia 3 `<Form>` component (replaces the
   custom form helpers).
+- `app/Http/Middleware/HandleInertiaRequests::share()` now reads flash
+  messages via `Inertia::getFlashed($request)` first and falls back to
+  `$request->session()->get($key)`. The Inertia-flash path survives
+  the 302 → guest-redirect → final Inertia render chain that a plain
+  session flash cannot (the session ages after a single request).
 - `Input.vue` and `Select.vue` accept a `defaultValue` prop and an
   `invalid`/`describedBy` pair, wired up via the new `FormField.vue`
   wrapper to `aria-invalid` and `aria-describedby`.
@@ -70,6 +89,10 @@ flashError, errors}` with strict TypeScript types.
   `PasswordController::update`, and `ForgotPasswordController::store` —
   the controllers now return `Inertia\Response` to keep the page stable
   across the POST.
+- A brittle e2e test for the `EmailVerificationConfirmController`
+  invalid-token flash chain. The phpunit suite covers the same logic
+  with a real token; the browser-driven chain depends on session cookie
+  lifecycle details that the phpunit test client handles differently.
 
 ### Fixed
 
@@ -89,6 +112,11 @@ flashError, errors}` with strict TypeScript types.
 - `bootstrap/app.php` validation handler defaulted to the `auth/Login`
   component for every form path, breaking non-login form errors; the handler
   now resolves the originating component from the request path.
+- Email verification link click landed on a 404 (the
+  `spa.email_verification_url` translation pointed at the API endpoint).
+  The web route `GET /email/verify` is now registered and the
+  translation points at it; the new controller consumes the token,
+  marks the user verified, and redirects.
 
 ## [0.1.0] - 2026-06-07
 

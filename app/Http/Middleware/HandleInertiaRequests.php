@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 use Thinkycz\LaravelCore\Support\Config;
 use Thinkycz\LaravelCore\Support\Resolver;
@@ -43,10 +44,35 @@ class HandleInertiaRequests extends Middleware
                 'user' => fn(): array|null => $this->user(),
             ],
             'flash' => [
-                'success' => static fn(): string|null => Typer::assertNullableString($request->session()->get('success')),
-                'error' => static fn(): string|null => Typer::assertNullableString($request->session()->get('error')),
+                'success' => static fn(): string|null => self::flashMessage($request, 'success'),
+                'error' => static fn(): string|null => self::flashMessage($request, 'error'),
             ],
         ];
+    }
+
+    /**
+     * Resolve a flash message by key.
+     *
+     * Inertia v3 stores flash data under the dedicated `inertia.flash_data`
+     * session key (see {@see Inertia::flash()}) and the Inertia middleware
+     * reflashes the entry on every request. The Laravel session
+     * `->flash('success', ...)` mechanism, by contrast, is consumed after a
+     * single request and dies across an intermediate 302 redirect chain
+     * (e.g. the authenticated visitor being bounced from /login to
+     * /dashboard). We prefer the Inertia path so flashes survive the
+     * 302 → guest-redirect → final render hop, and fall back to the
+     * plain session key for same-request controllers that still use
+     * `$request->session()->flash(...)`.
+     */
+    protected static function flashMessage(Request $request, string $key): string|null
+    {
+        $inertiaFlash = Inertia::getFlashed($request);
+
+        if (isset($inertiaFlash[$key]) && \is_string($inertiaFlash[$key])) {
+            return $inertiaFlash[$key];
+        }
+
+        return Typer::assertNullableString($request->session()->get($key));
     }
 
     /**
