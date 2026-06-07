@@ -107,8 +107,13 @@ const localeOptions = computed(() =>
             }}</Button>
         </Form>
 
-        <p class="mt-6 text-center text-sm text-gray-600">
+        <p class="mt-6 text-center text-xs font-medium text-on-surface-variant">
             {{ t('auth.register.login_link') }}
+            <Link
+                href="/login"
+                class="ml-1 font-bold text-primary hover:text-primary-container"
+                >{{ t('auth.login.title') }}</Link
+            >
         </p>
     </AuthLayout>
 </template>

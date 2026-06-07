@@ -12,29 +12,37 @@ defineProps<{
 <template>
     <Head :title="title" />
 
-    <main
-        class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-10"
+    <div
+        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-surface-bg p-6 font-sans antialiased md:p-10"
     >
-        <section class="w-full max-w-md">
-            <Brand
-                href="/login"
-                class="mb-8 block text-center text-lg font-semibold text-gray-950"
-            />
-
+        <div class="w-full max-w-md">
+            <!-- Glassmorphic Card Container -->
             <div
-                class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+                class="space-y-6 rounded-2xl border border-outline-glass bg-surface-container-lowest p-8 shadow-xl md:p-10"
             >
-                <div class="mb-6">
-                    <h1 class="text-2xl font-semibold text-gray-950">
-                        {{ title }}
-                    </h1>
-                    <p class="mt-2 text-sm text-gray-600">{{ subtitle }}</p>
+                <!-- Brand Header -->
+                <div class="flex flex-col items-center gap-4 text-center">
+                    <Brand href="/login" />
+
+                    <div class="mt-2 space-y-1.5">
+                        <h2
+                            class="font-heading text-lg leading-tight font-black text-on-surface"
+                        >
+                            {{ title }}
+                        </h2>
+                        <p
+                            class="text-center text-xs leading-relaxed text-on-surface-variant"
+                        >
+                            {{ subtitle }}
+                        </p>
+                    </div>
                 </div>
 
                 <FlashAlerts />
 
+                <!-- Form Slot -->
                 <slot />
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 </template>

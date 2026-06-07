@@ -3,8 +3,9 @@ import { Form, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
-import FormField from '@/components/ui/FormField.vue';
+import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
+import Label from '@/components/ui/Label.vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
 
 type LoginFields = {
@@ -26,73 +27,67 @@ useBoundLocale();
             v-slot="{ errors, processing }"
             action="/login"
             method="post"
-            :reset-on-error="['password']"
             class="space-y-5"
         >
-            <FormField
-                :label="t('fields.email')"
-                :error="
-                    (
-                        errors as LoginFields extends object
-                            ? LoginFields
-                            : never
-                    )['email']
-                "
-                required
-            >
-                <template #default="{ id, describedBy, invalid }">
-                    <Input
-                        :id="id"
-                        name="email"
-                        type="email"
-                        autocomplete="email"
-                        :aria-describedby="describedBy"
-                        :invalid="invalid"
-                        required
-                    />
-                </template>
-            </FormField>
+            <div class="space-y-2">
+                <Label for="email">{{ t('fields.email') }}</Label>
+                <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                />
+                <FieldError
+                    :message="
+                        (
+                            errors as LoginFields extends object
+                                ? LoginFields
+                                : never
+                        )['email']
+                    "
+                />
+            </div>
 
-            <FormField
-                :label="t('fields.password')"
-                :error="
-                    (
-                        errors as LoginFields extends object
-                            ? LoginFields
-                            : never
-                    )['password']
-                "
-                required
-            >
-                <template #default="{ id, describedBy, invalid }">
-                    <Input
-                        :id="id"
-                        name="password"
-                        type="password"
-                        autocomplete="current-password"
-                        :aria-describedby="describedBy"
-                        :invalid="invalid"
-                        required
-                    />
-                </template>
-            </FormField>
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <Label for="password">{{ t('fields.password') }}</Label>
+                    <Link
+                        href="/forgot-password"
+                        class="text-xs font-semibold text-primary hover:text-primary-container"
+                        >{{ t('auth.login.forgot_link') }}</Link
+                    >
+                </div>
+                <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                />
+                <FieldError
+                    :message="
+                        (
+                            errors as LoginFields extends object
+                                ? LoginFields
+                                : never
+                        )['password']
+                    "
+                />
+            </div>
 
             <Button type="submit" class="w-full" :disabled="processing">{{
                 t('auth.login.submit')
             }}</Button>
         </Form>
 
-        <div class="mt-6 flex items-center justify-between text-sm">
-            <Link
-                href="/forgot-password"
-                class="font-medium text-blue-700 hover:text-blue-800"
-                >{{ t('auth.login.forgot_link') }}</Link
-            >
+        <p class="mt-6 text-center text-xs font-medium text-on-surface-variant">
+            {{ t('auth.register.login_link') }}
             <Link
                 href="/register"
-                class="font-medium text-blue-700 hover:text-blue-800"
+                class="ml-1 font-bold text-primary hover:text-primary-container"
                 >{{ t('auth.register.title') }}</Link
             >
-        </div>
+        </p>
     </AuthLayout>
 </template>

@@ -12,7 +12,12 @@ withDefaults(
 </script>
 
 <template>
-    <p v-if="message" :id="$props.id" class="text-sm text-red-700" role="alert">
+    <p
+        v-if="message"
+        :id="$props.id"
+        class="text-xs font-semibold text-error-red"
+        role="alert"
+    >
         {{ message }}
     </p>
 </template>

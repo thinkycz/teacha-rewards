@@ -22,7 +22,9 @@ test.describe('Locale switcher', () => {
             page.getByRole('button', { name: 'Log out' }),
         ).toBeVisible();
 
-        const switcher = page.locator('header select');
+        const switcher = page
+            .locator('aside select, header select')
+            .filter({ visible: true });
         await switcher.selectOption('cs');
 
         await expect(
@@ -52,7 +54,9 @@ test.describe('Locale switcher', () => {
     test('navigating to settings shows the localized page title', async ({
         page,
     }) => {
-        const switcher = page.locator('header select');
+        const switcher = page
+            .locator('aside select, header select')
+            .filter({ visible: true });
         await switcher.selectOption('cs');
 
         await page.getByRole('link', { name: 'Profil', exact: true }).click();

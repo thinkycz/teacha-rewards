@@ -21,7 +21,7 @@ useBoundLocale();
 <template>
     <AppLayout :title="t('settings.password.title')">
         <section
-            class="max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            class="max-w-xl rounded-2xl border border-outline-glass bg-surface-container-lowest p-6 shadow-sm"
         >
             <Form
                 v-slot="{ errors, processing }"
@@ -74,13 +74,13 @@ useBoundLocale();
                     />
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     <Button type="submit" :disabled="processing">{{
                         t('settings.password.submit')
                     }}</Button>
                     <Link
                         href="/settings/profile"
-                        class="text-sm font-medium text-blue-700"
+                        class="text-xs font-bold text-primary hover:text-primary-container"
                         >{{ t('settings.password.back_to_profile') }}</Link
                     >
                 </div>

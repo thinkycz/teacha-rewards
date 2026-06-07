@@ -44,7 +44,7 @@ function switchLocale(next: string): void {
         <select
             :value="currentLocale"
             :aria-label="t('locale.switcher_label')"
-            class="h-8 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+            class="h-8 rounded-lg border border-outline-glass bg-white px-2 text-xs text-on-surface outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
             @change="
                 (event) =>
                     switchLocale((event.target as HTMLSelectElement).value)

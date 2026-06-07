@@ -46,10 +46,10 @@ const selectId = computed(
         :aria-describedby="props.describedBy"
         :class="
             cn(
-                'h-10 w-full rounded-md border bg-white px-3 text-sm text-gray-950 outline-none transition focus:ring-2 focus:ring-blue-100',
+                'h-10 w-full rounded-xl border bg-white px-3 text-xs text-on-surface outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20',
                 props.invalid
-                    ? 'border-red-700 focus:border-red-700'
-                    : 'border-gray-300 focus:border-blue-700',
+                    ? 'border-error-red focus-visible:border-error-red'
+                    : 'border-outline-glass focus-visible:border-primary',
                 props.class,
             )
         "

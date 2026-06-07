@@ -11,9 +11,9 @@ const props = withDefaults(
 );
 
 const variants = {
-    success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
-    error: 'border-red-200 bg-red-50 text-red-900',
-    info: 'border-blue-200 bg-blue-50 text-blue-950',
+    success: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700',
+    error: 'border-error-red/30 bg-error-red/10 text-error-red',
+    info: 'border-outline-glass bg-surface-container-low text-on-surface-variant',
 };
 </script>
 
@@ -21,7 +21,10 @@ const variants = {
     <div
         role="alert"
         :class="
-            cn('rounded-md border px-4 py-3 text-sm', variants[props.variant])
+            cn(
+                'rounded-xl border px-4 py-3 text-xs font-medium',
+                variants[props.variant],
+            )
         "
     >
         <slot />

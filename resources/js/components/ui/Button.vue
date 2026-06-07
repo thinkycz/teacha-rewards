@@ -17,10 +17,12 @@ const props = withDefaults(
 );
 
 const variants = {
-    primary: 'border-blue-700 bg-blue-700 text-white hover:bg-blue-800',
-    secondary: 'border-gray-300 bg-white text-gray-900 hover:bg-gray-50',
-    ghost: 'border-transparent bg-transparent text-gray-700 hover:bg-gray-100',
-    danger: 'border-red-700 bg-red-700 text-white hover:bg-red-800',
+    primary:
+        'border-primary/20 bg-gradient-to-b from-primary-container to-primary text-white shadow-[0_4px_12px_rgba(0,104,95,0.15)] hover:brightness-105 active:scale-[0.98]',
+    secondary:
+        'border-outline-glass bg-white text-on-surface hover:bg-surface-container-low',
+    ghost: 'border-transparent bg-transparent text-on-surface-variant hover:bg-surface-container-low hover:text-primary',
+    danger: 'border-error-red/20 bg-error-red text-white hover:brightness-105 active:scale-[0.98]',
 };
 </script>
 
@@ -30,7 +32,7 @@ const variants = {
         :disabled="props.disabled"
         :class="
             cn(
-                'inline-flex h-10 items-center justify-center rounded-md border px-4 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60',
+                'inline-flex h-10 items-center justify-center rounded-xl border px-4 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer gap-2',
                 variants[props.variant],
                 props.class,
             )

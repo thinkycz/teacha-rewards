@@ -53,10 +53,10 @@ useBoundLocale();
             }}</Button>
         </Form>
 
-        <p class="mt-6 text-center text-sm">
+        <p class="mt-6 text-center text-xs font-medium text-on-surface-variant">
             <Link
                 href="/login"
-                class="font-medium text-blue-700 hover:text-blue-800"
+                class="font-bold text-primary hover:text-primary-container"
                 >{{ t('auth.login.back_link') }}</Link
             >
         </p>

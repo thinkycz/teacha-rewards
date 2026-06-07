@@ -17,9 +17,11 @@ function submit(): void {
 <template>
     <AppLayout :title="t('auth.verify.title')">
         <section
-            class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            class="max-w-xl rounded-2xl border border-outline-glass bg-surface-container-lowest p-6 shadow-sm"
         >
-            <p class="max-w-2xl text-sm text-gray-700">
+            <p
+                class="max-w-xl text-xs leading-relaxed text-on-surface-variant font-medium"
+            >
                 {{ t('auth.verify.description') }}
             </p>
 
