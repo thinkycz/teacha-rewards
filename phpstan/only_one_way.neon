@@ -1,0 +1,110 @@
+parameters:
+  disallowedMethodCalls:
+    -
+      method: 'Illuminate\Contracts\Config\Repository::*()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Support\Env::*()'
+      message: 'use Thinkycz\LaravelCore\Support\Env::inject()->*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Env.php
+    -
+      method: 'Illuminate\Contracts\Translation\Translator::*()'
+      message: 'use Thinkycz\LaravelCore\Support\Trans::inject()->*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Trans.php
+    -
+      method: 'Illuminate\Validation\ValidationException::withMessages()'
+      message: 'use Thinkycz\LaravelCore\Support\Thrower::default()->*()'
+    -
+      method: 'Illuminate\Foundation\Application::environment()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appEnv*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::isLocal()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appEnv*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::isProduction()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appEnv*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::runningUnitTests()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appEnv*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::hasDebugModeEnabled()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appEnv*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::getLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::currentLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::getFallbackLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appFallbackLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::isLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->appLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::setLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->setAppLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Foundation\Application::setFallbackLocale()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->setAppFallbackLocale()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\AuthManager::getConfig()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\AuthManager::getDefaultDriver()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->authDefaultsGuard()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\AuthManager::shouldUse()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->setAuthDefaultsGuard()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\AuthManager::setDefaultDriver()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->setAuthDefaultsGuard()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\Passwords\PasswordBrokerManager::getConfig()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->*()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\Passwords\PasswordBrokerManager::getDefaultDriver()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->authDefaultsPasswords()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
+    -
+      method: 'Illuminate\Auth\Passwords\PasswordBrokerManager::setDefaultDriver()'
+      message: 'use Thinkycz\LaravelCore\Support\Config::inject()->setAuthDefaultsPasswords()'
+      allowIn:
+        - packages/thinkycz/laravel-core/src/Support/Config.php
