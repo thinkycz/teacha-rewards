@@ -2,9 +2,8 @@
 import { Form, Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
-import FieldError from '@/components/ui/FieldError.vue';
+import FormField from '@/components/ui/FormField.vue';
 import Input from '@/components/ui/Input.vue';
-import Label from '@/components/ui/Label.vue';
 
 type LoginFields = {
     email: string;
@@ -21,45 +20,53 @@ type LoginFields = {
             :reset-on-error="['password']"
             class="space-y-5"
         >
-            <div class="space-y-2">
-                <Label for="email">Email</Label>
-                <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                />
-                <FieldError
-                    :message="
-                        (
-                            errors as LoginFields extends object
-                                ? LoginFields
-                                : never
-                        )['email']
-                    "
-                />
-            </div>
+            <FormField
+                label="Email"
+                :error="
+                    (
+                        errors as LoginFields extends object
+                            ? LoginFields
+                            : never
+                    )['email']
+                "
+                required
+            >
+                <template #default="{ id, describedBy, invalid }">
+                    <Input
+                        :id="id"
+                        name="email"
+                        type="email"
+                        autocomplete="email"
+                        :aria-describedby="describedBy"
+                        :invalid="invalid"
+                        required
+                    />
+                </template>
+            </FormField>
 
-            <div class="space-y-2">
-                <Label for="password">Password</Label>
-                <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autocomplete="current-password"
-                    required
-                />
-                <FieldError
-                    :message="
-                        (
-                            errors as LoginFields extends object
-                                ? LoginFields
-                                : never
-                        )['password']
-                    "
-                />
-            </div>
+            <FormField
+                label="Password"
+                :error="
+                    (
+                        errors as LoginFields extends object
+                            ? LoginFields
+                            : never
+                    )['password']
+                "
+                required
+            >
+                <template #default="{ id, describedBy, invalid }">
+                    <Input
+                        :id="id"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        :aria-describedby="describedBy"
+                        :invalid="invalid"
+                        required
+                    />
+                </template>
+            </FormField>
 
             <Button type="submit" class="w-full" :disabled="processing"
                 >Log in</Button

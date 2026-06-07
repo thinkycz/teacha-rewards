@@ -14,6 +14,8 @@ const props = withDefaults(
         options: Array<{ value: string; label: string }>;
         placeholder?: string;
         defaultValue?: string;
+        invalid?: boolean;
+        describedBy?: string;
     }>(),
     {
         id: undefined,
@@ -23,6 +25,8 @@ const props = withDefaults(
         class: '',
         placeholder: undefined,
         defaultValue: undefined,
+        invalid: false,
+        describedBy: undefined,
     },
 );
 
@@ -38,9 +42,14 @@ const selectId = computed(
         :name="props.name"
         :autocomplete="props.autocomplete"
         :required="props.required"
+        :aria-invalid="props.invalid ? 'true' : undefined"
+        :aria-describedby="props.describedBy"
         :class="
             cn(
-                'h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-950 outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100',
+                'h-10 w-full rounded-md border bg-white px-3 text-sm text-gray-950 outline-none transition focus:ring-2 focus:ring-blue-100',
+                props.invalid
+                    ? 'border-red-700 focus:border-red-700'
+                    : 'border-gray-300 focus:border-blue-700',
                 props.class,
             )
         "
