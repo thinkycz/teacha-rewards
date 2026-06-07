@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 
-const form = useForm({
-    email: '',
-});
-
-function submit(): void {
-    form.post('/forgot-password');
-}
+type ForgotPasswordFields = {
+    email: string;
+};
 </script>
 
 <template>
@@ -20,24 +16,36 @@ function submit(): void {
         title="Forgot password"
         subtitle="Send a new generated password using the core mail flow."
     >
-        <form class="space-y-5" @submit.prevent="submit">
+        <Form
+            v-slot="{ errors, processing }"
+            action="/forgot-password"
+            method="post"
+            class="space-y-5"
+        >
             <div class="space-y-2">
                 <Label for="email">Email</Label>
                 <Input
                     id="email"
-                    v-model="form.email"
                     name="email"
                     type="email"
                     autocomplete="email"
                     required
                 />
-                <FieldError :message="form.errors.email" />
+                <FieldError
+                    :message="
+                        (
+                            errors as ForgotPasswordFields extends object
+                                ? ForgotPasswordFields
+                                : never
+                        )['email']
+                    "
+                />
             </div>
 
-            <Button type="submit" class="w-full" :disabled="form.processing"
+            <Button type="submit" class="w-full" :disabled="processing"
                 >Send password</Button
             >
-        </form>
+        </Form>
 
         <p class="mt-6 text-center text-sm">
             <Link

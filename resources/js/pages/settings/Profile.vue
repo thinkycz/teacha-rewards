@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
@@ -9,6 +9,11 @@ import Label from '@/components/ui/Label.vue';
 import Select from '@/components/ui/Select.vue';
 import { useSharedProps } from '@/composables/useSharedProps';
 
+type ProfileFields = {
+    email: string;
+    locale: string;
+};
+
 const { user, app } = useSharedProps();
 
 const localeOptions = [
@@ -16,15 +21,6 @@ const localeOptions = [
     { value: 'cs', label: 'Čeština' },
     { value: 'sk', label: 'Slovenčina' },
 ];
-
-const form = useForm({
-    email: user.value?.email ?? '',
-    locale: user.value?.locale ?? app.value.locale,
-});
-
-function submit(): void {
-    form.post('/settings/profile');
-}
 </script>
 
 <template>
@@ -34,34 +30,55 @@ function submit(): void {
         >
             <FlashAlerts />
 
-            <form class="space-y-5" @submit.prevent="submit">
+            <Form
+                v-slot="{ errors, processing }"
+                action="/settings/profile"
+                method="post"
+                class="space-y-5"
+            >
                 <div class="space-y-2">
                     <Label for="email">Email</Label>
                     <Input
                         id="email"
-                        v-model="form.email"
                         name="email"
                         type="email"
                         autocomplete="email"
+                        :default-value="user?.email ?? ''"
                         required
                     />
-                    <FieldError :message="form.errors.email" />
+                    <FieldError
+                        :message="
+                            (
+                                errors as ProfileFields extends object
+                                    ? ProfileFields
+                                    : never
+                            )['email']
+                        "
+                    />
                 </div>
 
                 <div class="space-y-2">
                     <Label for="locale">Locale</Label>
                     <Select
                         id="locale"
-                        v-model="form.locale"
                         name="locale"
                         :options="localeOptions"
+                        :default-value="user?.locale ?? app.locale"
                         required
                     />
-                    <FieldError :message="form.errors.locale" />
+                    <FieldError
+                        :message="
+                            (
+                                errors as ProfileFields extends object
+                                    ? ProfileFields
+                                    : never
+                            )['locale']
+                        "
+                    />
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <Button type="submit" :disabled="form.processing"
+                    <Button type="submit" :disabled="processing"
                         >Save profile</Button
                     >
                     <Link
@@ -70,7 +87,7 @@ function submit(): void {
                         >Change password</Link
                     >
                 </div>
-            </form>
+            </Form>
         </section>
     </AppLayout>
 </template>

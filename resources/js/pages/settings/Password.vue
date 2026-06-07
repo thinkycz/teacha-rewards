@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
@@ -7,16 +7,10 @@ import FlashAlerts from '@/components/ui/FlashAlerts.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 
-const form = useForm({
-    password: '',
-    new_password: '',
-});
-
-function submit(): void {
-    form.post('/settings/password', {
-        onFinish: () => form.reset(),
-    });
-}
+type PasswordFields = {
+    password: string;
+    new_password: string;
+};
 </script>
 
 <template>
@@ -26,35 +20,55 @@ function submit(): void {
         >
             <FlashAlerts />
 
-            <form class="space-y-5" @submit.prevent="submit">
+            <Form
+                v-slot="{ errors, processing }"
+                action="/settings/password"
+                method="post"
+                :reset-on-success="['password', 'new_password']"
+                class="space-y-5"
+            >
                 <div class="space-y-2">
                     <Label for="password">Current password</Label>
                     <Input
                         id="password"
-                        v-model="form.password"
                         name="password"
                         type="password"
                         autocomplete="current-password"
                         required
                     />
-                    <FieldError :message="form.errors.password" />
+                    <FieldError
+                        :message="
+                            (
+                                errors as PasswordFields extends object
+                                    ? PasswordFields
+                                    : never
+                            )['password']
+                        "
+                    />
                 </div>
 
                 <div class="space-y-2">
                     <Label for="new_password">New password</Label>
                     <Input
                         id="new_password"
-                        v-model="form.new_password"
                         name="new_password"
                         type="password"
                         autocomplete="new-password"
                         required
                     />
-                    <FieldError :message="form.errors.new_password" />
+                    <FieldError
+                        :message="
+                            (
+                                errors as PasswordFields extends object
+                                    ? PasswordFields
+                                    : never
+                            )['new_password']
+                        "
+                    />
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <Button type="submit" :disabled="form.processing"
+                    <Button type="submit" :disabled="processing"
                         >Update password</Button
                     >
                     <Link
@@ -63,7 +77,7 @@ function submit(): void {
                         >Back to profile</Link
                     >
                 </div>
-            </form>
+            </Form>
         </section>
     </AppLayout>
 </template>

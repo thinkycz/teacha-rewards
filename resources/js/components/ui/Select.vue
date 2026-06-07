@@ -13,6 +13,7 @@ const props = withDefaults(
         class?: string;
         options: Array<{ value: string; label: string }>;
         placeholder?: string;
+        defaultValue?: string;
     }>(),
     {
         id: undefined,
@@ -21,6 +22,7 @@ const props = withDefaults(
         required: false,
         class: '',
         placeholder: undefined,
+        defaultValue: undefined,
     },
 );
 
@@ -50,6 +52,7 @@ const selectId = computed(
             v-for="option in props.options"
             :key="option.value"
             :value="option.value"
+            :selected="props.defaultValue === option.value"
         >
             {{ option.label }}
         </option>

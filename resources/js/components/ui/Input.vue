@@ -12,6 +12,7 @@ const props = withDefaults(
         placeholder?: string;
         class?: string;
         required?: boolean;
+        defaultValue?: string;
     }>(),
     {
         id: undefined,
@@ -21,6 +22,7 @@ const props = withDefaults(
         placeholder: undefined,
         class: '',
         required: false,
+        defaultValue: undefined,
     },
 );
 </script>
@@ -28,7 +30,7 @@ const props = withDefaults(
 <template>
     <input
         :id="props.id"
-        v-model="model"
+        :value="model ?? props.defaultValue"
         :name="props.name"
         :type="props.type"
         :autocomplete="props.autocomplete"
@@ -40,5 +42,6 @@ const props = withDefaults(
                 props.class,
             )
         "
+        @input="model = ($event.target as HTMLInputElement).value"
     />
 </template>

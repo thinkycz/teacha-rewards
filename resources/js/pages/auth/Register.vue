@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 import Select from '@/components/ui/Select.vue';
+
+type RegisterFields = {
+    email: string;
+    password: string;
+    locale: string;
+};
 
 const props = defineProps<{
     locales: string[];
@@ -21,18 +27,6 @@ const localeOptions = props.locales.map((value) => ({
     value,
     label: localeLabels[value] ?? value,
 }));
-
-const form = useForm({
-    email: '',
-    password: '',
-    locale: props.locales[0] ?? 'en',
-});
-
-function submit(): void {
-    form.post('/register', {
-        onFinish: () => form.reset('password'),
-    });
-}
 </script>
 
 <template>
@@ -40,49 +34,77 @@ function submit(): void {
         title="Create account"
         subtitle="Start with an authenticated Inertia workspace."
     >
-        <form class="space-y-5" @submit.prevent="submit">
+        <Form
+            v-slot="{ errors, processing }"
+            action="/register"
+            method="post"
+            :reset-on-error="['password']"
+            class="space-y-5"
+        >
             <div class="space-y-2">
                 <Label for="email">Email</Label>
                 <Input
                     id="email"
-                    v-model="form.email"
                     name="email"
                     type="email"
                     autocomplete="email"
                     required
                 />
-                <FieldError :message="form.errors.email" />
+                <FieldError
+                    :message="
+                        (
+                            errors as RegisterFields extends object
+                                ? RegisterFields
+                                : never
+                        )['email']
+                    "
+                />
             </div>
 
             <div class="space-y-2">
                 <Label for="password">Password</Label>
                 <Input
                     id="password"
-                    v-model="form.password"
                     name="password"
                     type="password"
                     autocomplete="new-password"
                     required
                 />
-                <FieldError :message="form.errors.password" />
+                <FieldError
+                    :message="
+                        (
+                            errors as RegisterFields extends object
+                                ? RegisterFields
+                                : never
+                        )['password']
+                    "
+                />
             </div>
 
             <div class="space-y-2">
                 <Label for="locale">Locale</Label>
                 <Select
                     id="locale"
-                    v-model="form.locale"
                     name="locale"
                     :options="localeOptions"
+                    :default-value="locales[0] ?? 'en'"
                     required
                 />
-                <FieldError :message="form.errors.locale" />
+                <FieldError
+                    :message="
+                        (
+                            errors as RegisterFields extends object
+                                ? RegisterFields
+                                : never
+                        )['locale']
+                    "
+                />
             </div>
 
-            <Button type="submit" class="w-full" :disabled="form.processing"
+            <Button type="submit" class="w-full" :disabled="processing"
                 >Register</Button
             >
-        </form>
+        </Form>
 
         <p class="mt-6 text-center text-sm text-gray-600">
             Already have an account?
