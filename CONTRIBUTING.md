@@ -2,10 +2,10 @@
 
 ## Ground rules
 
-- `guidelines.md` is the source of truth for coding standards. Read it before
+- `docs/guidelines.md` is the source of truth for coding standards. Read it before
   opening a PR.
 - `AGENTS.md` captures project-specific architecture, workflows, and conventions
-  that build on top of `guidelines.md`.
+  that build on top of `docs/guidelines.md`.
 - All commits must pass `make fix && make check`.
 
 ## Local setup

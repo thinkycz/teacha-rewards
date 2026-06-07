@@ -3,7 +3,7 @@
 ## Purpose and scope
 
 - This file captures project-specific architecture, workflows, and coding rules.
-- `guidelines.md` remains authoritative where it applies.
+- `docs/guidelines.md` remains authoritative where it applies.
 
 ## Stack and runtime
 
