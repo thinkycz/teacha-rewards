@@ -1,0 +1,80 @@
+{
+    "app": {
+        "name": "Laravel Inertia Stack"
+    },
+    "nav": {
+        "skip_to_main": "Preskočiť na hlavný obsah",
+        "dashboard": "Nástenka",
+        "profile": "Profil",
+        "logout": "Odhlásiť sa",
+        "primary": "Hlavný"
+    },
+    "auth": {
+        "login": {
+            "title": "Prihlásiť sa",
+            "subtitle": "Pre pokračovanie zadajte svoje prihlasovacie údaje.",
+            "submit": "Prihlásiť sa",
+            "forgot_link": "Zabudli ste heslo?",
+            "back_link": "Späť na prihlásenie"
+        },
+        "register": {
+            "title": "Vytvoriť účet",
+            "subtitle": "Začnite s autentizovaným Inertia pracovným priestorom.",
+            "submit": "Registrovať",
+            "login_link": "Prihlásiť sa"
+        },
+        "forgot": {
+            "title": "Zabudnuté heslo",
+            "subtitle": "Odošleme nové vygenerované heslo prostredníctvom core mail flow.",
+            "submit": "Odoslať heslo"
+        },
+        "reset": {
+            "title": "Obnoviť heslo",
+            "subtitle": "Nastavte nové heslo pomocou platného tokenu na obnovenie.",
+            "submit": "Aktualizovať heslo",
+            "back_to_profile": "Späť na profil",
+            "labels": {
+                "email": "E-mail",
+                "token": "Token",
+                "new_password": "Nové heslo"
+            }
+        },
+        "verify": {
+            "title": "Overiť e-mail",
+            "description": "Overenie e-mailu je riadené core notifikačným tokom. Odošlite novú overovaciu správu, ak aktuálny používateľ stále potrebuje overiť svoju adresu.",
+            "submit": "Odoslať overovací e-mail"
+        }
+    },
+    "settings": {
+        "profile": {
+            "title": "Nastavenia profilu",
+            "submit": "Uložiť profil",
+            "change_password": "Zmeniť heslo"
+        },
+        "password": {
+            "title": "Nastavenia hesla",
+            "submit": "Aktualizovať heslo",
+            "back_to_profile": "Späť na profil"
+        }
+    },
+    "dashboard": {
+        "title": "Nástenka",
+        "welcome": "Prihlásený používateľ",
+        "settings_heading": "Nastavenia",
+        "settings_description": "Aplikácia používa referenčný database-token cookie guard.",
+        "manage_profile": "Spravovať profil"
+    },
+    "fields": {
+        "email": "E-mail",
+        "password": "Heslo",
+        "current_password": "Súčasné heslo",
+        "new_password": "Nové heslo",
+        "locale": "Jazyk"
+    },
+    "locale": {
+        "switcher_label": "Jazyk",
+        "en": "Angličtina",
+        "cs": "Čeština",
+        "sk": "Slovenčina"
+    }
+}

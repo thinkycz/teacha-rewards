@@ -136,3 +136,7 @@ helpers before introducing new ones.
 
 MySQL 8, Redis, cron, and supervisor are the production runtime services
 declared in `composer.json` / `docker-compose.yml` (when present).
+
+## Internationalization (i18n)
+
+The backend (`lang/*.json`) and frontend (`resources/js/i18n/*.json`) translation files are separate but mirrored. This duplication is a deliberate design tradeoff to keep the frontend independent of API calls for localizing core UI shells during bootstrap. In the long term, they can be consolidated by either exposing a backend localization API endpoint or generating the client JSON files from the server JSON files during a build step.

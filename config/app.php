@@ -98,7 +98,7 @@ return [
 
     'locale' => 'cs',
 
-    'locales' => ['en', 'cs'],
+    'locales' => ['en', 'cs', 'sk'],
 
     'fallback_locale' => 'en',
 

@@ -22,29 +22,40 @@ test.describe('Locale switcher', () => {
             page.getByRole('button', { name: 'Log out' }),
         ).toBeVisible();
 
-        const switcher = page.getByLabel('Language');
+        const switcher = page.locator('header select');
         await switcher.selectOption('cs');
 
         await expect(
-            page.getByRole('heading', { name: 'Nástěnka' }),
+            page.getByRole('heading', { name: 'Nastavení profilu' }),
         ).toBeVisible();
         await expect(
             page.getByRole('button', { name: 'Odhlásit se' }),
         ).toBeVisible();
 
+        await switcher.selectOption('sk');
+        await expect(
+            page.getByRole('heading', { name: 'Nastavenia profilu' }),
+        ).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Odhlásiť sa' }),
+        ).toBeVisible();
+
         await switcher.selectOption('en');
         await expect(
-            page.getByRole('heading', { name: 'Dashboard' }),
+            page.getByRole('heading', { name: 'Profile settings' }),
+        ).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Log out' }),
         ).toBeVisible();
     });
 
     test('navigating to settings shows the localized page title', async ({
         page,
     }) => {
-        const switcher = page.getByLabel('Language');
+        const switcher = page.locator('header select');
         await switcher.selectOption('cs');
 
-        await page.getByRole('link', { name: 'Profil' }).click();
+        await page.getByRole('link', { name: 'Profil', exact: true }).click();
         await page.waitForURL(/\/settings\/profile$/);
 
         await expect(

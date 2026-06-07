@@ -1,8 +1,9 @@
 import { createI18n } from 'vue-i18n';
 import en from './en.json';
 import cs from './cs.json';
+import sk from './sk.json';
 
-export const SUPPORTED_LOCALES = ['en', 'cs'] as const;
+export const SUPPORTED_LOCALES = ['en', 'cs', 'sk'] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -13,6 +14,7 @@ export function isSupportedLocale(value: string): value is SupportedLocale {
 export const messages = {
     en,
     cs,
+    sk,
 } as const;
 
 export type MessageSchema = typeof en;

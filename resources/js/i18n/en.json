@@ -74,6 +74,7 @@
     "locale": {
         "switcher_label": "Language",
         "en": "English",
-        "cs": "Čeština"
+        "cs": "Čeština",
+        "sk": "Slovenčina"
     }
 }
