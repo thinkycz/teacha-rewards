@@ -1,56 +1,70 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 
-const form = useForm({
-    email: '',
-    password: '',
-});
-
-function submit(): void {
-    form.post('/login', {
-        onFinish: () => form.reset('password'),
-    });
-}
+type LoginFields = {
+    email: string;
+    password: string;
+};
 </script>
 
 <template>
     <AuthLayout title="Log in" subtitle="Enter your credentials to continue.">
-        <form class="space-y-5" @submit.prevent="submit">
+        <Form
+            v-slot="{ errors, processing }"
+            action="/login"
+            method="post"
+            :reset-on-error="['password']"
+            class="space-y-5"
+        >
             <div class="space-y-2">
                 <Label for="email">Email</Label>
                 <Input
                     id="email"
-                    v-model="form.email"
                     name="email"
                     type="email"
                     autocomplete="email"
                     required
                 />
-                <FieldError :message="form.errors.email" />
+                <FieldError
+                    :message="
+                        (
+                            errors as LoginFields extends object
+                                ? LoginFields
+                                : never
+                        )['email']
+                    "
+                />
             </div>
 
             <div class="space-y-2">
                 <Label for="password">Password</Label>
                 <Input
                     id="password"
-                    v-model="form.password"
                     name="password"
                     type="password"
                     autocomplete="current-password"
                     required
                 />
-                <FieldError :message="form.errors.password" />
+                <FieldError
+                    :message="
+                        (
+                            errors as LoginFields extends object
+                                ? LoginFields
+                                : never
+                        )['password']
+                    "
+                />
             </div>
 
-            <Button type="submit" class="w-full" :disabled="form.processing"
+            <Button type="submit" class="w-full" :disabled="processing"
                 >Log in</Button
             >
-        </form>
+        </Form>
 
         <div class="mt-6 flex items-center justify-between text-sm">
             <Link
