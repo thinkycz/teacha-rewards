@@ -5,9 +5,11 @@
     "nav": {
         "skip_to_main": "Přeskočit na hlavní obsah",
         "dashboard": "Nástěnka",
-        "profile": "Profil",
-        "logout": "Odhlásit se",
-        "primary": "Hlavní"
+        "settings": "Nastavení",
+        "logout": "Odhlásit se"
+    },
+    "brand": {
+        "subtitle": "Startovací sada"
     },
     "auth": {
         "login": {
@@ -15,13 +17,14 @@
             "subtitle": "Pro pokračování zadejte své přihlašovací údaje.",
             "submit": "Přihlásit se",
             "forgot_link": "Zapomněli jste heslo?",
-            "back_link": "Zpět na přihlášení"
+            "back_link": "Zpět na přihlášení",
+            "register_link": "Nemáte účet?"
         },
         "register": {
             "title": "Vytvořit účet",
             "subtitle": "Začněte s autentizovaným Inertia pracovním prostorem.",
             "submit": "Registrovat",
-            "login_link": "Přihlásit se"
+            "login_link": "Máte již účet?"
         },
         "forgot": {
             "title": "Zapomenuté heslo",
@@ -46,13 +49,15 @@
         }
     },
     "settings": {
+        "title": "Nastavení",
+        "subtitle": "Spravujte předvolby svého účtu.",
         "profile": {
-            "title": "Nastavení profilu",
+            "title": "Profil",
             "submit": "Uložit profil",
             "change_password": "Změnit heslo"
         },
         "password": {
-            "title": "Nastavení hesla",
+            "title": "Heslo",
             "submit": "Aktualizovat heslo",
             "back_to_profile": "Zpět na profil"
         }
@@ -67,6 +72,7 @@
     "fields": {
         "email": "E-mail",
         "password": "Heslo",
+        "password_confirmation": "Potvrdit heslo",
         "current_password": "Současné heslo",
         "new_password": "Nové heslo",
         "locale": "Jazyk"

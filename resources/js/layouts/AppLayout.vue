@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { Activity, UserRound, KeyRound, LogOut } from '@lucide/vue';
+import { Activity, Settings as SettingsIcon, LogOut } from '@lucide/vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 import Brand from '@/components/ui/Brand.vue';
 import FlashAlerts from '@/components/ui/FlashAlerts.vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
@@ -21,11 +20,8 @@ useBoundLocale();
 const activeUrl = computed(() => usePage().url);
 
 const currentTab = computed(() => {
-    if (activeUrl.value.startsWith('/settings/profile')) {
-        return 'profile';
-    }
-    if (activeUrl.value.startsWith('/settings/password')) {
-        return 'password';
+    if (activeUrl.value.startsWith('/settings')) {
+        return 'settings';
     }
     return 'dashboard';
 });
@@ -72,44 +68,7 @@ function logout(): void {
                     <Activity :size="16" />
                     {{ t('nav.dashboard') }}
                 </Link>
-
-                <Link
-                    href="/settings/profile"
-                    :class="[
-                        'flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold transition-all',
-                        currentTab === 'profile'
-                            ? 'border-r-2 border-primary bg-surface-container-low font-bold text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]'
-                            : 'text-on-surface-variant hover:bg-surface-container-low',
-                    ]"
-                >
-                    <UserRound :size="16" />
-                    {{ t('nav.profile') }}
-                </Link>
-
-                <Link
-                    href="/settings/password"
-                    :class="[
-                        'flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold transition-all',
-                        currentTab === 'password'
-                            ? 'border-r-2 border-primary bg-surface-container-low font-bold text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]'
-                            : 'text-on-surface-variant hover:bg-surface-container-low',
-                    ]"
-                >
-                    <KeyRound :size="16" />
-                    {{ t('settings.password.title') }}
-                </Link>
             </nav>
-
-            <!-- Language Switcher in Sidebar -->
-            <div class="mb-4 border-t border-outline-glass pt-4 px-2">
-                <div class="flex items-center justify-between gap-2">
-                    <span
-                        class="font-mono text-[9px] font-extrabold tracking-wider text-on-surface-variant uppercase"
-                        >{{ t('locale.switcher_label') }}</span
-                    >
-                    <LocaleSwitcher v-if="auth.user" />
-                </div>
-            </div>
 
             <!-- Footer: User Identity + Quick Actions -->
             <div
@@ -139,7 +98,20 @@ function logout(): void {
                     </div>
                 </div>
 
-                <div class="flex shrink-0 items-center">
+                <div class="flex shrink-0 items-center gap-1">
+                    <Link
+                        href="/settings"
+                        :class="[
+                            'cursor-pointer rounded-lg p-1.5 transition-all',
+                            currentTab === 'settings'
+                                ? 'bg-surface-container-low text-primary'
+                                : 'text-on-surface-variant hover:bg-surface-container-low hover:text-primary',
+                        ]"
+                        :title="t('nav.settings')"
+                        :aria-label="t('nav.settings')"
+                    >
+                        <SettingsIcon :size="14" />
+                    </Link>
                     <button
                         @click="logout"
                         class="cursor-pointer rounded-lg p-1.5 text-on-surface-variant transition-all hover:bg-rose-50/50 hover:text-error-red"
@@ -173,28 +145,16 @@ function logout(): void {
                     <Activity :size="16" />
                 </Link>
                 <Link
-                    href="/settings/profile"
+                    href="/settings"
                     :class="[
                         'rounded-lg p-2 transition-all',
-                        currentTab === 'profile'
+                        currentTab === 'settings'
                             ? 'font-bold text-primary bg-surface-container-low'
                             : 'text-on-surface-variant',
                     ]"
                 >
-                    <UserRound :size="16" />
+                    <SettingsIcon :size="16" />
                 </Link>
-                <Link
-                    href="/settings/password"
-                    :class="[
-                        'rounded-lg p-2 transition-all',
-                        currentTab === 'password'
-                            ? 'font-bold text-primary bg-surface-container-low'
-                            : 'text-on-surface-variant',
-                    ]"
-                >
-                    <KeyRound :size="16" />
-                </Link>
-                <LocaleSwitcher v-if="auth.user" />
                 <button
                     @click="logout"
                     class="rounded-lg p-2 text-on-surface-variant transition-all hover:text-error-red"
@@ -213,24 +173,6 @@ function logout(): void {
                 ></div>
 
                 <div class="z-10 flex flex-1 flex-col max-w-4xl w-full mx-auto">
-                    <div
-                        class="mb-6 flex items-center justify-between border-b border-outline-glass/40 pb-4"
-                    >
-                        <div>
-                            <h2
-                                class="font-heading text-2xl font-bold tracking-tight text-on-surface md:text-3xl"
-                            >
-                                {{ title }}
-                            </h2>
-                            <p
-                                v-if="auth.user"
-                                class="text-xs font-medium text-on-surface-variant mt-1"
-                            >
-                                {{ auth.user.email }}
-                            </p>
-                        </div>
-                    </div>
-
                     <FlashAlerts />
 
                     <div class="flex-1">

@@ -38,7 +38,7 @@ const selectId = computed(
 <template>
     <select
         :id="selectId"
-        v-model="model"
+        :value="model ?? props.defaultValue"
         :name="props.name"
         :autocomplete="props.autocomplete"
         :required="props.required"
@@ -53,6 +53,7 @@ const selectId = computed(
                 props.class,
             )
         "
+        @change="model = ($event.target as HTMLSelectElement).value"
     >
         <option v-if="props.placeholder" value="">
             {{ props.placeholder }}
