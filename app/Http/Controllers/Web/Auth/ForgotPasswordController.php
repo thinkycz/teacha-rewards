@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Thinkycz\LaravelCore\Models\BaseUser;
+use Thinkycz\LaravelCore\Support\Config;
 use Thinkycz\LaravelCore\Support\Resolver;
 use Thinkycz\LaravelCore\Support\Thrower;
 use Thinkycz\LaravelCore\Support\Typer;
@@ -52,22 +53,45 @@ class ForgotPasswordController
             Thrower::default()->message('email', Typer::assertString(\__(PasswordBroker::INVALID_USER)))->throw();
         }
 
-        $password = Str::password(16);
+        if (self::sendRawPassword()) {
+            $password = Str::password(16);
 
-        DB::transaction(static function () use ($user, $password): void {
-            $user->update([
-                'password' => $password,
-            ]);
+            DB::transaction(static function () use ($user, $password): void {
+                $user->update([
+                    'password' => $password,
+                ]);
 
-            $user->databaseTokens()->getQuery()->delete();
-        });
+                $user->databaseTokens()->getQuery()->delete();
+            });
 
-        $user->sendPasswordNewPasswordSettedNotification($password);
+            $user->sendPasswordNewPasswordSettedNotification($password);
 
-        $clearThrottle();
+            $clearThrottle();
 
-        Inertia::flash('success', \__('A new password has been sent to your email address.'));
+            Inertia::flash('success', \__('A new password has been sent to your email address.'));
+        } else {
+            $broker = Resolver::resolvePasswordBroker('users');
+
+            $token = $broker->createToken($user);
+
+            $user->sendPasswordResetNotification($token);
+
+            $clearThrottle();
+
+            Inertia::flash('success', \__('A password reset link has been sent to your email address.'));
+        }
 
         return Inertia::render('auth/ForgotPassword');
+    }
+
+    /**
+     * Read the send-raw-password flag from auth config for the users
+     * broker. When true, the forgot-password flow generates a new
+     * password and emails it. When false, it uses the standard
+     * broker flow (createToken + sendPasswordResetNotification).
+     */
+    private static function sendRawPassword(): bool
+    {
+        return Config::inject()->assertNullableBool('auth.passwords.users.send_raw_password') ?? false;
     }
 }
