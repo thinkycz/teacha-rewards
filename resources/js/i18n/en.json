@@ -22,7 +22,8 @@
         "new_chat": "New Chat",
         "history": "Conversations",
         "delete_chat": "Delete Conversation",
-        "no_chats": "No conversations yet"
+        "no_chats": "No conversations yet",
+        "staff_login": "Staff"
     },
     "brand": {
         "subtitle": "Starter Kit"
@@ -137,6 +138,73 @@
         "note_required": "A reason is required for manual adjustments.",
         "purchase_logged": "Purchase logged. Rewards added.",
         "redeemed": "Rewards redeemed.",
-        "adjusted": "Balance adjusted."
+        "adjusted": "Balance adjusted.",
+        "invalid_phone": "That phone number doesn't look right."
+    },
+    "marketing": {
+        "tagline": "Teacha Rewards",
+        "headline": "Get rewarded for every matcha.",
+        "subheadline": "Earn cashback on every matcha, bubble tea, and seasonal drop. Open your wallet in under thirty seconds.",
+        "how_it_works": "How it works",
+        "step_1": "Open your wallet with your phone number and first name.",
+        "step_2": "Show the QR code at the till to earn cashback on every purchase.",
+        "step_3": "Redeem your rewards balance as a discount whenever you like.",
+        "cta": "Create or open my rewards wallet",
+        "privacy": "No password, no email. Your wallet is identified only by your phone number."
+    },
+    "wallet": {
+        "create": {
+            "title": "Open your rewards wallet",
+            "heading": "Create or open my rewards wallet",
+            "subheading": "We'll look you up by phone number. If you already have a wallet, we'll open it. If not, we'll create one on the spot.",
+            "phone_label": "Phone number",
+            "phone_placeholder": "+420 123 456 789",
+            "first_name_label": "First name",
+            "first_name_placeholder": "Anička",
+            "submit": "Continue",
+            "privacy": "We never share your phone number. It is the only key to your wallet."
+        },
+        "show": {
+            "title": "Wallet — :name",
+            "disabled_notice": "This wallet is currently disabled. Please see staff at the counter.",
+            "qr_heading": "Your wallet QR",
+            "qr_help": "Show this at the till to earn cashback or redeem your rewards.",
+            "lifetime_earned": "Lifetime earned",
+            "lifetime_redeemed": "Lifetime redeemed",
+            "recent_heading": "Recent activity",
+            "view_all_activity": "View full activity"
+        },
+        "activity": {
+            "title": "Activity — :name",
+            "heading": "Activity",
+            "subheading": "Every change to :name's wallet balance.",
+            "back": "Back to wallet",
+            "empty": "No activity yet."
+        },
+        "balance": {
+            "available": "Available rewards",
+            "discount": "Available discount"
+        },
+        "transactions": {
+            "empty": "No transactions yet.",
+            "purchase": "Purchase: :amount Kč",
+            "balance_after": "Balance: :amount Kč",
+            "types": {
+                "purchase_cashback": "Cashback",
+                "redeem": "Redemption",
+                "manual_add": "Manual credit",
+                "manual_subtract": "Manual debit",
+                "manual_set": "Manual adjustment"
+            }
+        }
+    },
+    "pwa": {
+        "offline": {
+            "title": "Offline",
+            "heading": "You're offline",
+            "body": "We can't reach Teacha Rewards right now. Reconnect to see your wallet or open a new one.",
+            "retry": "Try again"
+        }
     }
 }
+

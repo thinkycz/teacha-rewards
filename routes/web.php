@@ -14,19 +14,32 @@ use App\Http\Controllers\Web\Auth\ResetPasswordController;
 use App\Http\Controllers\Web\Auth\VerifyEmailController;
 use App\Http\Controllers\Web\ConversationController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\Marketing\MarketingIndexController;
+use App\Http\Controllers\Web\Pwa\OfflineController;
 use App\Http\Controllers\Web\Settings\SettingsController;
+use App\Http\Controllers\Web\Wallet\WalletActivityController;
+use App\Http\Controllers\Web\Wallet\WalletCreateController;
+use App\Http\Controllers\Web\Wallet\WalletShowController;
+use App\Http\Controllers\Web\Wallet\WalletStoreController;
 use App\Http\Middleware\EnsureInertiaUserIsAuthenticated;
 use App\Models\User;
 use Illuminate\Routing\Router;
 use Thinkycz\LaravelCore\Support\Resolver;
 
-Resolver::resolveRouteRegistrar()->get('/', static function () {
-    if (User::auth() instanceof User) {
-        return Resolver::resolveRedirector()->to('/dashboard');
-    }
+// `GET /` is always the customer marketing landing, even for
+// authenticated staff. Staff navigate to `/staff` for their dashboard.
+Resolver::resolveRouteRegistrar()->get('/', MarketingIndexController::class);
 
-    return Resolver::resolveRedirector()->to('/login');
-});
+// Public customer flow: no auth, the `public_token` in the URL is
+// the only identifier for the wallet.
+Resolver::resolveRouteRegistrar()->get('wallet', WalletCreateController::class);
+Resolver::resolveRouteRegistrar()->post('wallet', WalletStoreController::class);
+Resolver::resolveRouteRegistrar()->get('w/{token}', WalletShowController::class);
+Resolver::resolveRouteRegistrar()->get('w/{token}/activity', WalletActivityController::class);
+
+// PWA offline fallback (also serves as a soft-404 when the network
+// is down for navigations).
+Resolver::resolveRouteRegistrar()->get('offline', OfflineController::class);
 
 Resolver::resolveRouteRegistrar()
     ->middleware('guest:users')
@@ -61,3 +74,4 @@ Resolver::resolveRouteRegistrar()
         $router->post('agent/runs/cancel', AgentRunCancelController::class);
         $router->get('agent/runs/stream', AgentRunStreamController::class);
     });
+

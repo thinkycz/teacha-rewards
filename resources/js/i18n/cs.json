@@ -11,7 +11,15 @@
         "not_set": "Nenastaveno",
         "open": "Otevřít",
         "today": "Dnes",
-        "weekdays": ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"],
+        "weekdays": [
+            "Po",
+            "Út",
+            "St",
+            "Čt",
+            "Pá",
+            "So",
+            "Ne"
+        ],
         "yes": "Ano"
     },
     "nav": {
@@ -22,7 +30,8 @@
         "new_chat": "Nový chat",
         "history": "Konverzace",
         "delete_chat": "Smazat konverzaci",
-        "no_chats": "Zatím žádné konverzace"
+        "no_chats": "Zatím žádné konverzace",
+        "staff_login": "Pro personál"
     },
     "brand": {
         "subtitle": "Startovací sada"
@@ -137,6 +146,72 @@
         "note_required": "U ručních úprav je vyžadován důvod.",
         "purchase_logged": "Nákup zaznamenán. Odměny přidány.",
         "redeemed": "Odměny uplatněny.",
-        "adjusted": "Zůstatek upraven."
+        "adjusted": "Zůstatek upraven.",
+        "invalid_phone": "Toto telefonní číslo nevypadá správně."
+    },
+    "marketing": {
+        "tagline": "Teacha Rewards",
+        "headline": "Odměna za každý matcha.",
+        "subheadline": "Získejte cashback za každý matcha, bubble tea i sezónní speciál. Otevřete si peněženku za třicet sekund.",
+        "how_it_works": "Jak to funguje",
+        "step_1": "Otevřete si peněženku pomocí telefonního čísla a jména.",
+        "step_2": "Ukažte QR kód na pokladně a získejte cashback z každého nákupu.",
+        "step_3": "Kdykoliv uplatněte svůj zůstatek jako slevu.",
+        "cta": "Vytvořit nebo otevřít moji peněženku",
+        "privacy": "Žádné heslo, žádný e-mail. Vaše peněženka je identifikována pouze telefonním číslem."
+    },
+    "wallet": {
+        "create": {
+            "title": "Otevřít peněženku",
+            "heading": "Vytvořit nebo otevřít moji peněženku",
+            "subheading": "Najdeme vás podle telefonního čísla. Pokud peněženku máte, otevřeme ji. Pokud ne, vytvoříme ji rovnou na místě.",
+            "phone_label": "Telefonní číslo",
+            "phone_placeholder": "+420 123 456 789",
+            "first_name_label": "Jméno",
+            "first_name_placeholder": "Anička",
+            "submit": "Pokračovat",
+            "privacy": "Vaše telefonní číslo nikomu neposkytujeme. Je to jediný klíč k vaší peněžence."
+        },
+        "show": {
+            "title": "Peněženka — :name",
+            "disabled_notice": "Tato peněženka je momentálně deaktivována. Obraťte se na personál.",
+            "qr_heading": "QR kód peněženky",
+            "qr_help": "Ukažte na pokladně pro získání cashbacku nebo uplatnění odměn.",
+            "lifetime_earned": "Celkově vyděláno",
+            "lifetime_redeemed": "Celkově uplatněno",
+            "recent_heading": "Nedávná aktivita",
+            "view_all_activity": "Zobrazit celou aktivitu"
+        },
+        "activity": {
+            "title": "Aktivita — :name",
+            "heading": "Aktivita",
+            "subheading": "Každá změna zůstatku peněženky :name.",
+            "back": "Zpět na peněženku",
+            "empty": "Zatím žádná aktivita."
+        },
+        "balance": {
+            "available": "Dostupné odměny",
+            "discount": "Dostupná sleva"
+        },
+        "transactions": {
+            "empty": "Zatím žádné transakce.",
+            "purchase": "Nákup: :amount Kč",
+            "balance_after": "Zůstatek: :amount Kč",
+            "types": {
+                "purchase_cashback": "Cashback",
+                "redeem": "Uplatnění",
+                "manual_add": "Ruční navýšení",
+                "manual_subtract": "Ruční snížení",
+                "manual_set": "Ruční úprava"
+            }
+        }
+    },
+    "pwa": {
+        "offline": {
+            "title": "Offline",
+            "heading": "Jste offline",
+            "body": "Nemůžeme se spojit s Teacha Rewards. Připojte se znovu pro zobrazení peněženky nebo otevření nové.",
+            "retry": "Zkusit znovu"
+        }
     }
 }
