@@ -10,8 +10,8 @@ interface Transaction {
     type: string;
     amount: string;
     purchase_amount?: string | null;
-    balance_after: string;
-    note: string | null;
+    balance_after?: string | null;
+    note?: string | null;
     created_at: string | null;
     staff_name: string | null;
 }

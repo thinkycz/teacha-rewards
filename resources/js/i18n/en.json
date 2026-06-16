@@ -205,6 +205,149 @@
             "body": "We can't reach Teacha Rewards right now. Reconnect to see your wallet or open a new one.",
             "retry": "Try again"
         }
+    },
+    "staff": {
+        "nav": {
+            "dashboard": "Dashboard",
+            "scan": "Scan",
+            "wallets": "Wallets",
+            "transactions": "Transactions",
+            "settings": "Settings",
+            "logout": "Log out"
+        },
+        "layout": {
+            "app_name": "Teacha Staff",
+            "role_admin": "Admin",
+            "role_staff": "Staff"
+        },
+        "dashboard": {
+            "title": "Staff dashboard",
+            "heading": "Today at a glance",
+            "active_wallets": "Active wallets",
+            "disabled_wallets": "Disabled wallets",
+            "today_purchases": "Purchases today",
+            "today_cashback": "Cashback today",
+            "recent": "Recent activity",
+            "view_all_transactions": "View all transactions",
+            "quick_actions": "Quick actions",
+            "scan_qr": "Scan a customer QR",
+            "view_wallets": "Browse wallets"
+        },
+        "scan": {
+            "index": {
+                "title": "Scan wallet",
+                "heading": "Scan a customer QR",
+                "subheading": "Point the camera at the customer's wallet QR. We'll jump straight to their balance.",
+                "manual_fallback": "Can't scan?",
+                "manual_link": "Enter a token manually",
+                "camera_denied": "Camera access was denied. Use the manual entry above.",
+                "scanner_error": "We couldn't start the camera. Please check permissions or use manual entry.",
+                "no_camera": "No camera found on this device."
+            },
+            "show": {
+                "title": "Wallet — :name",
+                "disabled_notice": "This wallet is disabled. Re-enable it from the full wallet view to take actions.",
+                "view_full": "Open full wallet view",
+                "actions_heading": "What do you want to do?",
+                "log_purchase": "Log a purchase",
+                "redeem": "Redeem rewards",
+                "manual_adjust": "Manual adjustment"
+            }
+        },
+        "wallets": {
+            "index": {
+                "title": "Wallets",
+                "heading": "Customer wallets",
+                "search_placeholder": "Search by name, phone, or wallet #",
+                "status_all": "All",
+                "status_active": "Active",
+                "status_disabled": "Disabled",
+                "sort_recent": "Most recent",
+                "sort_earned": "Lifetime earned",
+                "sort_redeemed": "Lifetime redeemed",
+                "sort_balance": "Balance",
+                "empty": "No wallets match your filters.",
+                "lifetime_earned": "Earned",
+                "lifetime_redeemed": "Redeemed",
+                "balance": "Balance"
+            },
+            "show": {
+                "title": "Wallet — :name",
+                "disabled_notice": "This wallet is disabled. Enable it to take actions.",
+                "view_public": "Open public wallet",
+                "actions_heading": "Actions",
+                "log_purchase": "Log purchase",
+                "redeem": "Redeem rewards",
+                "manual_adjust": "Manual adjustment",
+                "disable": "Disable wallet",
+                "enable": "Enable wallet",
+                "disable_confirm": "Disable this wallet? The customer will not be able to earn or redeem until you re-enable it.",
+                "enable_confirm": "Re-enable this wallet?",
+                "customer": "Customer",
+                "phone": "Phone",
+                "wallet_number": "Wallet number",
+                "balance": "Balance",
+                "lifetime_earned": "Lifetime earned",
+                "lifetime_redeemed": "Lifetime redeemed",
+                "last_used": "Last activity",
+                "never_used": "No activity yet"
+            }
+        },
+        "transactions": {
+            "index": {
+                "title": "Transactions",
+                "heading": "All transactions",
+                "search_placeholder": "Search by note, name, or wallet #",
+                "type_all": "All types",
+                "type_purchase_cashback": "Cashback",
+                "type_redeem": "Redemption",
+                "type_manual_add": "Manual credit",
+                "type_manual_subtract": "Manual debit",
+                "type_manual_set": "Manual adjustment",
+                "empty": "No transactions match your filters.",
+                "balance_after": "Balance after",
+                "purchase_amount": "Purchase",
+                "note": "Note"
+            }
+        },
+        "settings": {
+            "index": {
+                "title": "Settings",
+                "heading": "Program settings",
+                "subheading": "Tune the cashback rate, currency, and the program + store name shown to customers.",
+                "cashback_rate_label": "Cashback rate (%)",
+                "cashback_rate_help": "Percent of the purchase amount credited as rewards. 10% is a sensible default.",
+                "currency_label": "Currency code",
+                "currency_help": "3-letter ISO code shown next to balances (CZK, EUR, …).",
+                "program_name_label": "Program name",
+                "program_name_help": "The name shown on the customer-facing wallet.",
+                "store_name_label": "Store name",
+                "store_name_help": "The name shown on receipts and the staff header.",
+                "submit": "Save settings",
+                "saved": "Settings updated."
+            }
+        },
+        "forms": {
+            "purchase_amount": "Purchase amount (Kč)",
+            "purchase_amount_help": "The pre-cashback amount the customer just paid.",
+            "redeem_amount": "Redeem amount (Kč)",
+            "redeem_amount_help": "The amount to deduct from the rewards balance and apply as a discount.",
+            "adjust_type": "Type of adjustment",
+            "adjust_type_add": "Add (credit the wallet)",
+            "adjust_type_subtract": "Subtract (debit the wallet)",
+            "adjust_type_set": "Set (overwrite the balance)",
+            "adjust_amount": "Amount (Kč)",
+            "adjust_amount_help": "For 'set', the new balance; for 'add' or 'subtract', the change to apply.",
+            "adjust_note": "Reason for adjustment",
+            "adjust_note_help": "Required. Tell future staff why this change was made.",
+            "submit_purchase": "Log purchase",
+            "submit_redeem": "Redeem",
+            "submit_adjust": "Apply adjustment"
+        },
+        "status": {
+            "active": "Active",
+            "disabled": "Disabled"
+        }
     }
 }
 

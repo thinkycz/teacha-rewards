@@ -14,6 +14,7 @@ use Illuminate\Http\Resources\JsonApi\JsonApiResource;
 use Illuminate\Support\Carbon;
 use Laravel\Ai\Models\Conversation;
 use Thinkycz\LaravelCore\Models\BaseUser;
+use Thinkycz\LaravelCore\Support\Typer;
 
 class User extends BaseUser implements MustVerifyEmail
 {
@@ -84,7 +85,13 @@ class User extends BaseUser implements MustVerifyEmail
      */
     public function getRole(): UserRoleEnum
     {
-        return UserRoleEnum::from($this->assertString('role'));
+        $raw = $this->getAttribute('role');
+
+        if ($raw instanceof UserRoleEnum) {
+            return $raw;
+        }
+
+        return UserRoleEnum::from(Typer::assertString(\is_scalar($raw) ? (string) $raw : 'staff'));
     }
 
     /**

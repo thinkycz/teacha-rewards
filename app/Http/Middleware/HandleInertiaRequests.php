@@ -95,7 +95,9 @@ class HandleInertiaRequests extends Middleware
 
         return [
             'id' => $user->getKey(),
+            'name' => $user->getName(),
             'email' => $user->getEmail(),
+            'role' => $user->getRole()->value,
             'locale' => $user->getLocale(),
             'email_verified_at' => $user->getEmailVerifiedAt()?->toJSON(),
         ];

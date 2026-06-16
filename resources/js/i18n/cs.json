@@ -213,5 +213,148 @@
             "body": "Nemůžeme se spojit s Teacha Rewards. Připojte se znovu pro zobrazení peněženky nebo otevření nové.",
             "retry": "Zkusit znovu"
         }
+    },
+    "staff": {
+        "nav": {
+            "dashboard": "Přehled",
+            "scan": "Skenovat",
+            "wallets": "Peněženky",
+            "transactions": "Transakce",
+            "settings": "Nastavení",
+            "logout": "Odhlásit se"
+        },
+        "layout": {
+            "app_name": "Teacha Personál",
+            "role_admin": "Admin",
+            "role_staff": "Personál"
+        },
+        "dashboard": {
+            "title": "Personál — přehled",
+            "heading": "Dnešní souhrn",
+            "active_wallets": "Aktivní peněženky",
+            "disabled_wallets": "Deaktivované peněženky",
+            "today_purchases": "Dnešní nákupy",
+            "today_cashback": "Dnešní cashback",
+            "recent": "Nedávná aktivita",
+            "view_all_transactions": "Zobrazit všechny transakce",
+            "quick_actions": "Rychlé akce",
+            "scan_qr": "Naskenovat QR zákazníka",
+            "view_wallets": "Procházet peněženky"
+        },
+        "scan": {
+            "index": {
+                "title": "Skenovat peněženku",
+                "heading": "Naskenujte QR zákazníka",
+                "subheading": "Namiřte kameru na QR kód zákazníkovy peněženky. Ihned otevřeme jeho zůstatek.",
+                "manual_fallback": "Nelze skenovat?",
+                "manual_link": "Zadejte token ručně",
+                "camera_denied": "Přístup ke kameře byl zamítnut. Použijte ruční zadání výše.",
+                "scanner_error": "Kameru se nepodařilo spustit. Zkontrolujte oprávnění nebo použijte ruční zadání.",
+                "no_camera": "Na tomto zařízení nebyla nalezena kamera."
+            },
+            "show": {
+                "title": "Peněženka — :name",
+                "disabled_notice": "Tato peněženka je deaktivovaná. Pro akce ji znovu aktivujte v plném zobrazení.",
+                "view_full": "Otevřít plné zobrazení peněženky",
+                "actions_heading": "Co chcete udělat?",
+                "log_purchase": "Zaznamenat nákup",
+                "redeem": "Uplatnit odměny",
+                "manual_adjust": "Ruční úprava"
+            }
+        },
+        "wallets": {
+            "index": {
+                "title": "Peněženky",
+                "heading": "Peněženky zákazníků",
+                "search_placeholder": "Hledat podle jména, telefonu nebo čísla peněženky",
+                "status_all": "Všechny",
+                "status_active": "Aktivní",
+                "status_disabled": "Deaktivované",
+                "sort_recent": "Nejnovější",
+                "sort_earned": "Celkově vyděláno",
+                "sort_redeemed": "Celkově uplatněno",
+                "sort_balance": "Zůstatek",
+                "empty": "Vašim filtrům neodpovídají žádné peněženky.",
+                "lifetime_earned": "Vyděláno",
+                "lifetime_redeemed": "Uplatněno",
+                "balance": "Zůstatek"
+            },
+            "show": {
+                "title": "Peněženka — :name",
+                "disabled_notice": "Tato peněženka je deaktivovaná. Pro akce ji aktivujte.",
+                "view_public": "Otevřít veřejnou peněženku",
+                "actions_heading": "Akce",
+                "log_purchase": "Zaznamenat nákup",
+                "redeem": "Uplatnit odměny",
+                "manual_adjust": "Ruční úprava",
+                "disable": "Deaktivovat peněženku",
+                "enable": "Aktivovat peněženku",
+                "disable_confirm": "Deaktivovat tuto peněženku? Zákazník nebude moci vydělávat ani uplatňovat, dokud ji znovu neaktivujete.",
+                "enable_confirm": "Znovu aktivovat tuto peněženku?",
+                "customer": "Zákazník",
+                "phone": "Telefon",
+                "wallet_number": "Číslo peněženky",
+                "balance": "Zůstatek",
+                "lifetime_earned": "Celkově vyděláno",
+                "lifetime_redeemed": "Celkově uplatněno",
+                "last_used": "Poslední aktivita",
+                "never_used": "Zatím žádná aktivita"
+            }
+        },
+        "transactions": {
+            "index": {
+                "title": "Transakce",
+                "heading": "Všechny transakce",
+                "search_placeholder": "Hledat podle poznámky, jména nebo čísla peněženky",
+                "type_all": "Všechny typy",
+                "type_purchase_cashback": "Cashback",
+                "type_redeem": "Uplatnění",
+                "type_manual_add": "Ruční navýšení",
+                "type_manual_subtract": "Ruční snížení",
+                "type_manual_set": "Ruční úprava",
+                "empty": "Vašim filtrům neodpovídají žádné transakce.",
+                "balance_after": "Zůstatek po",
+                "purchase_amount": "Nákup",
+                "note": "Poznámka"
+            }
+        },
+        "settings": {
+            "index": {
+                "title": "Nastavení",
+                "heading": "Nastavení programu",
+                "subheading": "Upravte cashback, měnu a název programu i obchodu, které se zobrazují zákazníkům.",
+                "cashback_rate_label": "Sazba cashbacku (%)",
+                "cashback_rate_help": "Procento z nákupu připsané jako odměna. 10% je rozumný výchozí bod.",
+                "currency_label": "Kód měny",
+                "currency_help": "Třípísmenný kód ISO zobrazený u zůstatků (CZK, EUR, …).",
+                "program_name_label": "Název programu",
+                "program_name_help": "Název zobrazený na zákaznické peněžence.",
+                "store_name_label": "Název obchodu",
+                "store_name_help": "Název zobrazený na účtence a v záhlaví personálu.",
+                "submit": "Uložit nastavení",
+                "saved": "Nastavení uloženo."
+            }
+        },
+        "forms": {
+            "purchase_amount": "Částka nákupu (Kč)",
+            "purchase_amount_help": "Částka zaplacená zákazníkem před cashbackem.",
+            "redeem_amount": "Částka k uplatnění (Kč)",
+            "redeem_amount_help": "Částka odečtená ze zůstatku odměn a použitá jako sleva.",
+            "adjust_type": "Typ úpravy",
+            "adjust_type_add": "Přidat (navýšit peněženku)",
+            "adjust_type_subtract": "Odečíst (snížit peněženku)",
+            "adjust_type_set": "Nastavit (přepsat zůstatek)",
+            "adjust_amount": "Částka (Kč)",
+            "adjust_amount_help": "Pro 'nastavit' nový zůstatek; pro 'přidat' nebo 'odečíst' hodnota změny.",
+            "adjust_note": "Důvod úpravy",
+            "adjust_note_help": "Povinné. Popište budoucímu personálu, proč k této změně došlo.",
+            "submit_purchase": "Zaznamenat nákup",
+            "submit_redeem": "Uplatnit",
+            "submit_adjust": "Provést úpravu"
+        },
+        "status": {
+            "active": "Aktivní",
+            "disabled": "Deaktivovaná"
+        }
     }
 }

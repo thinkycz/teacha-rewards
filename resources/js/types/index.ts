@@ -1,6 +1,8 @@
 export interface AuthUser {
     id: number;
+    name: string;
     email: string;
+    role: 'admin' | 'staff';
     locale: string;
     email_verified_at: string | null;
 }
