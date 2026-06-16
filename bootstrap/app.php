@@ -29,6 +29,10 @@ return Application::configure(basePath: \dirname(__DIR__))
         $middleware->trustProxies(at: Env::inject()->parseNullableString('TRUSTED_PROXIES'));
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/dashboard');
+        $middleware->alias([
+            'staff' => App\Http\Middleware\EnsureStaffRole::class,
+            'admin' => App\Http\Middleware\EnsureAdminRole::class,
+        ]);
 
         $middleware->web(append: [
             AuthShouldUseMiddleware::class,

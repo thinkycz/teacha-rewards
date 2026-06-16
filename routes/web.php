@@ -16,10 +16,24 @@ use App\Http\Controllers\Web\ConversationController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\Marketing\MarketingIndexController;
 use App\Http\Controllers\Web\Pwa\OfflineController;
+use App\Http\Controllers\Web\Scan\ScanShowController as PublicScanShowController;
 use App\Http\Controllers\Web\Settings\SettingsController;
+use App\Http\Controllers\Web\Staff\DashboardController as StaffDashboardController;
+use App\Http\Controllers\Web\Staff\Scan\ScanIndexController as StaffScanIndexController;
+use App\Http\Controllers\Web\Staff\Scan\ScanShowController as StaffScanShowController;
+use App\Http\Controllers\Web\Staff\Settings\SettingsEditController;
+use App\Http\Controllers\Web\Staff\Settings\SettingsUpdateController;
+use App\Http\Controllers\Web\Staff\Transactions\TransactionIndexController;
+use App\Http\Controllers\Web\Staff\Wallets\AdjustController as StaffAdjustController;
+use App\Http\Controllers\Web\Staff\Wallets\DisableController;
+use App\Http\Controllers\Web\Staff\Wallets\EnableController;
+use App\Http\Controllers\Web\Staff\Wallets\LogPurchaseController;
+use App\Http\Controllers\Web\Staff\Wallets\RedeemController;
+use App\Http\Controllers\Web\Staff\Wallets\WalletIndexController as StaffWalletIndexController;
+use App\Http\Controllers\Web\Staff\Wallets\WalletShowController as StaffWalletShowController;
 use App\Http\Controllers\Web\Wallet\WalletActivityController;
 use App\Http\Controllers\Web\Wallet\WalletCreateController;
-use App\Http\Controllers\Web\Wallet\WalletShowController;
+use App\Http\Controllers\Web\Wallet\WalletShowController as PublicWalletShowController;
 use App\Http\Controllers\Web\Wallet\WalletStoreController;
 use App\Http\Middleware\EnsureInertiaUserIsAuthenticated;
 use App\Models\User;
@@ -39,7 +53,7 @@ Resolver::resolveRouteRegistrar()
     ->post('wallet', WalletStoreController::class)
     ->name('wallet.store');
 Resolver::resolveRouteRegistrar()
-    ->get('w/{token}', WalletShowController::class)
+    ->get('w/{token}', PublicWalletShowController::class)
     ->name('wallet.show');
 Resolver::resolveRouteRegistrar()
     ->get('w/{token}/activity', WalletActivityController::class)
@@ -81,5 +95,36 @@ Resolver::resolveRouteRegistrar()
         $router->post('agent/runs', AgentRunStartController::class);
         $router->post('agent/runs/cancel', AgentRunCancelController::class);
         $router->get('agent/runs/stream', AgentRunStreamController::class);
+    });
+
+// Staff surface: requires authenticated user with role in
+// {admin, staff}. The `staff` middleware alias is registered in
+// bootstrap/app.php and gates the whole /staff/* subtree.
+Resolver::resolveRouteRegistrar()
+    ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'staff'])
+    ->prefix('staff')
+    ->name('staff.')
+    ->group(static function (Router $router): void {
+        $router->get('/', StaffDashboardController::class)->name('dashboard');
+        $router->get('scan', StaffScanIndexController::class)->name('scan.index');
+        $router->get('scan/{token}', StaffScanShowController::class)->name('scan.show');
+        $router->get('wallets', StaffWalletIndexController::class)->name('wallets.index');
+        $router->get('wallets/{wallet}', StaffWalletShowController::class)->name('wallets.show');
+        $router->post('wallets/{wallet}/purchase', LogPurchaseController::class)->name('wallets.purchase');
+        $router->post('wallets/{wallet}/redeem', RedeemController::class)->name('wallets.redeem');
+        $router->post('wallets/{wallet}/adjust', StaffAdjustController::class)->name('wallets.adjust');
+        $router->post('wallets/{wallet}/disable', DisableController::class)->name('wallets.disable');
+        $router->post('wallets/{wallet}/enable', EnableController::class)->name('wallets.enable');
+        $router->get('transactions', TransactionIndexController::class)->name('transactions.index');
+    });
+
+// Admin-only settings surface.
+Resolver::resolveRouteRegistrar()
+    ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'admin'])
+    ->prefix('staff/settings')
+    ->name('staff.settings.')
+    ->group(static function (Router $router): void {
+        $router->get('/', SettingsEditController::class)->name('edit');
+        $router->post('/', SettingsUpdateController::class)->name('update');
     });
 
