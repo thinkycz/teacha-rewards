@@ -30,12 +30,21 @@ withDefaults(
 </script>
 
 <template>
-    <div v-if="transactions.length === 0" class="rounded-2xl bg-white p-6 text-center text-sm text-charcoal-500 shadow-soft ring-1 ring-sage-200">
+    <div
+        v-if="transactions.length === 0"
+        class="surface-card p-6 text-center text-sm text-on-surface-variant"
+    >
         {{ emptyMessage || t('wallet.transactions.empty') }}
     </div>
     <ul v-else class="space-y-2">
-        <li v-for="tx in transactions" :key="tx.id">
-            <TransactionItem :transaction="tx" :show-balance-after="showBalanceAfter" />
+        <li
+            v-for="tx in transactions"
+            :key="tx.id"
+        >
+            <TransactionItem
+                :transaction="tx"
+                :show-balance-after="showBalanceAfter"
+            />
         </li>
     </ul>
 </template>

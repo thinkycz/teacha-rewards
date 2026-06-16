@@ -47,7 +47,7 @@ watch(
     <div class="flex justify-center">
         <div
             v-if="error"
-            class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+            class="surface-card border border-error-red bg-error-soft p-4 text-sm text-error-red"
         >
             {{ error }}
         </div>
@@ -57,7 +57,7 @@ watch(
             :alt="url"
             :width="size"
             :height="size"
-            class="rounded-2xl border border-sage-200 bg-white p-2"
+            class="rounded-2xl border border-outline-glass bg-white p-2"
         />
     </div>
 </template>

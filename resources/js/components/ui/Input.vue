@@ -44,10 +44,10 @@ withDefaults(
         :aria-describedby="$props.describedBy"
         :class="
             cn(
-                'h-10 w-full rounded-xl border bg-white px-3 text-xs text-on-surface outline-none transition placeholder:text-on-surface-variant/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20',
+                'h-11 w-full rounded-xl border bg-white px-3.5 text-sm text-on-surface outline-none transition placeholder:text-on-surface-variant/60 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15',
                 $props.invalid
                     ? 'border-error-red focus-visible:border-error-red'
-                    : 'border-outline-glass focus-visible:border-primary',
+                    : 'border-outline focus-visible:border-primary',
                 $props.class,
             )
         "

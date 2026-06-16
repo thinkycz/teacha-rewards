@@ -84,27 +84,36 @@ const dateLabel = computed(() => {
 </script>
 
 <template>
-    <div class="rounded-2xl bg-white p-4 shadow-soft ring-1 ring-sage-200">
+    <div class="surface-card p-4">
         <div class="flex items-center justify-between gap-4">
             <div class="min-w-0 flex-1">
-                <p class="truncate text-sm font-medium text-charcoal-900">
+                <p class="truncate text-sm font-semibold text-on-surface">
                     {{ typeLabel }}
                 </p>
-                <p v-if="subtitle" class="mt-0.5 truncate text-xs text-charcoal-500">
+                <p
+                    v-if="subtitle"
+                    class="mt-0.5 truncate text-xs text-on-surface-variant"
+                >
                     {{ subtitle }}
                 </p>
-                <p v-if="dateLabel" class="mt-0.5 text-xs text-charcoal-400">
+                <p
+                    v-if="dateLabel"
+                    class="mt-0.5 text-xs text-on-surface-variant/70"
+                >
                     {{ dateLabel }}
                 </p>
             </div>
             <div class="text-right">
                 <p
-                    class="text-base font-semibold"
-                    :class="isPositive ? 'text-matcha-700' : 'text-amber-700'"
+                    class="text-base font-bold"
+                    :class="isPositive ? 'text-success' : 'text-error-red'"
                 >
                     {{ formattedAmount }}&nbsp;Kč
                 </p>
-                <p v-if="showBalanceAfter" class="mt-0.5 text-xs text-charcoal-400">
+                <p
+                    v-if="showBalanceAfter"
+                    class="mt-0.5 text-xs text-on-surface-variant/70"
+                >
                     {{ t('wallet.transactions.balance_after', { amount: transaction.balance_after }) }}
                 </p>
             </div>

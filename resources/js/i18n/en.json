@@ -113,7 +113,10 @@
             "view_all_transactions": "View all transactions",
             "quick_actions": "Quick actions",
             "scan_qr": "Scan a customer QR",
-            "view_wallets": "Browse wallets"
+            "view_wallets": "Browse wallets",
+            "subtitle": "Today at a glance",
+            "scan": "Scan a customer QR",
+            "view": "Browse wallets"
         },
         "scan": {
             "index": {
@@ -299,7 +302,10 @@
         "step_2": "Show the QR code at the till to earn cashback on every purchase.",
         "step_3": "Redeem your rewards balance as a discount whenever you like.",
         "cta": "Create or open my rewards wallet",
-        "privacy": "No password, no email. Your wallet is identified only by your phone number."
+        "privacy": "No password, no email. Your wallet is identified only by your phone number.",
+        "bullet_no_email": "No email",
+        "bullet_no_password": "No password",
+        "bullet_install": "Add to home screen"
     },
     "wallet": {
         "create": {

@@ -19,7 +19,6 @@ import WalletCard from '@/components/reward/WalletCard.vue';
 import RewardsBalance from '@/components/reward/RewardsBalance.vue';
 import { fieldError } from '@/composables/useFieldError';
 
-useI18n();
 const { t } = useI18n();
 
 interface WalletSummary {
@@ -94,7 +93,7 @@ function submitAdjust(): void {
         <div class="space-y-6">
             <section
                 v-if="!isActive"
-                class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
+                class="surface-card border-warning bg-warning-soft p-4 text-sm text-warning"
             >
                 <div class="flex items-start gap-2">
                     <AlertTriangle :size="16" class="mt-0.5 shrink-0" />
@@ -109,7 +108,7 @@ function submitAdjust(): void {
             <div class="flex justify-end">
                 <Link
                     :href="`/dashboard/wallets/${wallet.id}`"
-                    class="inline-flex items-center gap-1 text-xs font-semibold text-matcha-700 hover:text-matcha-800"
+                    class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
                 >
                     {{ t('dashboard.scan.show.view_full') }}
                     <ExternalLink :size="12" />
@@ -117,15 +116,15 @@ function submitAdjust(): void {
             </div>
 
             <section>
-                <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-charcoal-500">
+                <h2 class="label-eyebrow mb-3">
                     {{ t('dashboard.scan.show.actions_heading') }}
                 </h2>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     <button
                         type="button"
                         :disabled="!isActive"
-                        class="flex items-center justify-center gap-2 rounded-2xl border border-outline-glass bg-white px-4 py-4 text-sm font-semibold text-charcoal-900 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-matcha-500 bg-sage-50': openAction === 'purchase' }"
+                        class="flex items-center justify-center gap-2 surface-card px-4 py-4 text-sm font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'purchase' }"
                         @click="openPanel('purchase')"
                     >
                         <ShoppingBag :size="18" />
@@ -134,8 +133,8 @@ function submitAdjust(): void {
                     <button
                         type="button"
                         :disabled="!isActive"
-                        class="flex items-center justify-center gap-2 rounded-2xl border border-outline-glass bg-white px-4 py-4 text-sm font-semibold text-charcoal-900 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-matcha-500 bg-sage-50': openAction === 'redeem' }"
+                        class="flex items-center justify-center gap-2 surface-card px-4 py-4 text-sm font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'redeem' }"
                         @click="openPanel('redeem')"
                     >
                         <ArrowDownToLine :size="18" />
@@ -144,8 +143,8 @@ function submitAdjust(): void {
                     <button
                         type="button"
                         :disabled="!isActive"
-                        class="flex items-center justify-center gap-2 rounded-2xl border border-outline-glass bg-white px-4 py-4 text-sm font-semibold text-charcoal-900 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-matcha-500 bg-sage-50': openAction === 'adjust' }"
+                        class="flex items-center justify-center gap-2 surface-card px-4 py-4 text-sm font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'adjust' }"
                         @click="openPanel('adjust')"
                     >
                         <Sliders :size="18" />
@@ -157,7 +156,7 @@ function submitAdjust(): void {
             <!-- Log purchase panel -->
             <section
                 v-if="openAction === 'purchase'"
-                class="rounded-2xl border border-matcha-300 bg-white p-5 shadow-sm"
+                class="surface-card border-primary p-5"
             >
                 <form
                     class="space-y-4"
@@ -179,7 +178,7 @@ function submitAdjust(): void {
                             :described-by="fieldError(purchaseForm.errors, 'purchase_amount', 'purchase').describedBy"
                             required
                         />
-                        <p class="text-[10px] text-charcoal-500">
+                        <p class="label-help">
                             {{ t('dashboard.forms.purchase_amount_help') }}
                         </p>
                         <FieldError v-bind="fieldError(purchaseForm.errors, 'purchase_amount', 'purchase')" />
@@ -196,7 +195,7 @@ function submitAdjust(): void {
             <!-- Redeem panel -->
             <section
                 v-if="openAction === 'redeem'"
-                class="rounded-2xl border border-matcha-300 bg-white p-5 shadow-sm"
+                class="surface-card border-primary p-5"
             >
                 <form
                     class="space-y-4"
@@ -219,7 +218,7 @@ function submitAdjust(): void {
                             :described-by="fieldError(redeemForm.errors, 'amount', 'redeem').describedBy"
                             required
                         />
-                        <p class="text-[10px] text-charcoal-500">
+                        <p class="label-help">
                             {{ t('dashboard.forms.redeem_amount_help') }}
                         </p>
                         <FieldError v-bind="fieldError(redeemForm.errors, 'amount', 'redeem')" />
@@ -236,7 +235,7 @@ function submitAdjust(): void {
             <!-- Adjust panel -->
             <section
                 v-if="openAction === 'adjust'"
-                class="rounded-2xl border border-matcha-300 bg-white p-5 shadow-sm"
+                class="surface-card border-primary p-5"
             >
                 <form
                     class="space-y-4"
@@ -277,7 +276,7 @@ function submitAdjust(): void {
                             :described-by="fieldError(adjustForm.errors, 'amount', 'adjust').describedBy"
                             required
                         />
-                        <p class="text-[10px] text-charcoal-500">
+                        <p class="label-help">
                             {{ t('dashboard.forms.adjust_amount_help') }}
                         </p>
                         <FieldError v-bind="fieldError(adjustForm.errors, 'amount', 'adjust')" />
@@ -296,7 +295,7 @@ function submitAdjust(): void {
                             :described-by="fieldError(adjustForm.errors, 'note', 'adjust').describedBy"
                             required
                         />
-                        <p class="text-[10px] text-charcoal-500">
+                        <p class="label-help">
                             {{ t('dashboard.forms.adjust_note_help') }}
                         </p>
                         <FieldError v-bind="fieldError(adjustForm.errors, 'note', 'adjust')" />

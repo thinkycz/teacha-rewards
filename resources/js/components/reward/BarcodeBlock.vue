@@ -34,8 +34,8 @@ function render(): void {
             displayValue: props.displayValue,
             fontSize: props.fontSize,
             margin: props.margin,
-            background: '#FAF8F1',
-            lineColor: '#1f2937',
+            background: '#faf7f0',
+            lineColor: '#1e1b16',
         });
         error.value = null;
     } catch (err) {
@@ -51,7 +51,7 @@ watch(
 </script>
 
 <template>
-    <div class="rounded-xl bg-cream-50 px-3 py-3">
+    <div class="surface-card bg-surface-container-lowest p-3">
         <svg
             ref="svgRef"
             class="block h-auto w-full"

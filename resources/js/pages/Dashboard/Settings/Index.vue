@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { Save } from '@lucide/vue';
+import { Save, ArrowRight, Printer } from '@lucide/vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
@@ -9,7 +9,6 @@ import Label from '@/components/ui/Label.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import { fieldError } from '@/composables/useFieldError';
 
-useI18n();
 const { t } = useI18n();
 
 interface Settings {
@@ -43,16 +42,16 @@ function submit(): void {
     <AdminLayout :title="t('dashboard.settings.index.title')">
         <div class="space-y-6">
             <header>
-                <h1 class="text-2xl font-semibold text-charcoal-900">
+                <h1 class="heading-2">
                     {{ t('dashboard.settings.index.heading') }}
                 </h1>
-                <p class="mt-1 text-sm text-charcoal-600">
+                <p class="mt-1 text-sm text-on-surface-variant">
                     {{ t('dashboard.settings.index.subheading') }}
                 </p>
             </header>
 
             <form
-                class="space-y-5 rounded-2xl border border-outline-glass bg-white p-5 shadow-sm"
+                class="surface-card space-y-5 p-5"
                 @submit.prevent="submit"
             >
                 <div class="space-y-2">
@@ -71,7 +70,7 @@ function submit(): void {
                         :described-by="fieldError(form.errors, 'cashback_rate', 'settings').describedBy"
                         required
                     />
-                    <p class="text-[10px] text-charcoal-500">
+                    <p class="label-help">
                         {{ t('dashboard.settings.index.cashback_rate_help') }}
                     </p>
                     <FieldError v-bind="fieldError(form.errors, 'cashback_rate', 'settings')" />
@@ -91,7 +90,7 @@ function submit(): void {
                         :described-by="fieldError(form.errors, 'currency', 'settings').describedBy"
                         required
                     />
-                    <p class="text-[10px] text-charcoal-500">
+                    <p class="label-help">
                         {{ t('dashboard.settings.index.currency_help') }}
                     </p>
                     <FieldError v-bind="fieldError(form.errors, 'currency', 'settings')" />
@@ -110,7 +109,7 @@ function submit(): void {
                         :described-by="fieldError(form.errors, 'program_name', 'settings').describedBy"
                         required
                     />
-                    <p class="text-[10px] text-charcoal-500">
+                    <p class="label-help">
                         {{ t('dashboard.settings.index.program_name_help') }}
                     </p>
                     <FieldError v-bind="fieldError(form.errors, 'program_name', 'settings')" />
@@ -129,7 +128,7 @@ function submit(): void {
                         :described-by="fieldError(form.errors, 'store_name', 'settings').describedBy"
                         required
                     />
-                    <p class="text-[10px] text-charcoal-500">
+                    <p class="label-help">
                         {{ t('dashboard.settings.index.store_name_help') }}
                     </p>
                     <FieldError v-bind="fieldError(form.errors, 'store_name', 'settings')" />
@@ -146,22 +145,24 @@ function submit(): void {
                 </div>
             </form>
 
-            <div
-                class="rounded-2xl border border-outline-glass bg-white p-5 shadow-sm"
+            <Link
+                href="/dashboard/store-qr"
+                class="surface-card group flex items-center justify-between gap-4 p-5 transition hover:border-primary"
             >
-                <h2 class="text-sm font-semibold text-charcoal-900">
-                    {{ t('dashboard.store_qr.title') }}
-                </h2>
-                <p class="mt-1 text-xs text-charcoal-600">
-                    {{ t('dashboard.store_qr.headline') }}
-                </p>
-                <a
-                    href="/dashboard/store-qr"
-                    class="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-matcha-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-matcha-700"
-                >
+                <div>
+                    <h2 class="heading-3">
+                        {{ t('dashboard.store_qr.title') }}
+                    </h2>
+                    <p class="mt-1 text-xs text-on-surface-variant">
+                        {{ t('dashboard.store_qr.headline') }}
+                    </p>
+                </div>
+                <span class="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-on-primary transition group-hover:bg-primary-container">
+                    <Printer :size="14" />
                     {{ t('dashboard.store_qr.print') }}
-                </a>
-            </div>
+                    <ArrowRight :size="14" />
+                </span>
+            </Link>
         </div>
     </AdminLayout>
 </template>

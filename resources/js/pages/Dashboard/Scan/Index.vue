@@ -151,17 +151,16 @@ const flashError = ref<string | null>(
     <AdminLayout :title="t('dashboard.scan.index.title')">
         <div class="space-y-6">
             <header class="text-center">
-                <h1 class="text-2xl font-semibold text-charcoal-900">
+                <h1 class="heading-2">
                     {{ t('dashboard.scan.index.heading') }}
                 </h1>
-                <p class="mt-2 text-sm text-charcoal-600">
+                <p class="mt-2 label-help">
                     {{ t('dashboard.scan.index.subheading') }}
                 </p>
             </header>
 
-            <!-- Camera viewport -->
             <section
-                class="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl border border-outline-glass bg-charcoal-900 shadow-sm"
+                class="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl border border-outline-glass bg-on-surface shadow-md"
             >
                 <div
                     id="staff-qr-scanner"
@@ -170,7 +169,7 @@ const flashError = ref<string | null>(
                 />
                 <div
                     v-if="cameraStatus !== 'scanning'"
-                    class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-charcoal-900/80 p-6 text-center text-white"
+                    class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-on-surface/85 p-6 text-center text-white"
                 >
                     <Camera
                         v-if="cameraStatus === 'starting' || cameraStatus === 'idle'"
@@ -180,7 +179,7 @@ const flashError = ref<string | null>(
                     <AlertTriangle
                         v-else
                         :size="48"
-                        class="text-amber-300"
+                        class="text-warning"
                     />
                     <p
                         v-if="cameraStatus === 'starting' || cameraStatus === 'idle'"
@@ -197,11 +196,8 @@ const flashError = ref<string | null>(
                 </div>
             </section>
 
-            <!-- Manual fallback -->
-            <section
-                class="rounded-2xl border border-outline-glass bg-white p-5 shadow-sm"
-            >
-                <p class="text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+            <section class="surface-card p-5">
+                <p class="label-eyebrow">
                     {{ t('dashboard.scan.index.manual_fallback') }}
                 </p>
                 <form
@@ -234,7 +230,7 @@ const flashError = ref<string | null>(
 
             <div
                 v-if="flashError"
-                class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
+                class="surface-card border border-warning bg-warning-soft p-4 text-sm text-warning"
             >
                 {{ flashError }}
             </div>

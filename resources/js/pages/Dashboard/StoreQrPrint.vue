@@ -54,14 +54,14 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
             <div class="no-print flex items-center justify-between">
                 <Link
                     href="/dashboard"
-                    class="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-500 hover:text-charcoal-700"
+                    class="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant transition hover:text-on-surface"
                 >
                     <ArrowLeft :size="12" />
                     {{ t('dashboard.store_qr.back') }}
                 </Link>
                 <button
                     type="button"
-                    class="inline-flex items-center gap-1.5 rounded-xl border border-outline-glass bg-white px-3 py-2 text-xs font-semibold text-charcoal-700 transition hover:bg-sage-50"
+                    class="inline-flex items-center gap-1.5 rounded-xl border border-outline-glass bg-white px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:bg-primary-soft"
                     @click="printPage"
                 >
                     <Printer :size="14" />
@@ -69,17 +69,15 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
                 </button>
             </div>
 
-            <article
-                class="rounded-3xl border border-outline-glass bg-white p-8 shadow-sm print:border-0 print:shadow-none print:p-12"
-            >
+            <article class="surface-card print:border-0 p-8 print:shadow-none print:p-12">
                 <header class="text-center">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                    <p class="label-eyebrow">
                         {{ store_name }}
                     </p>
-                    <h1 class="mt-2 text-3xl font-semibold text-charcoal-900">
+                    <h1 class="mt-2 text-3xl font-bold tracking-tight text-on-surface">
                         {{ program_name }}
                     </h1>
-                    <p class="mt-3 text-sm text-charcoal-600">
+                    <p class="mt-3 text-sm text-on-surface-variant">
                         {{ t('dashboard.store_qr.headline') }}
                     </p>
                 </header>
@@ -97,27 +95,27 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
                     </div>
                     <div
                         v-else
-                        class="h-72 w-72 animate-pulse rounded-2xl bg-sage-50"
+                        class="h-72 w-72 animate-pulse rounded-2xl bg-primary-soft"
                     />
 
-                    <p class="mt-6 max-w-md text-center text-sm text-charcoal-700">
+                    <p class="mt-6 max-w-md text-center text-sm text-on-surface">
                         {{ t('dashboard.store_qr.scan_prompt') }}
                     </p>
 
-                    <p class="mt-3 inline-flex items-center gap-1 rounded-full bg-sage-50 px-4 py-2 text-xs font-mono text-matcha-700">
+                    <p class="mt-3 inline-flex items-center gap-1 rounded-full bg-primary-soft px-4 py-2 text-xs font-mono text-primary">
                         <ExternalLink :size="12" />
                         {{ shortUrl }}
                     </p>
                 </div>
 
-                <footer class="mt-10 border-t border-outline-glass pt-6 text-center text-xs text-charcoal-500">
+                <footer class="mt-10 border-t border-outline-glass pt-6 text-center text-xs text-on-surface-variant">
                     {{ t('dashboard.store_qr.footer') }}
                 </footer>
             </article>
 
             <p
                 v-if="isAdmin"
-                class="no-print text-center text-xs text-charcoal-500"
+                class="no-print text-center text-xs text-on-surface-variant"
             >
                 {{ t('dashboard.store_qr.admin_hint') }}
             </p>

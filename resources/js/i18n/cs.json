@@ -113,7 +113,10 @@
             "view_all_transactions": "Zobrazit všechny transakce",
             "quick_actions": "Rychlé akce",
             "scan_qr": "Naskenovat QR zákazníka",
-            "view_wallets": "Procházet peněženky"
+            "view_wallets": "Procházet peněženky",
+            "subtitle": "Dnešní souhrn v kostce",
+            "scan": "Skenovat QR zákazníka",
+            "view": "Zobrazit peněženky"
         },
         "scan": {
             "index": {
@@ -299,7 +302,10 @@
         "step_2": "Ukažte QR kód na pokladně a získejte cashback z každého nákupu.",
         "step_3": "Kdykoliv uplatněte svůj zůstatek jako slevu.",
         "cta": "Vytvořit nebo otevřít moji peněženku",
-        "privacy": "Žádné heslo, žádný e-mail. Vaše peněženka je identifikována pouze telefonním číslem."
+        "privacy": "Žádné heslo, žádný e-mail. Vaše peněženka je identifikována pouze telefonním číslem.",
+        "bullet_no_email": "Bez e-mailu",
+        "bullet_no_password": "Bez hesla",
+        "bullet_install": "Přidáte na plochu"
     },
     "wallet": {
         "create": {

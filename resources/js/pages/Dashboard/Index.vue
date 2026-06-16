@@ -9,6 +9,7 @@ import {
     CircleDollarSign,
     QrCode,
     Wallet as WalletIcon,
+    ArrowRight,
 } from '@lucide/vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import TransactionList from '@/components/reward/TransactionList.vue';
@@ -46,6 +47,33 @@ const cashbackFormatted = computed(() =>
         maximumFractionDigits: 2,
     }).format(cashbackNumber.value),
 );
+
+interface Tile {
+    label: string;
+    value: string;
+    icon: typeof Users;
+    accent: 'primary' | 'success' | 'warning' | 'error';
+}
+
+const tiles = computed<Tile[]>(() => [
+    { label: t('dashboard.dashboard.active_wallets'), value: String(props.stats.active_wallets), icon: Users, accent: 'success' },
+    { label: t('dashboard.dashboard.disabled_wallets'), value: String(props.stats.disabled_wallets), icon: UserX, accent: 'warning' },
+    { label: t('dashboard.dashboard.today_purchases'), value: String(props.stats.today_purchase_count), icon: ShoppingBag, accent: 'primary' },
+    { label: t('dashboard.dashboard.today_cashback'), value: `${cashbackFormatted.value} Kč`, icon: CircleDollarSign, accent: 'primary' },
+]);
+
+function tileBg(accent: Tile['accent']): string {
+    switch (accent) {
+        case 'success':
+            return 'bg-success-soft text-success';
+        case 'warning':
+            return 'bg-warning-soft text-warning';
+        case 'error':
+            return 'bg-error-soft text-error-red';
+        default:
+            return 'bg-primary-soft text-primary';
+    }
+}
 </script>
 
 <template>
@@ -54,140 +82,89 @@ const cashbackFormatted = computed(() =>
     <AdminLayout :title="t('dashboard.dashboard.title')">
         <div class="space-y-6">
             <header>
-                <h1 class="text-2xl font-semibold text-charcoal-900">
+                <h1 class="heading-2">
                     {{ t('dashboard.dashboard.heading') }}
                 </h1>
+                <p class="mt-1 label-help">
+                    {{ t('dashboard.dashboard.subtitle') ?? t('dashboard.dashboard.heading') }}
+                </p>
             </header>
 
-            <!-- Stat tiles -->
             <section class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <div
-                    class="rounded-2xl border border-outline-glass bg-white p-4 shadow-sm"
+                    v-for="tile in tiles"
+                    :key="tile.label"
+                    class="surface-card p-4"
                 >
-                    <div class="flex items-center gap-2 text-charcoal-500">
-                        <Users :size="14" />
-                        <span
-                            class="text-[10px] font-semibold uppercase tracking-wider"
-                        >
-                            {{ t('dashboard.dashboard.active_wallets') }}
-                        </span>
-                    </div>
-                    <p
-                        class="mt-2 text-2xl font-semibold text-charcoal-900 sm:text-3xl"
+                    <div
+                        class="flex h-9 w-9 items-center justify-center rounded-xl"
+                        :class="tileBg(tile.accent)"
                     >
-                        {{ stats.active_wallets }}
+                        <component
+                            :is="tile.icon"
+                            :size="18"
+                        />
+                    </div>
+                    <p class="mt-3 text-2xl font-bold tracking-tight text-on-surface">
+                        {{ tile.value }}
                     </p>
-                </div>
-
-                <div
-                    class="rounded-2xl border border-outline-glass bg-white p-4 shadow-sm"
-                >
-                    <div class="flex items-center gap-2 text-charcoal-500">
-                        <UserX :size="14" />
-                        <span
-                            class="text-[10px] font-semibold uppercase tracking-wider"
-                        >
-                            {{ t('dashboard.dashboard.disabled_wallets') }}
-                        </span>
-                    </div>
-                    <p
-                        class="mt-2 text-2xl font-semibold text-charcoal-900 sm:text-3xl"
-                    >
-                        {{ stats.disabled_wallets }}
-                    </p>
-                </div>
-
-                <div
-                    class="rounded-2xl border border-outline-glass bg-white p-4 shadow-sm"
-                >
-                    <div class="flex items-center gap-2 text-charcoal-500">
-                        <ShoppingBag :size="14" />
-                        <span
-                            class="text-[10px] font-semibold uppercase tracking-wider"
-                        >
-                            {{ t('dashboard.dashboard.today_purchases') }}
-                        </span>
-                    </div>
-                    <p
-                        class="mt-2 text-2xl font-semibold text-charcoal-900 sm:text-3xl"
-                    >
-                        {{ stats.today_purchase_count }}
-                    </p>
-                </div>
-
-                <div
-                    class="rounded-2xl border border-outline-glass bg-white p-4 shadow-sm"
-                >
-                    <div class="flex items-center gap-2 text-charcoal-500">
-                        <CircleDollarSign :size="14" />
-                        <span
-                            class="text-[10px] font-semibold uppercase tracking-wider"
-                        >
-                            {{ t('dashboard.dashboard.today_cashback') }}
-                        </span>
-                    </div>
-                    <p
-                        class="mt-2 text-xl font-semibold text-charcoal-900 sm:text-2xl"
-                    >
-                        {{ cashbackFormatted }}&nbsp;Kč
+                    <p class="label-eyebrow mt-1">
+                        {{ tile.label }}
                     </p>
                 </div>
             </section>
 
-            <!-- Quick actions -->
             <section>
-                <h2
-                    class="mb-2 text-sm font-semibold uppercase tracking-wider text-charcoal-500"
-                >
+                <h2 class="label-eyebrow mb-3">
                     {{ t('dashboard.dashboard.quick_actions') }}
                 </h2>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <Link
                         href="/dashboard/scan"
-                        class="flex items-center gap-3 rounded-2xl border border-outline-glass bg-white p-4 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50"
+                        class="group flex items-center gap-4 surface-card p-4 transition hover:border-primary"
                     >
                         <div
-                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-matcha-500 to-matcha-700 text-white"
+                            class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-primary transition group-hover:bg-primary group-hover:text-on-primary"
                         >
                             <QrCode :size="20" />
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-semibold text-charcoal-900">
+                            <p class="text-sm font-semibold text-on-surface">
                                 {{ t('dashboard.dashboard.scan_qr') }}
                             </p>
                         </div>
+                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
                     </Link>
                     <Link
                         href="/dashboard/wallets"
-                        class="flex items-center gap-3 rounded-2xl border border-outline-glass bg-white p-4 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50"
+                        class="group flex items-center gap-4 surface-card p-4 transition hover:border-primary"
                     >
                         <div
-                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-matcha-500 to-matcha-700 text-white"
+                            class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-primary transition group-hover:bg-primary group-hover:text-on-primary"
                         >
                             <WalletIcon :size="20" />
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-semibold text-charcoal-900">
+                            <p class="text-sm font-semibold text-on-surface">
                                 {{ t('dashboard.dashboard.view_wallets') }}
                             </p>
                         </div>
+                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
                     </Link>
                 </div>
             </section>
 
-            <!-- Recent activity -->
-            <section>
-                <div class="mb-2 flex items-center justify-between">
-                    <h2
-                        class="text-sm font-semibold uppercase tracking-wider text-charcoal-500"
-                    >
+            <section class="surface-card p-6">
+                <div class="mb-4 flex items-center justify-between">
+                    <h2 class="label-eyebrow">
                         {{ t('dashboard.dashboard.recent') }}
                     </h2>
                     <Link
                         href="/dashboard/transactions"
-                        class="text-xs font-semibold text-matcha-700 hover:text-matcha-800"
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
                     >
-                        {{ t('dashboard.dashboard.view_all_transactions') }} →
+                        {{ t('dashboard.dashboard.view_all_transactions') }}
+                        <ArrowRight :size="12" />
                     </Link>
                 </div>
                 <TransactionList

@@ -116,7 +116,7 @@ const userLabel = computed(() => {
     </a>
 
     <div
-        class="theme-matcha flex h-screen flex-col overflow-hidden bg-surface-bg font-sans antialiased md:flex-row"
+        class="flex h-screen flex-col overflow-hidden bg-surface-bg font-sans antialiased md:flex-row"
     >
         <!-- Desktop Persistent Sidebar -->
         <aside

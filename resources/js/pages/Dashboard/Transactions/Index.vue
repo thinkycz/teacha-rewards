@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Search, X } from '@lucide/vue';
+import { Search, X, ChevronRight } from '@lucide/vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Button from '@/components/ui/Button.vue';
 
-useI18n();
 const { t } = useI18n();
 
 interface Transaction {
@@ -119,15 +118,13 @@ const typeOptions = computed(() => [
     <AdminLayout :title="t('dashboard.transactions.index.title')">
         <div class="space-y-5">
             <header>
-                <h1 class="text-2xl font-semibold text-charcoal-900">
+                <h1 class="heading-2">
                     {{ t('dashboard.transactions.index.heading') }}
                 </h1>
             </header>
 
             <!-- Filters -->
-            <section
-                class="rounded-2xl border border-outline-glass bg-white p-4 shadow-sm"
-            >
+            <section class="surface-card p-4">
                 <form
                     class="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_auto]"
                     @submit.prevent="applyFilters"
@@ -135,14 +132,14 @@ const typeOptions = computed(() => [
                     <div class="relative">
                         <Search
                             :size="14"
-                            class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-charcoal-400"
+                            class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-on-surface-variant"
                         />
                         <Input
                             v-model="search"
                             type="search"
                             name="q"
                             :placeholder="t('dashboard.transactions.index.search_placeholder')"
-                            class="pl-8"
+                            class="pl-9"
                         />
                     </div>
                     <Select
@@ -159,11 +156,11 @@ const typeOptions = computed(() => [
                 </form>
                 <div
                     v-if="hasActiveFilters"
-                    class="mt-2 flex justify-end"
+                    class="mt-3 flex justify-end"
                 >
                     <button
                         type="button"
-                        class="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-500 hover:text-charcoal-700"
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant transition hover:text-on-surface"
                         @click="clearFilters"
                     >
                         <X :size="12" />
@@ -174,9 +171,7 @@ const typeOptions = computed(() => [
 
             <!-- Results -->
             <section v-if="transactions.length === 0">
-                <div
-                    class="rounded-2xl border border-outline-glass bg-white p-6 text-center text-sm text-charcoal-500 shadow-sm"
-                >
+                <div class="surface-card p-6 text-center text-sm text-on-surface-variant">
                     {{ t('dashboard.transactions.index.empty') }}
                 </div>
             </section>
@@ -187,47 +182,45 @@ const typeOptions = computed(() => [
                     :key="tx.id"
                 >
                     <component
-                        :is="tx.wallet_id ? 'a' : 'div'"
+                        :is="tx.wallet_id ? Link : 'div'"
                         :href="tx.wallet_id ? `/dashboard/wallets/${tx.wallet_id}` : undefined"
-                        class="block rounded-2xl border border-outline-glass bg-white p-4 shadow-sm transition hover:border-matcha-300 hover:bg-sage-50"
+                        class="group block surface-card p-4 transition hover:border-primary"
                         :class="{ 'cursor-pointer': !!tx.wallet_id }"
                     >
                         <div class="flex items-start gap-3">
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-2">
-                                    <span
-                                        class="rounded-full bg-sage-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sage-700"
-                                    >
+                                    <span class="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
                                         {{ typeLabel(tx.type) }}
                                     </span>
-                                    <span class="text-[10px] text-charcoal-500">
+                                    <span class="text-[10px] text-on-surface-variant">
                                         {{ formatDateTime(tx.created_at) }}
                                     </span>
                                 </div>
-                                <p class="mt-1 truncate text-sm font-semibold text-charcoal-900">
+                                <p class="mt-1 truncate text-sm font-semibold text-on-surface">
                                     {{ tx.wallet_first_name ?? '—' }}
                                     <span
                                         v-if="tx.wallet_number"
-                                        class="ml-1 font-mono text-[10px] text-charcoal-500"
+                                        class="ml-1 font-mono text-[10px] text-on-surface-variant"
                                     >
                                         {{ tx.wallet_number }}
                                     </span>
                                 </p>
                                 <p
                                     v-if="tx.purchase_amount"
-                                    class="text-[10px] text-charcoal-500"
+                                    class="text-[10px] text-on-surface-variant"
                                 >
                                     {{ t('dashboard.transactions.index.purchase_amount') }}: {{ tx.purchase_amount }} Kč
                                 </p>
                                 <p
                                     v-if="tx.note"
-                                    class="text-[10px] text-charcoal-500"
+                                    class="text-[10px] text-on-surface-variant"
                                 >
                                     {{ t('dashboard.transactions.index.note') }}: {{ tx.note }}
                                 </p>
                                 <p
                                     v-if="tx.staff_name"
-                                    class="text-[10px] text-charcoal-500"
+                                    class="text-[10px] text-on-surface-variant"
                                 >
                                     {{ tx.staff_name }}
                                 </p>
@@ -239,13 +232,18 @@ const typeOptions = computed(() => [
                                 >
                                     {{ signedAmount(tx.amount) }}&nbsp;Kč
                                 </p>
-                                <p class="text-[10px] uppercase tracking-wider text-charcoal-500">
+                                <p class="label-eyebrow">
                                     {{ t('dashboard.transactions.index.balance_after') }}
                                 </p>
-                                <p class="text-xs text-charcoal-700">
+                                <p class="text-xs text-on-surface">
                                     {{ tx.balance_after }}&nbsp;Kč
                                 </p>
                             </div>
+                            <ChevronRight
+                                v-if="tx.wallet_id"
+                                :size="16"
+                                class="shrink-0 self-center text-on-surface-variant transition group-hover:text-primary"
+                            />
                         </div>
                     </component>
                 </li>

@@ -6,28 +6,70 @@
 @source '../**/*.ts';
 @source '../**/*.vue';
 
+/*
+ * Teacha Rewards design tokens.
+ *
+ * Single-font stack (Inter for everything), purple primary
+ * (violet-600, premium / loyalty feel), warm cream surfaces so
+ * the matcha brand color on the wallet card itself still pops.
+ */
 @theme {
-    --color-primary: #0f172a;
-    --color-primary-container: #1e293b;
-    --color-surface-bg: #f8fafc;
-    --color-surface-container: #eef2f6;
-    --color-surface-container-low: #f3f6f9;
-    --color-surface-container-lowest: #ffffff;
-    --color-on-surface: #0f172a;
-    --color-on-surface-variant: #475569;
-    --color-outline-glass: #e2e8f0;
-    --color-error-red: #b91c1c;
-    --color-success: #047857;
+    /* Brand */
+    --color-primary: #7c3aed;
+    --color-primary-container: #a78bfa;
+    --color-primary-soft: #ede9fe;
+    --color-on-primary: #ffffff;
 
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-heading: 'Hanken Grotesk', system-ui, sans-serif;
-    --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+    /* Surfaces (warm cream so the matcha card stands out) */
+    --color-surface-bg: #faf7f0;
+    --color-surface-container: #f3eee2;
+    --color-surface-container-low: #f7f3e8;
+    --color-surface-container-lowest: #ffffff;
+
+    /* Text */
+    --color-on-surface: #1e1b16;
+    --color-on-surface-variant: #6b635a;
+
+    /* Lines */
+    --color-outline-glass: #ebe5d4;
+    --color-outline: #d8d1bf;
+
+    /* Semantic */
+    --color-error-red: #b91c1c;
+    --color-error-soft: #fef2f2;
+    --color-success: #047857;
+    --color-success-soft: #ecfdf5;
+    --color-warning: #b45309;
+    --color-warning-soft: #fffbeb;
+
+    /* Matcha (kept for the wallet card visual only) */
+    --color-matcha-50: #f7fee7;
+    --color-matcha-100: #ecfccb;
+    --color-matcha-200: #d9f99d;
+    --color-matcha-300: #bef264;
+    --color-matcha-400: #a3e635;
+    --color-matcha-500: #84cc16;
+    --color-matcha-600: #65a30d;
+    --color-matcha-700: #4d7c0f;
+    --color-matcha-800: #3f6212;
+
+    /* Fonts — single Inter family for body and headings. Mono
+       stays as ui-monospace for the brand mark / wallet number. */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-heading: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 @layer base {
     * {
         box-sizing: border-box;
-        border-color: #e4e4e7;
+        /* Default to the design token, not the dark Tailwind default. */
+        border-color: var(--color-outline-glass);
+    }
+
+    html,
+    body {
+        height: 100%;
     }
 
     body {
@@ -36,18 +78,77 @@
         background: var(--color-surface-bg);
         color: var(--color-on-surface);
         font-family: var(--font-sans);
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        letter-spacing: -0.02em;
     }
 
     button,
     input,
-    select {
+    select,
+    textarea {
         font: inherit;
+    }
+
+    /* Reset the user-agent link underline so we control it. */
+    a {
+        color: inherit;
+        text-decoration: none;
     }
 }
 
 .glass-panel {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+}
+
+/* Reusable building blocks. Tailwind v4 picks these up as
+ * @layer components so they survive purging. */
+@layer components {
+    .surface-card {
+        @apply rounded-2xl border border-outline-glass bg-white shadow-sm;
+    }
+
+    .surface-card-quiet {
+        @apply rounded-2xl border border-outline-glass bg-surface-container-lowest;
+    }
+
+    .surface-tile {
+        @apply rounded-xl border border-outline-glass bg-surface-container-lowest;
+    }
+
+    .heading-1 {
+        @apply font-heading text-3xl font-bold tracking-tight text-on-surface;
+    }
+
+    .heading-2 {
+        @apply font-heading text-2xl font-bold tracking-tight text-on-surface;
+    }
+
+    .heading-3 {
+        @apply font-heading text-lg font-bold tracking-tight text-on-surface;
+    }
+
+    .label-eyebrow {
+        @apply font-sans text-[11px] font-semibold tracking-wider text-on-surface-variant uppercase;
+    }
+
+    .label-help {
+        @apply text-xs text-on-surface-variant;
+    }
 }
 
 @utility scrollbar-thin {
@@ -74,21 +175,13 @@
 }
 
 @layer utilities {
-    /* Hide chrome that shouldn't show up on a printout of the store QR sheet. */
     @media print {
         .no-print {
             display: none !important;
         }
+
         body {
             background: #ffffff !important;
         }
     }
-}
-
-/* Admin / dashboard theme: matcha primary scoped to .theme-matcha
- * (the rewards admin shell). Keeps the original surface / outline
- * tokens — only swaps the active-link indicator color. */
-.theme-matcha {
-    --color-primary: #65a30d;
-    --color-primary-container: #84cc16;
 }

@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { ArrowRight, AlertTriangle } from '@lucide/vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
 import Brand from '@/components/ui/Brand.vue';
 import WalletCard from '@/components/reward/WalletCard.vue';
@@ -45,83 +46,93 @@ const isActive = computed(() => props.wallet.status === 'active');
 <template>
     <Head :title="t('wallet.show.title', { name: wallet.first_name })" />
 
-    <div class="min-h-screen bg-cream-50 text-charcoal-900">
+    <div class="min-h-screen bg-surface-bg text-on-surface">
         <header class="mx-auto flex max-w-md items-center justify-between px-6 py-6">
             <Link :href="'/'">
                 <Brand class="text-2xl" />
             </Link>
         </header>
 
-        <main class="mx-auto max-w-md space-y-8 px-6 pb-20">
-            <section v-if="!isActive" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                {{ t('wallet.show.disabled_notice') }}
+        <main class="mx-auto max-w-md space-y-6 px-6 pb-20">
+            <section
+                v-if="!isActive"
+                class="flex items-start gap-3 rounded-2xl border border-warning bg-warning-soft p-4 text-sm text-warning"
+            >
+                <AlertTriangle :size="16" class="mt-0.5 shrink-0" />
+                <span>{{ t('wallet.show.disabled_notice') }}</span>
             </section>
 
             <WalletCard :wallet="wallet">
                 <RewardsBalance :amount="wallet.rewards_balance" />
             </WalletCard>
 
-            <section class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-sage-200">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-charcoal-500">
+            <section class="surface-card p-6">
+                <h2 class="label-eyebrow">
                     {{ t('wallet.show.qr_heading') }}
                 </h2>
-                <p class="mt-2 text-xs text-charcoal-500">
+                <p class="mt-1 label-help">
                     {{ t('wallet.show.qr_help') }}
                 </p>
                 <QRCodeBlock :url="wallet_url" class="mt-4" />
-                <p class="mt-4 break-all text-center font-mono text-xs text-charcoal-500">
+                <p class="mt-4 break-all text-center font-mono text-[11px] text-on-surface-variant">
                     {{ wallet_url }}
                 </p>
 
-                <h3 class="mt-6 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                <h3 class="label-eyebrow mt-6">
                     {{ t('wallet.show.barcode_heading') }}
                 </h3>
-                <p class="mt-1 text-xs text-charcoal-500">
+                <p class="mt-1 label-help">
                     {{ t('wallet.show.barcode_help') }}
                 </p>
                 <BarcodeBlock
                     :value="wallet.public_token"
                     class="mt-3"
                 />
-                <p class="mt-2 text-center font-mono text-xs text-charcoal-500">
+                <p class="mt-2 text-center font-mono text-[11px] text-on-surface-variant">
                     {{ wallet.wallet_number }}
                 </p>
             </section>
 
             <section class="grid grid-cols-2 gap-4">
-                <div class="rounded-2xl bg-white p-4 shadow-soft ring-1 ring-sage-200">
-                    <p class="text-xs uppercase tracking-wider text-charcoal-500">
+                <div class="surface-card p-4">
+                    <p class="label-eyebrow">
                         {{ t('wallet.show.lifetime_earned') }}
                     </p>
-                    <p class="mt-1 text-xl font-semibold text-charcoal-900">
+                    <p class="mt-1 text-xl font-bold text-on-surface">
                         {{ wallet.lifetime_earned }}&nbsp;Kč
                     </p>
                 </div>
-                <div class="rounded-2xl bg-white p-4 shadow-soft ring-1 ring-sage-200">
-                    <p class="text-xs uppercase tracking-wider text-charcoal-500">
+                <div class="surface-card p-4">
+                    <p class="label-eyebrow">
                         {{ t('wallet.show.lifetime_redeemed') }}
                     </p>
-                    <p class="mt-1 text-xl font-semibold text-charcoal-900">
+                    <p class="mt-1 text-xl font-bold text-on-surface">
                         {{ wallet.lifetime_redeemed }}&nbsp;Kč
                     </p>
                 </div>
             </section>
 
-            <section v-if="recent_transactions.length > 0">
-                <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-charcoal-500">
-                    {{ t('wallet.show.recent_heading') }}
-                </h2>
-                <TransactionList :transactions="recent_transactions" />
+            <section
+                v-if="recent_transactions.length > 0"
+                class="surface-card p-6"
+            >
+                <header class="mb-4 flex items-center justify-between">
+                    <h2 class="label-eyebrow">
+                        {{ t('wallet.show.recent_heading') }}
+                    </h2>
+                    <Link
+                        :href="`/w/${wallet.public_token}/activity`"
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
+                    >
+                        {{ t('wallet.show.view_all_activity') }}
+                        <ArrowRight :size="12" />
+                    </Link>
+                </header>
+                <TransactionList
+                    :transactions="recent_transactions"
+                    :empty-message="t('wallet.transactions.empty')"
+                />
             </section>
-
-            <div class="flex justify-center">
-                <Link
-                    :href="`/w/${wallet.public_token}/activity`"
-                    class="text-sm font-medium text-matcha-700 hover:text-matcha-800"
-                >
-                    {{ t('wallet.show.view_all_activity') }}
-                </Link>
-            </div>
         </main>
     </div>
 </template>
