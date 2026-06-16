@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TransactionTypeEnum;
+use Database\Factories\RewardTransactionFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Thinkycz\LaravelCore\Models\BaseModel;
+use Thinkycz\LaravelCore\Support\Typer;
 
 /**
  * @property int $id
@@ -25,9 +28,12 @@ use Thinkycz\LaravelCore\Models\BaseModel;
  * @property array<string, mixed>|null $metadata
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @use HasFactory<RewardTransactionFactory>
  */
 class RewardTransaction extends BaseModel
 {
+    use HasFactory;
     /**
      * Base select query.
      *
@@ -50,11 +56,10 @@ class RewardTransaction extends BaseModel
     public static function scopeSearch(Builder $builder, string $search): void
     {
         $like = '%' . $search . '%';
-        $builder->getQuery()->where(static function (Builder $query) use ($like): void {
+        $builder->where(static function (Builder $query) use ($like): void {
             $query->where($query->qualifyColumn('note'), 'LIKE', $like)
                 ->orWhereHas('wallet', static function (Builder $wallet) use ($like): void {
-                    $wallet->getQuery()
-                        ->where($wallet->qualifyColumn('first_name'), 'LIKE', $like)
+                    $wallet->where($wallet->qualifyColumn('first_name'), 'LIKE', $like)
                         ->orWhere($wallet->qualifyColumn('phone'), 'LIKE', $like)
                         ->orWhere($wallet->qualifyColumn('wallet_number'), 'LIKE', $like);
                 });
@@ -135,6 +140,16 @@ class RewardTransaction extends BaseModel
     public function getNote(): string|null
     {
         return $this->assertNullableString('note');
+    }
+
+    /**
+     * User id getter.
+     */
+    public function getUserId(): int|null
+    {
+        $raw = $this->getAttribute('user_id');
+
+        return $raw === null ? null : Typer::assertInt(\is_numeric($raw) ? (int) $raw : 0);
     }
 
     /**

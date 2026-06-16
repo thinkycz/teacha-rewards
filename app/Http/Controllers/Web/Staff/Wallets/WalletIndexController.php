@@ -28,7 +28,7 @@ class WalletIndexController
 
         $search = $request->str('q')->toString();
         if ($search !== '') {
-            $query->search($search);
+            RewardWallet::scopeSearch($query, $search);
         }
 
         $status = $request->str('status')->toString() === '' ? 'all' : $request->str('status')->toString();

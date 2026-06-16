@@ -59,7 +59,7 @@ class RewardWallet extends BaseModel
     public static function scopeSearch(Builder $builder, string $search): void
     {
         $like = '%' . $search . '%';
-        $builder->getQuery()->where(static function (Builder $query) use ($like): void {
+        $builder->where(static function (Builder $query) use ($like): void {
             $query->where($query->qualifyColumn('first_name'), 'LIKE', $like)
                 ->orWhere($query->qualifyColumn('phone'), 'LIKE', $like)
                 ->orWhere($query->qualifyColumn('phone_normalized'), 'LIKE', $like)

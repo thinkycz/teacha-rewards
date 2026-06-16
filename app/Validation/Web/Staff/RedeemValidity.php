@@ -32,7 +32,8 @@ class RedeemValidity
     {
         return $this->baseValidity
             ->make()
-            ->decimal(8, 2)
+            ->numeric(null, 0)
+            ->decimal(0, 2)
             ->required()
             ->min(0.01);
     }

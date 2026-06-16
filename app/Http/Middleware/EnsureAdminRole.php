@@ -32,7 +32,7 @@ class EnsureAdminRole
         }
 
         if ($user->getRole() !== UserRoleEnum::ADMIN) {
-            Thrower::default()->message('auth', \__('auth.forbidden'))->throw();
+            \abort(403, \__('auth.forbidden'));
         }
 
         return $next($request);

@@ -44,9 +44,10 @@ class ManualAdjustValidity
     {
         return $this->baseValidity
             ->make()
-            ->decimal(8, 2)
+            ->numeric(null, 0)
+            ->decimal(0, 2)
             ->required()
-            ->min(0.01);
+            ->min(0);
     }
 
     public function note(): Validity

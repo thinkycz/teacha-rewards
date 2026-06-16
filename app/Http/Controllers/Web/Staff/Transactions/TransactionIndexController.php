@@ -39,7 +39,7 @@ class TransactionIndexController
 
         $search = $request->str('q')->toString();
         if ($search !== '') {
-            $query->search($search);
+            RewardTransaction::scopeSearch($query, $search);
         }
 
         $transactions = $query->orderByDesc('created_at')->limit(200)->get();

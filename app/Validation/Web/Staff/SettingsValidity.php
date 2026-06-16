@@ -37,7 +37,8 @@ class SettingsValidity
     {
         return $this->baseValidity
             ->make()
-            ->decimal(5, 2)
+            ->numeric(null, 0)
+            ->decimal(0, 2)
             ->required()
             ->min(0)
             ->max(100);
