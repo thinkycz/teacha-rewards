@@ -28,11 +28,12 @@ use Thinkycz\LaravelCore\Support\Typer;
  * @property array<string, mixed>|null $metadata
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
- * @use HasFactory<RewardTransactionFactory>
  */
 class RewardTransaction extends BaseModel
 {
+    /**
+     * @use HasFactory<RewardTransactionFactory>
+     */
     use HasFactory;
     /**
      * Base select query.

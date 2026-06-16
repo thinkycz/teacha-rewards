@@ -10,6 +10,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Thinkycz\LaravelCore\Support\Thrower;
+use Thinkycz\LaravelCore\Support\Typer;
 
 /**
  * Reject any user whose role is not `admin`. The `EnsureStaffRole`
@@ -32,7 +33,7 @@ class EnsureAdminRole
         }
 
         if ($user->getRole() !== UserRoleEnum::ADMIN) {
-            \abort(403, \__('auth.forbidden'));
+            \abort(403, Typer::assertString(\__('auth.forbidden')));
         }
 
         return $next($request);
