@@ -48,6 +48,23 @@ php artisan migrate --seed
 composer run dev
 ```
 
+### Local dev over plain `http://`
+
+The default `SESSION_SECURE_COOKIE` derives from the `APP_URL` scheme.
+If `APP_URL=http://...` (the default in `.env.example`) the session +
+XSRF cookies are **not** marked `Secure`, so the browser stores and
+sends them on `http://` — the typical Herd / Valet dev setup.
+
+If you see `TokenMismatchException` on POST forms after a fresh
+browser session, check:
+
+1. The browser has an `XSRF-TOKEN` cookie (DevTools → Application →
+   Cookies). If not, the session cookie was rejected because it was
+   `Secure` over `http://` — flip `SESSION_SECURE_COOKIE=false` in
+   `.env` or set `APP_URL` to your `http://` origin.
+2. You're not running the Inertia client from a different origin than
+   the session cookie was set on.
+
 The seeder creates:
 - `admin@teacha.cz` / `password` — admin
 - `staff@teacha.cz` / `password` — staff

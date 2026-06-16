@@ -140,6 +140,19 @@ To exercise the rewards flow by hand (also in `README.md`):
     sheet with a single QR pointing at `/wallet` is ready to
     stick at the till.
 
+## CSRF / Inertia wiring
+
+`tests/Feature/CsrfCookieRegressionTest.php` is the regression
+guard for the `TokenMismatchException` on `POST /register` that
+shows up when a developer runs the app over `http://` (Herd /
+Valet). The default `SESSION_SECURE_COOKIE` in
+`config/session.php` derives from the `APP_URL` scheme, so a
+plain-http `APP_URL` keeps the XSRF cookie `Secure: false` and
+the Inertia client can echo it back on the next XHR. Set
+`SESSION_SECURE_COOKIE=true` explicitly in production. The
+regression test asserts both presence and the unsecure-on-http
+behavior.
+
 ## Acceptance gate
 
 The Teacha Rewards build is shippable:
