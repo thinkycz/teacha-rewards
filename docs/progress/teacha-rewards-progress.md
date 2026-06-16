@@ -110,6 +110,40 @@ ticket(s) they block._
 _None at session start. New blockers should be appended here with the date
 and the ticket(s) they block._
 
+## Resume checklist (next session)
+
+If this work is picked up in a fresh turn, the next agent should:
+
+1. **Finish the pre-existing PHPStan cleanup (10 errors remain).** The
+   pattern is the same in all 10: PHPStan cannot infer the static return
+   type of `Model::query()->first()`, `Model::create()`, or
+   `Model::find()` for the `Laravel\Ai\Models\Conversation` and the local
+   `App\Models\AgentRun` / `App\Models\AgentRunEvent` models. Pick one of
+   these two fixes:
+   - Add a `stubs/Models/Conversation.stub` (and the same for
+     `AgentRun`/`AgentRunEvent`) declaring `create()`/`find()`/`first()` as
+     template-typed static methods, then include them in `phpstan.neon`'s
+     `scanFiles` + `stubFiles`.
+   - Add `@phpstan-method static find(int|string $id)` and
+     `@phpstan-method static create(array<mixed> $attributes)` annotations
+     directly on the three model classes.
+   The `sseEvent` "unused" report in `AgentRunStreamController` is
+   investigated separately — likely a false positive from the
+   bleedingEdge strict rules not following the `Generator` yield.
+
+2. **Phase 2 — services.** The three services in `app/Services/{Reward,Settings}/*`
+   and the `RewardServiceProvider` in `app/Providers/`. The plan §Phase 2
+   has the exact API surface. Two new composer dependencies are needed:
+   `propaganistas/laravel-phone` (Czech phone validation + E.164 cast)
+   and `brick/math` (typed decimal math). The wallet-side `getRewardsBalance()`
+   currently returns a `string`; the service converts to `BigDecimal` for
+   arithmetic and persists the rounded `toScale(2, RoundingMode::HALF_UP)`
+   string.
+
+3. **Phase 3+** follows the plan §Phase 3 / 4 / 5 / 6 / 7 in order. Each
+   phase has its own acceptance criteria; the plan + verification doc are
+   the source of truth.
+
 ## Change log
 
 - **2026-06-16** — Initial spec, plan, and progress documents created from
