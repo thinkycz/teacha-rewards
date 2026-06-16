@@ -69,6 +69,15 @@ defineProps<{
             <p class="mt-4 text-center text-xs text-charcoal-500">
                 {{ t('marketing.privacy') }}
             </p>
+
+            <p class="mt-2 text-center text-xs">
+                <Link
+                    :href="'/install'"
+                    class="font-semibold text-matcha-700 hover:text-matcha-800"
+                >
+                    {{ t('pwa.install.guide_title') }} →
+                </Link>
+            </p>
         </main>
     </div>
 </template>

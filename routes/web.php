@@ -63,6 +63,11 @@ Resolver::resolveRouteRegistrar()
 // is down for navigations).
 Resolver::resolveRouteRegistrar()->get('offline', OfflineController::class);
 
+// PWA install guide (iOS-friendly step-by-step screen).
+Resolver::resolveRouteRegistrar()
+    ->get('install', \App\Http\Controllers\Web\Pwa\InstallGuideController::class)
+    ->name('pwa.install');
+
 Resolver::resolveRouteRegistrar()
     ->middleware('guest:users')
     ->group(static function (Router $router): void {

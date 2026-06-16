@@ -212,6 +212,21 @@
             "heading": "Ste offline",
             "body": "Nemôžeme sa spojiť s Teacha Rewards. Pripojte sa znova pre zobrazenie peňaženky alebo otvorenie novej.",
             "retry": "Skúsiť znova"
+        },
+        "install": {
+            "banner_heading": "Pridajte si Teacha na plochu",
+            "banner_body": "Otvorte peňaženku jedným klepnutím. Funguje aj bez pripojenia.",
+            "banner_install": "Pridať na plochu",
+            "banner_dismiss": "Nie, ďakujem",
+            "ios_step_1": "Klepnite na tlačidlo Zdieľať v prehliadači.",
+            "ios_step_2": "Vyberte \"Pridať na plochu\" z ponuky.",
+            "ios_step_3": "Potvrďte klepnutím na Pridať.",
+            "guide_title": "Ako pridať Teacha na plochu",
+            "guide_intro": "Pre najrýchlejší prístup k peňaženke si môžete Teacha nainštalovať ako aplikáciu.",
+            "guide_ios": "Na iPhone alebo iPade",
+            "guide_android": "Na Androide",
+            "guide_chrome": "V Chrome na počítači",
+            "guide_chrome_body": "Kliknite na ikonu inštalácie v adresnom riadku alebo použite ponuku prehliadača."
         }
     },
     "staff": {

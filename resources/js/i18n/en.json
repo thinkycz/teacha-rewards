@@ -11,7 +11,15 @@
         "not_set": "Not set",
         "open": "Open",
         "today": "Today",
-        "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "weekdays": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ],
         "yes": "Yes"
     },
     "nav": {
@@ -204,6 +212,21 @@
             "heading": "You're offline",
             "body": "We can't reach Teacha Rewards right now. Reconnect to see your wallet or open a new one.",
             "retry": "Try again"
+        },
+        "install": {
+            "banner_heading": "Add Teacha to your home screen",
+            "banner_body": "Open your wallet with one tap. Works even without signal.",
+            "banner_install": "Add to home screen",
+            "banner_dismiss": "Not now",
+            "ios_step_1": "Tap the Share button in your browser.",
+            "ios_step_2": "Choose \"Add to Home Screen\" from the menu.",
+            "ios_step_3": "Confirm by tapping Add.",
+            "guide_title": "How to install Teacha",
+            "guide_intro": "For the fastest access to your wallet, install Teacha as an app.",
+            "guide_ios": "On iPhone or iPad",
+            "guide_android": "On Android",
+            "guide_chrome": "In Chrome on desktop",
+            "guide_chrome_body": "Click the install icon in the address bar or use the browser menu."
         }
     },
     "staff": {
@@ -350,4 +373,3 @@
         }
     }
 }
-

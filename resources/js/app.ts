@@ -1,11 +1,15 @@
 import './bootstrap';
+import './pwa';
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
-import { createApp, h } from 'vue';
+import { createApp, defineAsyncComponent, h } from 'vue';
 import type { DefineComponent } from 'vue';
 import { createAppI18n, isSupportedLocale } from './i18n';
 import type { SharedProps } from './types';
+import { registerServiceWorker } from './pwa';
+
+registerServiceWorker();
 
 createInertiaApp({
     title: (title) =>
@@ -29,7 +33,18 @@ createInertiaApp({
 
         const i18n = createAppI18n(locale);
 
-        createApp({ render: () => h(App, props) })
+        const PwaInstallBanner = defineAsyncComponent(
+            () => import('./components/pwa/PwaInstallBanner.vue'),
+        );
+
+        const root = createApp({
+            render: () => [
+                h(App, props),
+                h(PwaInstallBanner),
+            ],
+        });
+
+        root
             .use(plugin)
             .use(i18n)
             .mount(el);
