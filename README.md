@@ -14,14 +14,8 @@ patterns.
 
 ## What's in the box
 
-- **Customer flow** (`/`, `/wallet`, `/w/{token}`, `/w/{token}/activity`,
-  `/offline`, `/install`): open or create a wallet, view balance,
-  scan a personal QR at the till, see full ledger.
-- **Staff flow** (`/staff`): scan a customer QR (camera + manual
-  fallback), log purchase, redeem rewards, manual adjustment
-  (add / subtract / set with a required reason), search + filter
-  wallets, full transaction log, admin settings, printable store
-  QR sheet.
+- **Customer flow** (mobile-first responsive; mobile signup with phone number, QR + barcode to scan at the till): `/`, `/wallet`, `/w/{token}`, `/w/{token}/activity`, `/offline`, `/install`
+- **Admin / dashboard** (desktop-first sidebar nav, used by staff on a real keyboard at the till): `/dashboard`, `/dashboard/scan`, `/dashboard/wallets`, `/dashboard/transactions`, `/dashboard/settings`, `/dashboard/store-qr`
 - **PWA**: branded manifest, offline-first service worker, an
   install banner that handles both Chromium (`beforeinstallprompt`)
   and iOS Safari (manual 3-step guide), branded icons.
@@ -187,10 +181,10 @@ translation fails CI).
 
 | Setting          | Default                | Where to change                          |
 | ---------------- | ---------------------- | ---------------------------------------- |
-| `cashback_rate`  | `10`                   | `/staff/settings`                        |
-| `currency`       | `CZK`                  | `/staff/settings`                        |
-| `program_name`   | `Teacha Rewards`       | `/staff/settings`                        |
-| `store_name`     | `Teacha`               | `/staff/settings`                        |
+| `cashback_rate`  | `10`                   | `/dashboard/settings`                    |
+| `currency`       | `CZK`                  | `/dashboard/settings`                    |
+| `program_name`   | `Teacha Rewards`       | `/dashboard/settings`                    |
+| `store_name`     | `Teacha`               | `/dashboard/settings`                    |
 | Default app locale | `cs`                 | `.env` `APP_LOCALE`                      |
 | Wallet public token | 32-char URL-safe (Str::random) | `app/Models/RewardWallet.php`     |
 
@@ -205,23 +199,23 @@ translation fails CI).
 - `GET /offline` — PWA offline fallback
 - `GET /install` — PWA install guide (iOS-friendly steps)
 
-### Staff (`/staff/*`, requires `staff` or `admin`)
-- `GET /staff` — dashboard (stats + recent activity + quick actions)
-- `GET /staff/scan` — camera scanner + manual token entry
-- `GET /staff/scan/{token}` — wallet summary for the scanned token
-- `GET /staff/wallets` — searchable, filterable, sortable wallet list
-- `GET /staff/wallets/{wallet}` — full wallet detail + all action panels
-- `POST /staff/wallets/{wallet}/purchase` — log a purchase → credit cashback
-- `POST /staff/wallets/{wallet}/redeem` — redeem rewards (must not exceed balance)
-- `POST /staff/wallets/{wallet}/adjust` — manual add / subtract / set (note required)
-- `POST /staff/wallets/{wallet}/disable` / `enable` — toggle wallet status
-- `GET /staff/transactions` — full ledger with type + search filters
-- `GET /staff/store-qr` — printable store QR sheet (cashier can print and stick at the till)
+### Admin / dashboard (`/dashboard/*`, requires `staff` or `admin`)
+- `GET /dashboard` — stats (active/disabled wallets, today's purchases + cashback) + recent activity + quick actions
+- `GET /dashboard/scan` — camera scanner + manual token entry
+- `GET /dashboard/scan/{token}` — wallet summary for the scanned token
+- `GET /dashboard/wallets` — searchable, filterable, sortable wallet list
+- `GET /dashboard/wallets/{wallet}` — full wallet detail + all action panels
+- `POST /dashboard/wallets/{wallet}/purchase` — log a purchase → credit cashback
+- `POST /dashboard/wallets/{wallet}/redeem` — redeem rewards (must not exceed balance)
+- `POST /dashboard/wallets/{wallet}/adjust` — manual add / subtract / set (note required)
+- `POST /dashboard/wallets/{wallet}/disable` / `enable` — toggle wallet status
+- `GET /dashboard/transactions` — full ledger with type + search filters
+- `GET /dashboard/store-qr` — printable store QR sheet (cashier can print and stick at the till)
 
-### Admin (`/staff/settings/*`, requires `admin`)
-- `GET /staff/settings` — program + store settings
-- `POST /staff/settings` — save them
-- `/staff/store-qr` is also linked from the settings page for convenience
+### Admin-only sub-tree (`/dashboard/settings/*`, requires `admin`)
+- `GET /dashboard/settings` — program + store settings (cashback rate, currency, program name, store name)
+- `POST /dashboard/settings` — save them
+- `/dashboard/store-qr` is also linked from the settings page for convenience
 
 ### Auth (unchanged from the boilerplate)
 - `GET /login`, `POST /login`, `POST /logout`
@@ -235,23 +229,24 @@ translation fails CI).
 1. `composer run dev` and open `http://localhost:8000`.
 2. From the marketing page, click "Vytvořit nebo otevřít moji peněženku".
 3. Enter `+420 600 000 001` + a first name → wallet opens with 0 Kč
-   balance and a personal QR.
+   balance and a personal QR + barcode.
 4. Sign in as `staff@teacha.cz` / `password`. You land on
-   `/staff`.
-5. Tap "Scan" → either scan the customer's QR or use the manual
+   `/dashboard`.
+5. Click "Scan" in the sidebar → either scan the customer's QR
+   (or barcode at the till scanner) or use the manual
    "Zadejte token ručně" field.
 6. On the wallet summary, open "Log a purchase", enter `100 Kč`,
    submit. The wallet now has 10 Kč of rewards (default 10% rate).
 7. Open "Redeem rewards", enter `5`, submit. Balance is now 5 Kč.
 8. Open "Manual adjustment", pick "Add", enter `20` with note
    "Welcome gift", submit. Balance is 25 Kč.
-9. As `admin@teacha.cz`, visit `/staff/settings`, change the
+9. As `admin@teacha.cz`, visit `/dashboard/settings`, change the
    cashback rate to 15, save. A new purchase of 100 Kč now
    credits 15 Kč of rewards; old transactions keep the rate
    snapshot.
-10. Visit `/staff/store-qr`, click "Print". A printable A4 sheet
-    with a single QR pointing at `/wallet` is ready to stick at
-    the till.
+10. Visit `/dashboard/store-qr`, click "Print". A printable A4
+    sheet with a single QR pointing at `/wallet` is ready to
+    stick at the till.
 
 ## Where to look in the code
 
@@ -265,8 +260,10 @@ translation fails CI).
 | Service container wiring         | `app/Providers/RewardServiceProvider.php`                             |
 | Routes                           | `routes/web.php`                                                      |
 | Staff auth + role guard          | `app/Http/Middleware/EnsureStaffRole.php` + `EnsureAdminRole.php`     |
-| Vue mobile-first layout          | `resources/js/layouts/StaffLayout.vue` + `MarketingLayout.vue`        |
+| Desktop admin layout             | `resources/js/layouts/AdminLayout.vue`                                |
+| Mobile customer layout           | `resources/js/pages/Wallet/Show.vue` (inline)                         |
 | PWA install banner               | `resources/js/components/pwa/PwaInstallBanner.vue`                    |
+| Customer barcode renderer        | `resources/js/components/reward/BarcodeBlock.vue`                     |
 | Service worker                   | `public/sw.js`                                                        |
 | Seeder                           | `database/seeders/TeachaRewardsSeeder.php`                            |
 | Cashback docs                    | `docs/cashback-calculation.md`                                        |

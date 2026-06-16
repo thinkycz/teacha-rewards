@@ -180,7 +180,9 @@
             "lifetime_earned": "Lifetime earned",
             "lifetime_redeemed": "Lifetime redeemed",
             "recent_heading": "Recent activity",
-            "view_all_activity": "View full activity"
+            "view_all_activity": "View full activity",
+            "barcode_heading": "Barcode",
+            "barcode_help": "For till scanners that don't read QR. Same token as the QR above."
         },
         "activity": {
             "title": "Activity — :name",

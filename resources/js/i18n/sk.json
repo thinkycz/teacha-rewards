@@ -180,7 +180,9 @@
             "lifetime_earned": "Celkovo zarobené",
             "lifetime_redeemed": "Celkovo uplatnené",
             "recent_heading": "Nedávna aktivita",
-            "view_all_activity": "Zobraziť celú aktivitu"
+            "view_all_activity": "Zobraziť celú aktivitu",
+            "barcode_heading": "Čiarový kód",
+            "barcode_help": "Pre pultové čítačky, ktoré nečítajú QR. Kód nesie rovnaký token ako QR vyššie."
         },
         "activity": {
             "title": "Aktivita — :name",

@@ -8,6 +8,7 @@ import WalletCard from '@/components/reward/WalletCard.vue';
 import RewardsBalance from '@/components/reward/RewardsBalance.vue';
 import TransactionList from '@/components/reward/TransactionList.vue';
 import QRCodeBlock from '@/components/reward/QRCodeBlock.vue';
+import BarcodeBlock from '@/components/reward/BarcodeBlock.vue';
 
 useBoundLocale();
 const { t } = useI18n();
@@ -70,6 +71,20 @@ const isActive = computed(() => props.wallet.status === 'active');
                 <QRCodeBlock :url="wallet_url" class="mt-4" />
                 <p class="mt-4 break-all text-center font-mono text-xs text-charcoal-500">
                     {{ wallet_url }}
+                </p>
+
+                <h3 class="mt-6 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                    {{ t('wallet.show.barcode_heading') }}
+                </h3>
+                <p class="mt-1 text-xs text-charcoal-500">
+                    {{ t('wallet.show.barcode_help') }}
+                </p>
+                <BarcodeBlock
+                    :value="wallet.public_token"
+                    class="mt-3"
+                />
+                <p class="mt-2 text-center font-mono text-xs text-charcoal-500">
+                    {{ wallet.wallet_number }}
                 </p>
             </section>
 

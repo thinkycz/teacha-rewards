@@ -19,7 +19,7 @@ defineProps<{
         <header class="mx-auto flex max-w-md items-center justify-between px-6 py-6">
             <Brand class="text-2xl" />
             <Link
-                :href="'/staff'"
+                :href="'/dashboard'"
                 class="text-sm font-medium text-charcoal-500 hover:text-charcoal-900"
             >
                 {{ t('nav.staff_login') }}

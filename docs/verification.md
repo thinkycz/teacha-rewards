@@ -77,9 +77,9 @@ ls: phpstan-baseline.neon: No such file or directory
 | `GET /w/{token}/activity`     | public (token-gated)  | same                        |
 | `GET /offline`                | public                | PWA offline fallback        |
 | `GET /install`                | public                | PWA install guide           |
-| `GET/POST /staff/*`           | staff + admin         | `staff` middleware          |
-| `GET/POST /staff/settings/*`  | admin                 | `admin` middleware          |
-| `GET /staff/store-qr`         | staff + admin         | print-friendly QR sheet     |
+| `GET/POST /dashboard/*`        | staff + admin         | `staff` middleware          |
+| `GET/POST /dashboard/settings/*` | admin               | `admin` middleware          |
+| `GET /dashboard/store-qr`      | staff + admin         | print-friendly QR sheet     |
 | `GET/POST /login` + auth      | guest                 | core auth                   |
 
 Customer wallet URLs rely on the unguessable `public_token`
@@ -139,6 +139,23 @@ To exercise the rewards flow by hand (also in `README.md`):
 10. Visit `/staff/store-qr`, click "Print". A printable A4
     sheet with a single QR pointing at `/wallet` is ready to
     stick at the till.
+
+## Architecture decisions
+
+- **Customer surface is mobile-first responsive** — the wallet page
+  is the touch-friendly experience for phone-based signup, balance
+  check, and the QR + barcode that staff scans at the till.
+- **Admin / dashboard surface is desktop-first** — the cashier /
+  manager uses a real keyboard at the till, so the layout is a
+  sticky left sidebar (Dashboard, Scan, Wallets, Transactions,
+  Settings) on `lg+` viewports, collapsing to a bottom tab bar
+  on smaller screens for the occasional phone check. The route
+  prefix is `/dashboard/*`.
+- The legacy boilerplate agent-chat dashboard at `/dashboard` was
+  removed — its controllers, conversation model, and agent-run
+  flow are pre-existing code, not part of the Teacha Rewards
+  build, and the rewards admin is the only thing that should be
+  at that URL.
 
 ## CSRF / Inertia wiring
 
