@@ -52,7 +52,7 @@ class StoreWalletValidity
             ->make()
             ->varchar()
             ->required()
-            ->customRule(new Phone('cz', 'mobile'));
+            ->addRule('phone:cz,mobile');
     }
 
     /**

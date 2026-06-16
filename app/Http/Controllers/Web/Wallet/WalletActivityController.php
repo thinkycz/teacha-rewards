@@ -30,15 +30,26 @@ class WalletActivityController
 
         $wallet = $service->getByPublicToken($token);
 
-        if (! $wallet instanceof RewardWallet) {
-            Thrower::default()->message('wallet', \__('Wallet not found.'))->throw();
-        }
-
         $transactions = $wallet->transactions()
             ->with('user:id,name')
             ->orderByDesc('created_at')
             ->limit(100)
             ->get();
+
+        $items = $transactions->map(static function ($tx): array {
+            /** @var \App\Models\RewardTransaction $tx */
+            $createdAt = $tx->getAttribute('created_at');
+            return [
+                'id' => $tx->getKey(),
+                'type' => $tx->getType()->value,
+                'amount' => $tx->getAmount(),
+                'purchase_amount' => $tx->getPurchaseAmount(),
+                'balance_after' => $tx->getBalanceAfter(),
+                'note' => $tx->getNote(),
+                'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
+                'staff_name' => $tx->user?->getName(),
+            ];
+        })->all();
 
         return Inertia::render('Wallet/Activity', [
             'wallet' => [
@@ -49,19 +60,7 @@ class WalletActivityController
                 'lifetime_earned' => $wallet->getLifetimeEarned(),
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
             ],
-            'transactions' => $transactions->map(static function ($tx): array {
-                /** @var \App\Models\RewardTransaction $tx */
-                return [
-                    'id' => $tx->getKey(),
-                    'type' => $tx->getType()->value,
-                    'amount' => $tx->getAmount(),
-                    'purchase_amount' => $tx->getPurchaseAmount(),
-                    'balance_after' => $tx->getBalanceAfter(),
-                    'note' => $tx->getNote(),
-                    'created_at' => $tx->getAttribute('created_at')?->toIso8601String(),
-                    'staff_name' => $tx->user?->getName(),
-                ];
-            })->all(),
+            'transactions' => $items,
         ]);
     }
 }

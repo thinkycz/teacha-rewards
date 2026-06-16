@@ -33,15 +33,25 @@ class WalletShowController
 
         $wallet = $service->getByPublicToken($token);
 
-        if (! $wallet instanceof RewardWallet) {
-            Thrower::default()->message('wallet', \__('Wallet not found.'))->throw();
-        }
-
         $recent = $wallet->transactions()
             ->with('user:id,name')
             ->orderByDesc('created_at')
             ->limit(5)
             ->get();
+
+        $items = $recent->map(static function ($tx): array {
+            /** @var \App\Models\RewardTransaction $tx */
+            $createdAt = $tx->getAttribute('created_at');
+            return [
+                'id' => $tx->getKey(),
+                'type' => $tx->getType()->value,
+                'amount' => $tx->getAmount(),
+                'balance_after' => $tx->getBalanceAfter(),
+                'note' => $tx->getNote(),
+                'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
+                'staff_name' => $tx->user?->getName(),
+            ];
+        })->all();
 
         return Inertia::render('Wallet/Show', [
             'wallet' => [
@@ -53,18 +63,7 @@ class WalletShowController
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
                 'status' => $wallet->getStatus()->value,
             ],
-            'recent_transactions' => $recent->map(static function ($tx): array {
-                /** @var \App\Models\RewardTransaction $tx */
-                return [
-                    'id' => $tx->getKey(),
-                    'type' => $tx->getType()->value,
-                    'amount' => $tx->getAmount(),
-                    'balance_after' => $tx->getBalanceAfter(),
-                    'note' => $tx->getNote(),
-                    'created_at' => $tx->getAttribute('created_at')?->toIso8601String(),
-                    'staff_name' => $tx->user?->getName(),
-                ];
-            })->all(),
+            'recent_transactions' => $items,
             'wallet_url' => $request->url(),
         ]);
     }

@@ -32,10 +32,18 @@ Resolver::resolveRouteRegistrar()->get('/', MarketingIndexController::class);
 
 // Public customer flow: no auth, the `public_token` in the URL is
 // the only identifier for the wallet.
-Resolver::resolveRouteRegistrar()->get('wallet', WalletCreateController::class);
-Resolver::resolveRouteRegistrar()->post('wallet', WalletStoreController::class);
-Resolver::resolveRouteRegistrar()->get('w/{token}', WalletShowController::class);
-Resolver::resolveRouteRegistrar()->get('w/{token}/activity', WalletActivityController::class);
+Resolver::resolveRouteRegistrar()
+    ->get('wallet', WalletCreateController::class)
+    ->name('wallet.create');
+Resolver::resolveRouteRegistrar()
+    ->post('wallet', WalletStoreController::class)
+    ->name('wallet.store');
+Resolver::resolveRouteRegistrar()
+    ->get('w/{token}', WalletShowController::class)
+    ->name('wallet.show');
+Resolver::resolveRouteRegistrar()
+    ->get('w/{token}/activity', WalletActivityController::class)
+    ->name('wallet.activity');
 
 // PWA offline fallback (also serves as a soft-404 when the network
 // is down for navigations).
