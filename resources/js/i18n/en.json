@@ -370,6 +370,16 @@
         "status": {
             "active": "Active",
             "disabled": "Disabled"
+        },
+        "store_qr": {
+            "title": "Store QR — print",
+            "headline": "Open your cashback wallet in a single scan",
+            "back": "Back to dashboard",
+            "print": "Print",
+            "qr_alt": "QR code to open the wallet at {url}",
+            "scan_prompt": "Scan the code with your phone camera. The wallet opens in the browser — no app, no email.",
+            "footer": "Printed from the Teacha Rewards admin.",
+            "admin_hint": "Prints on A4 / Letter. For label printing, set the printer size to 10 × 10 cm."
         }
     }
 }

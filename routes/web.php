@@ -133,3 +133,10 @@ Resolver::resolveRouteRegistrar()
         $router->post('/', SettingsUpdateController::class)->name('update');
     });
 
+// Printable store QR sheet — staff (any role) can use it; the page
+// is a clean print-friendly render pointing customers at /wallet.
+Resolver::resolveRouteRegistrar()
+    ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'staff'])
+    ->get('staff/store-qr', \App\Http\Controllers\Web\Staff\StoreQrPrintController::class)
+    ->name('staff.store-qr');
+

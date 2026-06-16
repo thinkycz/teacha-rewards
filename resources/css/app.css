@@ -72,3 +72,15 @@
         display: none;
     }
 }
+
+@layer utilities {
+    /* Hide chrome that shouldn't show up on a printout of the store QR sheet. */
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        body {
+            background: #ffffff !important;
+        }
+    }
+}

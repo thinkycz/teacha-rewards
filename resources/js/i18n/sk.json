@@ -370,6 +370,16 @@
         "status": {
             "active": "Aktívna",
             "disabled": "Deaktivovaná"
+        },
+        "store_qr": {
+            "title": "QR kód obchodu — tlač",
+            "headline": "Otvorte si cashbackovú peňaženku jedným naskenovaním",
+            "back": "Späť na prehľad",
+            "print": "Vytlačiť",
+            "qr_alt": "QR kód na otvorenie peňaženky na adrese {url}",
+            "scan_prompt": "Naskenujte kód fotoaparátom telefónu. Peňaženka sa otvorí v prehliadači — žiadna aplikácia, žiadny e-mail.",
+            "footer": "Vytlačené z administrácie Teacha Rewards.",
+            "admin_hint": "Tlač na A4 / Letter. Pre tlač na etikety nastavte v tlačiarni rozmer 10 × 10 cm."
         }
     }
 }

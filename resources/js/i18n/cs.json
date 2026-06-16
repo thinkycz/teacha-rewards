@@ -370,6 +370,16 @@
         "status": {
             "active": "Aktivní",
             "disabled": "Deaktivovaná"
+        },
+        "store_qr": {
+            "title": "Store QR — tisk",
+            "headline": "Otevřete si cashbackovou peněženku jedním naskenováním",
+            "back": "Zpět na přehled",
+            "print": "Vytisknout",
+            "qr_alt": "QR kód pro otevření peněženky na adrese {url}",
+            "scan_prompt": "Naskenujte kód fotoaparátem telefonu. Peněženka se otevře v prohlížeči — žádná aplikace, žádný e-mail.",
+            "footer": "Vytištěno z administrace Teacha Rewards.",
+            "admin_hint": "Tisk použije velikost A4 / Letter; pro tisk na etikety nastavte v tiskárně rozměr 10 × 10 cm."
         }
     }
 }

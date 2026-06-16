@@ -145,6 +145,23 @@ function submit(): void {
                     </Button>
                 </div>
             </form>
+
+            <div
+                class="rounded-2xl border border-outline-glass bg-white p-5 shadow-sm"
+            >
+                <h2 class="text-sm font-semibold text-charcoal-900">
+                    {{ t('staff.store_qr.title') }}
+                </h2>
+                <p class="mt-1 text-xs text-charcoal-600">
+                    {{ t('staff.store_qr.headline') }}
+                </p>
+                <a
+                    href="/staff/store-qr"
+                    class="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-matcha-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-matcha-700"
+                >
+                    {{ t('staff.store_qr.print') }}
+                </a>
+            </div>
         </div>
     </StaffLayout>
 </template>
