@@ -122,5 +122,21 @@
         "en": "English",
         "cs": "Čeština",
         "sk": "Slovenčina"
+    },
+    "reward": {
+        "wallet": {
+            "ready": "Wallet ready.",
+            "opened_existing": "Welcome back."
+        },
+        "purchase_amount_positive": "Purchase amount must be greater than zero.",
+        "redeem_amount_positive": "Redeem amount must be greater than zero.",
+        "redeem_amount_exceeds_balance": "You cannot redeem more than the current balance.",
+        "manual_amount_positive": "Adjustment amount must be greater than zero.",
+        "manual_subtract_exceeds_balance": "Cannot subtract more than the current balance.",
+        "manual_set_negative": "Balance cannot be set to a negative value.",
+        "note_required": "A reason is required for manual adjustments.",
+        "purchase_logged": "Purchase logged. Rewards added.",
+        "redeemed": "Rewards redeemed.",
+        "adjusted": "Balance adjusted."
     }
 }

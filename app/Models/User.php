@@ -6,7 +6,9 @@ namespace App\Models;
 
 use App\Enums\UserRoleEnum;
 use App\Http\Resources\UserResource;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Resources\JsonApi\JsonApiResource;
 use Illuminate\Support\Carbon;
@@ -15,6 +17,10 @@ use Thinkycz\LaravelCore\Models\BaseUser;
 
 class User extends BaseUser implements MustVerifyEmail
 {
+    /**
+     * @use HasFactory<UserFactory>
+     */
+    use HasFactory;
     /**
      * Explicit mass-assignment allowlist.
      *
@@ -30,7 +36,7 @@ class User extends BaseUser implements MustVerifyEmail
      * declaration; using `list<string>` here triggered a PHPStan
      * `property.phpDocType` mismatch on the override.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = ['email', 'password', 'locale', 'name', 'role'];
 

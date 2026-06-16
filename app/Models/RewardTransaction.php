@@ -154,12 +154,22 @@ class RewardTransaction extends BaseModel
     /**
      * Get the attributes that should be cast.
      *
+     * Every decimal column is cast to `decimal:2` so that Eloquent
+     * always returns them as zero-padded strings (`"5.00"`) instead of
+     * the PDO driver's int representation of `5.00` → `5`. The
+     * `metadata` column is a JSON column.
+     *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'metadata' => 'array',
+            'amount' => 'decimal:2',
+            'balance_before' => 'decimal:2',
+            'balance_after' => 'decimal:2',
+            'purchase_amount' => 'decimal:2',
+            'cashback_rate' => 'decimal:2',
         ];
     }
 }

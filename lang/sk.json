@@ -24,5 +24,17 @@
     "Password updated.": "Heslo bolo aktualizované.",
     "A new password has been sent to your email address.": "Na vašu e-mailovú adresu bolo odoslané nové heslo.",
     "A password reset link has been sent to your email address.": "Na vašu e-mailovú adresu bol odoslaný odkaz na obnovenie hesla.",
-    "Verification email sent.": "Overovací e-mail bol odoslaný."
+    "Verification email sent.": "Overovací e-mail bol odoslaný.",
+    "reward.wallet.ready": "Peňaženka je pripravená.",
+    "reward.wallet.opened_existing": "Vitajte späť.",
+    "reward.purchase_amount_positive": "Suma nákupu musí byť kladná.",
+    "reward.redeem_amount_positive": "Suma na uplatnenie musí byť kladná.",
+    "reward.redeem_amount_exceeds_balance": "Nie je možné uplatniť viac, než je aktuálny zostatok.",
+    "reward.manual_amount_positive": "Suma úpravy musí byť kladná.",
+    "reward.manual_subtract_exceeds_balance": "Nie je možné odpočítať viac, než je aktuálny zostatok.",
+    "reward.manual_set_negative": "Zostatok nie je možné nastaviť na zápornú hodnotu.",
+    "reward.note_required": "Pri ručných úpravách je vyžadovaný dôvod.",
+    "reward.purchase_logged": "Nákup zaznamenaný. Odmeny pridané.",
+    "reward.redeemed": "Odmeny uplatnené.",
+    "reward.adjusted": "Zostatok upravený."
 }

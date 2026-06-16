@@ -177,12 +177,21 @@ class RewardWallet extends BaseModel
     /**
      * Get the attributes that should be cast.
      *
+     * The three decimal columns are cast to `decimal:2` so that Eloquent
+     * always returns them as zero-padded strings (e.g. `"0.00"`,
+     * `"12.50"`) instead of the PDO driver's int representation of
+     * `0.00` → `0`. Without this cast, `assertString('rewards_balance')`
+     * panics on every read of a default-valued row.
+     *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'last_used_at' => 'datetime',
+            'rewards_balance' => 'decimal:2',
+            'lifetime_earned' => 'decimal:2',
+            'lifetime_redeemed' => 'decimal:2',
         ];
     }
 }

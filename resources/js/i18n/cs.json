@@ -122,5 +122,21 @@
         "en": "Angličtina",
         "cs": "Čeština",
         "sk": "Slovenčina"
+    },
+    "reward": {
+        "wallet": {
+            "ready": "Peněženka je připravena.",
+            "opened_existing": "Vítejte zpět."
+        },
+        "purchase_amount_positive": "Částka nákupu musí být kladná.",
+        "redeem_amount_positive": "Částka pro uplatnění musí být kladná.",
+        "redeem_amount_exceeds_balance": "Nelze uplatnit více, než je aktuální zůstatek.",
+        "manual_amount_positive": "Částka úpravy musí být kladná.",
+        "manual_subtract_exceeds_balance": "Nelze odečíst více, než je aktuální zůstatek.",
+        "manual_set_negative": "Zůstatek nelze nastavit na zápornou hodnotu.",
+        "note_required": "U ručních úprav je vyžadován důvod.",
+        "purchase_logged": "Nákup zaznamenán. Odměny přidány.",
+        "redeemed": "Odměny uplatněny.",
+        "adjusted": "Zůstatek upraven."
     }
 }

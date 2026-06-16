@@ -30,9 +30,9 @@ return new class extends Migration {
             $table->string('phone', 32);
             $table->string('phone_normalized', 32)->unique();
 
-            $table->decimal('rewards_balance', 10, 2)->default(0);
-            $table->decimal('lifetime_earned', 10, 2)->default(0);
-            $table->decimal('lifetime_redeemed', 10, 2)->default(0);
+            $table->decimal('rewards_balance', 10, 2)->default('0.00');
+            $table->decimal('lifetime_earned', 10, 2)->default('0.00');
+            $table->decimal('lifetime_redeemed', 10, 2)->default('0.00');
 
             $table->string('status')->default(WalletStatusEnum::ACTIVE->value);
 

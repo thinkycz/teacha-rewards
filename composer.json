@@ -19,10 +19,12 @@
     "license": "proprietary",
     "require": {
         "php": "^8.3.0",
+        "brick/math": "^0.14.8",
         "inertiajs/inertia-laravel": "^3.0",
         "laravel/ai": "^0.8.1",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "propaganistas/laravel-phone": "^6.0",
         "thinkycz/laravel-core": "*"
     },
     "require-dev": {

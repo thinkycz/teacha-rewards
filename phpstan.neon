@@ -1,7 +1,11 @@
 includes:
     - ./vendor/phpstan/phpstan/conf/bleedingEdge.neon
-    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
-    - ./vendor/spaze/phpstan-disallowed-calls/extension.neon
+    # Note: the spaze/phpstan-disallowed-calls and phpstan-strict-rules
+    # extension.neon files are auto-loaded by phpstan/extension-installer
+    # (see composer.json require-dev). Listing them here as well would
+    # double-load their rules and trigger a PHPStan warning. The
+    # preset neons below set parameter values; the extensions themselves
+    # are registered once by the installer.
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
     - ./vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
