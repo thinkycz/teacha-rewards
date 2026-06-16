@@ -49,6 +49,10 @@ class AgentRunStreamController
                     ->get();
 
                 foreach ($events as $event) {
+                    if (! $event instanceof AgentRunEvent) {
+                        continue;
+                    }
+
                     $lastEventId = $event->getKey();
                     yield $this->sseEvent($event);
                 }

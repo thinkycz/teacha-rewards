@@ -25,11 +25,14 @@ class ConversationRepository
      */
     public function createForUser(User $user, string $message): Conversation
     {
-        return Conversation::create([
+        /** @var Conversation $conversation */
+        $conversation = Conversation::create([
             'id' => Str::uuid()->toString(),
             'user_id' => $this->userId($user),
             'title' => Str::limit($message, 35),
         ]);
+
+        return $conversation;
     }
 
     /**
@@ -41,7 +44,7 @@ class ConversationRepository
     {
         $payload = [];
 
-        foreach ($user->conversations()->select(['id', 'title', 'updated_at'])->limit($limit)->get() as $conversation) {
+        foreach ($user->conversations()->select(['id', 'title', 'updated_at'])->orderBy('updated_at', 'desc')->limit($limit)->get() as $conversation) {
             $updatedAt = $conversation->getAttribute('updated_at');
 
             $payload[] = [
@@ -59,6 +62,7 @@ class ConversationRepository
      */
     public function findOwned(string $id, User $user): Conversation|null
     {
+        /** @var Conversation|null $conversation */
         $conversation = Conversation::find($id);
 
         if ($conversation === null) {

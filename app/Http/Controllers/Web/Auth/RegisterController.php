@@ -48,6 +48,7 @@ class RegisterController
 
         $clearThrottle = $this->hit($this->limit());
 
+        /** @var User $user */
         $user = DB::transaction(static function () use ($validated): User {
             return User::create([
                 'email' => $validated->assertString('email'),

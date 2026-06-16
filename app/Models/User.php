@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Resources\UserResource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,24 +20,33 @@ class User extends BaseUser implements MustVerifyEmail
      *
      * Overrides the permissive `BaseUser::$guarded = ['id']` so only the
      * columns actually written through `create()`/`update()` are
-     * fillable: `email`, `password`, and `locale`. Sensitive attributes
-     * such as `email_verified_at` and `remember_token` are set through
-     * `forceFill()`/`save()` (bypassing the guard) by their dedicated
-     * methods, so they remain intentionally non-fillable here.
+     * fillable: `email`, `password`, `locale`, `name`, and `role`.
+     * Sensitive attributes such as `email_verified_at` and `remember_token`
+     * are set through `forceFill()`/`save()` (bypassing the guard) by
+     * their dedicated methods, so they remain intentionally non-fillable
+     * here.
      *
-     * @var list<string>
+     * The PHPDoc type matches the Eloquent parent's `array<int, string>`
+     * declaration; using `list<string>` here triggered a PHPStan
+     * `property.phpDocType` mismatch on the override.
+     *
+     * @var array<int, string>
      */
-    protected $fillable = ['email', 'password', 'locale'];
+    protected $fillable = ['email', 'password', 'locale', 'name', 'role'];
 
     /**
      * Get the user's AI conversations.
+     *
+     * The `->orderBy()` chain is intentionally omitted so the static
+     * return type stays `HasMany<...>`. Callers that need a specific
+     * order append their own `->orderBy(...)` (e.g. the sidebar payload
+     * in `ConversationRepository::recentForSidebar`).
      *
      * @return HasMany<Conversation, $this>
      */
     public function conversations(): HasMany
     {
-        return $this->hasMany(Conversation::class, 'user_id')
-            ->orderBy('updated_at', 'desc');
+        return $this->hasMany(Conversation::class, 'user_id');
     }
 
     /**
@@ -53,6 +63,38 @@ class User extends BaseUser implements MustVerifyEmail
     public function getLocale(): string
     {
         return $this->assertString('locale');
+    }
+
+    /**
+     * Name getter.
+     */
+    public function getName(): string
+    {
+        return $this->assertString('name');
+    }
+
+    /**
+     * Role getter.
+     */
+    public function getRole(): UserRoleEnum
+    {
+        return UserRoleEnum::from($this->assertString('role'));
+    }
+
+    /**
+     * Whether the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->getRole() === UserRoleEnum::ADMIN;
+    }
+
+    /**
+     * Whether the user is a staff member.
+     */
+    public function isStaff(): bool
+    {
+        return $this->getRole() === UserRoleEnum::STAFF;
     }
 
     /**
@@ -99,6 +141,7 @@ class User extends BaseUser implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRoleEnum::class,
         ];
     }
 }

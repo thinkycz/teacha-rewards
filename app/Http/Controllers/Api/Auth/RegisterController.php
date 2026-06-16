@@ -30,6 +30,7 @@ class RegisterController extends AutomaticController
         $guard = $validated->parseNullableString('guard') ?? $this->getDefaultGuard();
 
         if ($guard === GuardEnum::USERS->value) {
+            /** @var User $user */
             $user = DB::transaction(static function () use ($validated): User {
                 return User::create([
                     'email' => $validated->assertString('email'),

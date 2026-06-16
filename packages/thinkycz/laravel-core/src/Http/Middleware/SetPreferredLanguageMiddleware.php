@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Thinkycz\LaravelCore\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Thinkycz\LaravelCore\Support\Config;
@@ -37,7 +37,7 @@ class SetPreferredLanguageMiddleware
         $allowed = \array_values(\array_map('strval', $locales));
 
         $user = $request->user();
-        $stored = $user instanceof Authenticatable ? Typer::assertNullableString($user->getAttribute('locale')) : null;
+        $stored = $user instanceof Model ? Typer::assertNullableString($user->getAttribute('locale')) : null;
 
         $locale = $stored !== null
             ? $this->matchLocale($stored, $allowed)

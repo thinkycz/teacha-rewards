@@ -964,7 +964,7 @@ trait ModelTrait
     /**
      * @inheritDoc
      *
-     * @param array<string, mixed> $options
+     * @param array<mixed> $options
      */
     public function save(array $options = []): bool
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -28,9 +29,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => Carbon::now(),
             'password' => static::$password ??= 'password',
+            'role' => UserRoleEnum::STAFF->value,
             'remember_token' => Str::random(10),
             'locale' => Config::inject()->assertString('app.locale'),
         ];
@@ -43,6 +46,27 @@ class UserFactory extends Factory
     {
         return $this->state([
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state([
+            'role' => UserRoleEnum::ADMIN->value,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is staff (the default; useful for clarity
+     * in tests).
+     */
+    public function staff(): static
+    {
+        return $this->state([
+            'role' => UserRoleEnum::STAFF->value,
         ]);
     }
 
