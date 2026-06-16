@@ -84,3 +84,11 @@
         }
     }
 }
+
+/* Admin / dashboard theme: matcha primary scoped to .theme-matcha
+ * (the rewards admin shell). Keeps the original surface / outline
+ * tokens — only swaps the active-link indicator color. */
+.theme-matcha {
+    --color-primary: #65a30d;
+    --color-primary-container: #84cc16;
+}

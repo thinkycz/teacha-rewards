@@ -89,149 +89,6 @@
         }
     },
     "dashboard": {
-        "title": "Nástenka",
-        "how_can_i_help": "Ako vám môžem dnes pomôcť?",
-        "chat_description": "Spusťte interaktívny chat s vaším AI agentom. Tento zásobník je optimalizovaný pomocou Laravel AI SDK a OpenRouteru.",
-        "type_message": "Napíšte správu...",
-        "send": "Odoslať správu",
-        "suggestions": {
-            "inertia": "Vysvetli Inertia.js, ako by som mal päť rokov",
-            "route": "Napíš definíciu Laravel routy pre REST API",
-            "schema": "Navrhni databázovú schému pre e-shop"
-        }
-    },
-    "fields": {
-        "email": "E-mail",
-        "password": "Heslo",
-        "password_confirmation": "Potvrdiť heslo",
-        "current_password": "Súčasné heslo",
-        "new_password": "Nové heslo",
-        "locale": "Jazyk",
-        "user": "Vy",
-        "assistant": "Asistent"
-    },
-    "errors": {
-        "failed_response": "Nepodarilo sa vygenerovať odpoveď. Skúste to prosím znova."
-    },
-    "agent": {
-        "cancelled": "Zrušené",
-        "cancel_run": "Zrušiť beh",
-        "cancel_run_confirm": "Zrušiť bežiaceho agenta? Váš postup bude stratený.",
-        "clarification_hint": "Vyberte možnosť, ktorá najlepšie zodpovedá vášmu zámeru.",
-        "completed": "Dokončené",
-        "error_generic": "Beh agenta zlyhal. Skúste to prosím znova.",
-        "failed": "Zlyhalo",
-        "queued": "V poradí",
-        "recommended": "Odporúčané",
-        "resume_existing": "Obnovuje sa existujúci beh…",
-        "running": "Beží…",
-        "tool_running": "Používa sa {tool}…"
-    },
-    "locale": {
-        "en": "Angličtina",
-        "cs": "Čeština",
-        "sk": "Slovenčina"
-    },
-    "reward": {
-        "wallet": {
-            "ready": "Peňaženka je pripravená.",
-            "opened_existing": "Vitajte späť."
-        },
-        "purchase_amount_positive": "Suma nákupu musí byť kladná.",
-        "redeem_amount_positive": "Suma na uplatnenie musí byť kladná.",
-        "redeem_amount_exceeds_balance": "Nie je možné uplatniť viac, než je aktuálny zostatok.",
-        "manual_amount_positive": "Suma úpravy musí byť kladná.",
-        "manual_subtract_exceeds_balance": "Nie je možné odpočítať viac, než je aktuálny zostatok.",
-        "manual_set_negative": "Zostatok nie je možné nastaviť na zápornú hodnotu.",
-        "note_required": "Pri ručných úpravách je vyžadovaný dôvod.",
-        "purchase_logged": "Nákup zaznamenaný. Odmeny pridané.",
-        "redeemed": "Odmeny uplatnené.",
-        "adjusted": "Zostatok upravený.",
-        "invalid_phone": "Toto telefónne číslo nevyzerá správne."
-    },
-    "marketing": {
-        "tagline": "Teacha Rewards",
-        "headline": "Odmena za každý matcha.",
-        "subheadline": "Získajte cashback za každý matcha, bubble tea aj sezónny špeciál. Otvorte si peňaženku za tridsať sekúnd.",
-        "how_it_works": "Ako to funguje",
-        "step_1": "Otvorte si peňaženku pomocou telefónneho čísla a mena.",
-        "step_2": "Ukážte QR kód na pokladni a získajte cashback z každého nákupu.",
-        "step_3": "Kedykoľvek uplatnite svoj zostatok ako zľavu.",
-        "cta": "Vytvoriť alebo otvoriť moju peňaženku",
-        "privacy": "Žiadne heslo, žiadny e-mail. Vaša peňaženka je identifikovaná iba telefónnym číslom."
-    },
-    "wallet": {
-        "create": {
-            "title": "Otvoriť peňaženku",
-            "heading": "Vytvoriť alebo otvoriť moju peňaženku",
-            "subheading": "Nájdeme vás podľa telefónneho čísla. Ak peňaženku máte, otvoríme ju. Ak nie, vytvoríme ju hneď na mieste.",
-            "phone_label": "Telefónne číslo",
-            "phone_placeholder": "+421 123 456 789",
-            "first_name_label": "Meno",
-            "first_name_placeholder": "Anička",
-            "submit": "Pokračovať",
-            "privacy": "Vaše telefónne číslo nikomu neposkytujeme. Je to jediný kľúč k vašej peňaženke."
-        },
-        "show": {
-            "title": "Peňaženka — :name",
-            "disabled_notice": "Táto peňaženka je momentálne deaktivovaná. Obráťte sa na personál.",
-            "qr_heading": "QR kód peňaženky",
-            "qr_help": "Ukážte na pokladni pre získanie cashbacku alebo uplatnenie odmien.",
-            "lifetime_earned": "Celkovo zarobené",
-            "lifetime_redeemed": "Celkovo uplatnené",
-            "recent_heading": "Nedávna aktivita",
-            "view_all_activity": "Zobraziť celú aktivitu",
-            "barcode_heading": "Čiarový kód",
-            "barcode_help": "Pre pultové čítačky, ktoré nečítajú QR. Kód nesie rovnaký token ako QR vyššie."
-        },
-        "activity": {
-            "title": "Aktivita — :name",
-            "heading": "Aktivita",
-            "subheading": "Každá zmena zostatku peňaženky :name.",
-            "back": "Späť na peňaženku",
-            "empty": "Zatiaľ žiadna aktivita."
-        },
-        "balance": {
-            "available": "Dostupné odmeny",
-            "discount": "Dostupná zľava"
-        },
-        "transactions": {
-            "empty": "Zatiaľ žiadne transakcie.",
-            "purchase": "Nákup: :amount Kč",
-            "balance_after": "Zostatok: :amount Kč",
-            "types": {
-                "purchase_cashback": "Cashback",
-                "redeem": "Uplatnenie",
-                "manual_add": "Ručné navýšenie",
-                "manual_subtract": "Ručné zníženie",
-                "manual_set": "Ručná úprava"
-            }
-        }
-    },
-    "pwa": {
-        "offline": {
-            "title": "Offline",
-            "heading": "Ste offline",
-            "body": "Nemôžeme sa spojiť s Teacha Rewards. Pripojte sa znova pre zobrazenie peňaženky alebo otvorenie novej.",
-            "retry": "Skúsiť znova"
-        },
-        "install": {
-            "banner_heading": "Pridajte si Teacha na plochu",
-            "banner_body": "Otvorte peňaženku jedným klepnutím. Funguje aj bez pripojenia.",
-            "banner_install": "Pridať na plochu",
-            "banner_dismiss": "Nie, ďakujem",
-            "ios_step_1": "Klepnite na tlačidlo Zdieľať v prehliadači.",
-            "ios_step_2": "Vyberte \"Pridať na plochu\" z ponuky.",
-            "ios_step_3": "Potvrďte klepnutím na Pridať.",
-            "guide_title": "Ako pridať Teacha na plochu",
-            "guide_intro": "Pre najrýchlejší prístup k peňaženke si môžete Teacha nainštalovať ako aplikáciu.",
-            "guide_ios": "Na iPhone alebo iPade",
-            "guide_android": "Na Androide",
-            "guide_chrome": "V Chrome na počítači",
-            "guide_chrome_body": "Kliknite na ikonu inštalácie v adresnom riadku alebo použite ponuku prehliadača."
-        }
-    },
-    "staff": {
         "nav": {
             "dashboard": "Prehľad",
             "scan": "Skenovať",
@@ -382,6 +239,137 @@
             "scan_prompt": "Naskenujte kód fotoaparátom telefónu. Peňaženka sa otvorí v prehliadači — žiadna aplikácia, žiadny e-mail.",
             "footer": "Vytlačené z administrácie Teacha Rewards.",
             "admin_hint": "Tlač na A4 / Letter. Pre tlač na etikety nastavte v tlačiarni rozmer 10 × 10 cm."
+        }
+    },
+    "fields": {
+        "email": "E-mail",
+        "password": "Heslo",
+        "password_confirmation": "Potvrdiť heslo",
+        "current_password": "Súčasné heslo",
+        "new_password": "Nové heslo",
+        "locale": "Jazyk",
+        "user": "Vy",
+        "assistant": "Asistent"
+    },
+    "errors": {
+        "failed_response": "Nepodarilo sa vygenerovať odpoveď. Skúste to prosím znova."
+    },
+    "agent": {
+        "cancelled": "Zrušené",
+        "cancel_run": "Zrušiť beh",
+        "cancel_run_confirm": "Zrušiť bežiaceho agenta? Váš postup bude stratený.",
+        "clarification_hint": "Vyberte možnosť, ktorá najlepšie zodpovedá vášmu zámeru.",
+        "completed": "Dokončené",
+        "error_generic": "Beh agenta zlyhal. Skúste to prosím znova.",
+        "failed": "Zlyhalo",
+        "queued": "V poradí",
+        "recommended": "Odporúčané",
+        "resume_existing": "Obnovuje sa existujúci beh…",
+        "running": "Beží…",
+        "tool_running": "Používa sa {tool}…"
+    },
+    "locale": {
+        "en": "Angličtina",
+        "cs": "Čeština",
+        "sk": "Slovenčina"
+    },
+    "reward": {
+        "wallet": {
+            "ready": "Peňaženka je pripravená.",
+            "opened_existing": "Vitajte späť."
+        },
+        "purchase_amount_positive": "Suma nákupu musí byť kladná.",
+        "redeem_amount_positive": "Suma na uplatnenie musí byť kladná.",
+        "redeem_amount_exceeds_balance": "Nie je možné uplatniť viac, než je aktuálny zostatok.",
+        "manual_amount_positive": "Suma úpravy musí byť kladná.",
+        "manual_subtract_exceeds_balance": "Nie je možné odpočítať viac, než je aktuálny zostatok.",
+        "manual_set_negative": "Zostatok nie je možné nastaviť na zápornú hodnotu.",
+        "note_required": "Pri ručných úpravách je vyžadovaný dôvod.",
+        "purchase_logged": "Nákup zaznamenaný. Odmeny pridané.",
+        "redeemed": "Odmeny uplatnené.",
+        "adjusted": "Zostatok upravený.",
+        "invalid_phone": "Toto telefónne číslo nevyzerá správne."
+    },
+    "marketing": {
+        "tagline": "Teacha Rewards",
+        "headline": "Odmena za každý matcha.",
+        "subheadline": "Získajte cashback za každý matcha, bubble tea aj sezónny špeciál. Otvorte si peňaženku za tridsať sekúnd.",
+        "how_it_works": "Ako to funguje",
+        "step_1": "Otvorte si peňaženku pomocou telefónneho čísla a mena.",
+        "step_2": "Ukážte QR kód na pokladni a získajte cashback z každého nákupu.",
+        "step_3": "Kedykoľvek uplatnite svoj zostatok ako zľavu.",
+        "cta": "Vytvoriť alebo otvoriť moju peňaženku",
+        "privacy": "Žiadne heslo, žiadny e-mail. Vaša peňaženka je identifikovaná iba telefónnym číslom."
+    },
+    "wallet": {
+        "create": {
+            "title": "Otvoriť peňaženku",
+            "heading": "Vytvoriť alebo otvoriť moju peňaženku",
+            "subheading": "Nájdeme vás podľa telefónneho čísla. Ak peňaženku máte, otvoríme ju. Ak nie, vytvoríme ju hneď na mieste.",
+            "phone_label": "Telefónne číslo",
+            "phone_placeholder": "+421 123 456 789",
+            "first_name_label": "Meno",
+            "first_name_placeholder": "Anička",
+            "submit": "Pokračovať",
+            "privacy": "Vaše telefónne číslo nikomu neposkytujeme. Je to jediný kľúč k vašej peňaženke."
+        },
+        "show": {
+            "title": "Peňaženka — :name",
+            "disabled_notice": "Táto peňaženka je momentálne deaktivovaná. Obráťte sa na personál.",
+            "qr_heading": "QR kód peňaženky",
+            "qr_help": "Ukážte na pokladni pre získanie cashbacku alebo uplatnenie odmien.",
+            "lifetime_earned": "Celkovo zarobené",
+            "lifetime_redeemed": "Celkovo uplatnené",
+            "recent_heading": "Nedávna aktivita",
+            "view_all_activity": "Zobraziť celú aktivitu",
+            "barcode_heading": "Čiarový kód",
+            "barcode_help": "Pre pultové čítačky, ktoré nečítajú QR. Kód nesie rovnaký token ako QR vyššie."
+        },
+        "activity": {
+            "title": "Aktivita — :name",
+            "heading": "Aktivita",
+            "subheading": "Každá zmena zostatku peňaženky :name.",
+            "back": "Späť na peňaženku",
+            "empty": "Zatiaľ žiadna aktivita."
+        },
+        "balance": {
+            "available": "Dostupné odmeny",
+            "discount": "Dostupná zľava"
+        },
+        "transactions": {
+            "empty": "Zatiaľ žiadne transakcie.",
+            "purchase": "Nákup: :amount Kč",
+            "balance_after": "Zostatok: :amount Kč",
+            "types": {
+                "purchase_cashback": "Cashback",
+                "redeem": "Uplatnenie",
+                "manual_add": "Ručné navýšenie",
+                "manual_subtract": "Ručné zníženie",
+                "manual_set": "Ručná úprava"
+            }
+        }
+    },
+    "pwa": {
+        "offline": {
+            "title": "Offline",
+            "heading": "Ste offline",
+            "body": "Nemôžeme sa spojiť s Teacha Rewards. Pripojte sa znova pre zobrazenie peňaženky alebo otvorenie novej.",
+            "retry": "Skúsiť znova"
+        },
+        "install": {
+            "banner_heading": "Pridajte si Teacha na plochu",
+            "banner_body": "Otvorte peňaženku jedným klepnutím. Funguje aj bez pripojenia.",
+            "banner_install": "Pridať na plochu",
+            "banner_dismiss": "Nie, ďakujem",
+            "ios_step_1": "Klepnite na tlačidlo Zdieľať v prehliadači.",
+            "ios_step_2": "Vyberte \"Pridať na plochu\" z ponuky.",
+            "ios_step_3": "Potvrďte klepnutím na Pridať.",
+            "guide_title": "Ako pridať Teacha na plochu",
+            "guide_intro": "Pre najrýchlejší prístup k peňaženke si môžete Teacha nainštalovať ako aplikáciu.",
+            "guide_ios": "Na iPhone alebo iPade",
+            "guide_android": "Na Androide",
+            "guide_chrome": "V Chrome na počítači",
+            "guide_chrome_body": "Kliknite na ikonu inštalácie v adresnom riadku alebo použite ponuku prehliadača."
         }
     }
 }

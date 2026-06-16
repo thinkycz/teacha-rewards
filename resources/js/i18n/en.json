@@ -89,149 +89,6 @@
         }
     },
     "dashboard": {
-        "title": "Dashboard",
-        "how_can_i_help": "How can I help you today?",
-        "chat_description": "Start an interactive chat session with your AI Agent. This stack is optimized with Laravel AI SDK and OpenRouter.",
-        "type_message": "Type a message...",
-        "send": "Send message",
-        "suggestions": {
-            "inertia": "Explain Inertia.js like I'm five",
-            "route": "Write a Laravel route setup for a REST API",
-            "schema": "Design a database schema for an online store"
-        }
-    },
-    "fields": {
-        "email": "Email",
-        "password": "Password",
-        "password_confirmation": "Confirm password",
-        "current_password": "Current password",
-        "new_password": "New password",
-        "locale": "Locale",
-        "user": "You",
-        "assistant": "Assistant"
-    },
-    "errors": {
-        "failed_response": "Failed to generate response. Please try again."
-    },
-    "agent": {
-        "cancelled": "Cancelled",
-        "cancel_run": "Cancel run",
-        "cancel_run_confirm": "Cancel the running agent? Your progress will be lost.",
-        "clarification_hint": "Pick the option that best matches your intent.",
-        "completed": "Completed",
-        "error_generic": "The agent run failed. Please try again.",
-        "failed": "Failed",
-        "queued": "Queued",
-        "recommended": "Recommended",
-        "resume_existing": "Resuming existing run…",
-        "running": "Running…",
-        "tool_running": "Using {tool}…"
-    },
-    "locale": {
-        "en": "English",
-        "cs": "Čeština",
-        "sk": "Slovenčina"
-    },
-    "reward": {
-        "wallet": {
-            "ready": "Wallet ready.",
-            "opened_existing": "Welcome back."
-        },
-        "purchase_amount_positive": "Purchase amount must be greater than zero.",
-        "redeem_amount_positive": "Redeem amount must be greater than zero.",
-        "redeem_amount_exceeds_balance": "You cannot redeem more than the current balance.",
-        "manual_amount_positive": "Adjustment amount must be greater than zero.",
-        "manual_subtract_exceeds_balance": "Cannot subtract more than the current balance.",
-        "manual_set_negative": "Balance cannot be set to a negative value.",
-        "note_required": "A reason is required for manual adjustments.",
-        "purchase_logged": "Purchase logged. Rewards added.",
-        "redeemed": "Rewards redeemed.",
-        "adjusted": "Balance adjusted.",
-        "invalid_phone": "That phone number doesn't look right."
-    },
-    "marketing": {
-        "tagline": "Teacha Rewards",
-        "headline": "Get rewarded for every matcha.",
-        "subheadline": "Earn cashback on every matcha, bubble tea, and seasonal drop. Open your wallet in under thirty seconds.",
-        "how_it_works": "How it works",
-        "step_1": "Open your wallet with your phone number and first name.",
-        "step_2": "Show the QR code at the till to earn cashback on every purchase.",
-        "step_3": "Redeem your rewards balance as a discount whenever you like.",
-        "cta": "Create or open my rewards wallet",
-        "privacy": "No password, no email. Your wallet is identified only by your phone number."
-    },
-    "wallet": {
-        "create": {
-            "title": "Open your rewards wallet",
-            "heading": "Create or open my rewards wallet",
-            "subheading": "We'll look you up by phone number. If you already have a wallet, we'll open it. If not, we'll create one on the spot.",
-            "phone_label": "Phone number",
-            "phone_placeholder": "+420 123 456 789",
-            "first_name_label": "First name",
-            "first_name_placeholder": "Anička",
-            "submit": "Continue",
-            "privacy": "We never share your phone number. It is the only key to your wallet."
-        },
-        "show": {
-            "title": "Wallet — :name",
-            "disabled_notice": "This wallet is currently disabled. Please see staff at the counter.",
-            "qr_heading": "Your wallet QR",
-            "qr_help": "Show this at the till to earn cashback or redeem your rewards.",
-            "lifetime_earned": "Lifetime earned",
-            "lifetime_redeemed": "Lifetime redeemed",
-            "recent_heading": "Recent activity",
-            "view_all_activity": "View full activity",
-            "barcode_heading": "Barcode",
-            "barcode_help": "For till scanners that don't read QR. Same token as the QR above."
-        },
-        "activity": {
-            "title": "Activity — :name",
-            "heading": "Activity",
-            "subheading": "Every change to :name's wallet balance.",
-            "back": "Back to wallet",
-            "empty": "No activity yet."
-        },
-        "balance": {
-            "available": "Available rewards",
-            "discount": "Available discount"
-        },
-        "transactions": {
-            "empty": "No transactions yet.",
-            "purchase": "Purchase: :amount Kč",
-            "balance_after": "Balance: :amount Kč",
-            "types": {
-                "purchase_cashback": "Cashback",
-                "redeem": "Redemption",
-                "manual_add": "Manual credit",
-                "manual_subtract": "Manual debit",
-                "manual_set": "Manual adjustment"
-            }
-        }
-    },
-    "pwa": {
-        "offline": {
-            "title": "Offline",
-            "heading": "You're offline",
-            "body": "We can't reach Teacha Rewards right now. Reconnect to see your wallet or open a new one.",
-            "retry": "Try again"
-        },
-        "install": {
-            "banner_heading": "Add Teacha to your home screen",
-            "banner_body": "Open your wallet with one tap. Works even without signal.",
-            "banner_install": "Add to home screen",
-            "banner_dismiss": "Not now",
-            "ios_step_1": "Tap the Share button in your browser.",
-            "ios_step_2": "Choose \"Add to Home Screen\" from the menu.",
-            "ios_step_3": "Confirm by tapping Add.",
-            "guide_title": "How to install Teacha",
-            "guide_intro": "For the fastest access to your wallet, install Teacha as an app.",
-            "guide_ios": "On iPhone or iPad",
-            "guide_android": "On Android",
-            "guide_chrome": "In Chrome on desktop",
-            "guide_chrome_body": "Click the install icon in the address bar or use the browser menu."
-        }
-    },
-    "staff": {
         "nav": {
             "dashboard": "Dashboard",
             "scan": "Scan",
@@ -382,6 +239,137 @@
             "scan_prompt": "Scan the code with your phone camera. The wallet opens in the browser — no app, no email.",
             "footer": "Printed from the Teacha Rewards admin.",
             "admin_hint": "Prints on A4 / Letter. For label printing, set the printer size to 10 × 10 cm."
+        }
+    },
+    "fields": {
+        "email": "Email",
+        "password": "Password",
+        "password_confirmation": "Confirm password",
+        "current_password": "Current password",
+        "new_password": "New password",
+        "locale": "Locale",
+        "user": "You",
+        "assistant": "Assistant"
+    },
+    "errors": {
+        "failed_response": "Failed to generate response. Please try again."
+    },
+    "agent": {
+        "cancelled": "Cancelled",
+        "cancel_run": "Cancel run",
+        "cancel_run_confirm": "Cancel the running agent? Your progress will be lost.",
+        "clarification_hint": "Pick the option that best matches your intent.",
+        "completed": "Completed",
+        "error_generic": "The agent run failed. Please try again.",
+        "failed": "Failed",
+        "queued": "Queued",
+        "recommended": "Recommended",
+        "resume_existing": "Resuming existing run…",
+        "running": "Running…",
+        "tool_running": "Using {tool}…"
+    },
+    "locale": {
+        "en": "English",
+        "cs": "Čeština",
+        "sk": "Slovenčina"
+    },
+    "reward": {
+        "wallet": {
+            "ready": "Wallet ready.",
+            "opened_existing": "Welcome back."
+        },
+        "purchase_amount_positive": "Purchase amount must be greater than zero.",
+        "redeem_amount_positive": "Redeem amount must be greater than zero.",
+        "redeem_amount_exceeds_balance": "You cannot redeem more than the current balance.",
+        "manual_amount_positive": "Adjustment amount must be greater than zero.",
+        "manual_subtract_exceeds_balance": "Cannot subtract more than the current balance.",
+        "manual_set_negative": "Balance cannot be set to a negative value.",
+        "note_required": "A reason is required for manual adjustments.",
+        "purchase_logged": "Purchase logged. Rewards added.",
+        "redeemed": "Rewards redeemed.",
+        "adjusted": "Balance adjusted.",
+        "invalid_phone": "That phone number doesn't look right."
+    },
+    "marketing": {
+        "tagline": "Teacha Rewards",
+        "headline": "Get rewarded for every matcha.",
+        "subheadline": "Earn cashback on every matcha, bubble tea, and seasonal drop. Open your wallet in under thirty seconds.",
+        "how_it_works": "How it works",
+        "step_1": "Open your wallet with your phone number and first name.",
+        "step_2": "Show the QR code at the till to earn cashback on every purchase.",
+        "step_3": "Redeem your rewards balance as a discount whenever you like.",
+        "cta": "Create or open my rewards wallet",
+        "privacy": "No password, no email. Your wallet is identified only by your phone number."
+    },
+    "wallet": {
+        "create": {
+            "title": "Open your rewards wallet",
+            "heading": "Create or open my rewards wallet",
+            "subheading": "We'll look you up by phone number. If you already have a wallet, we'll open it. If not, we'll create one on the spot.",
+            "phone_label": "Phone number",
+            "phone_placeholder": "+420 123 456 789",
+            "first_name_label": "First name",
+            "first_name_placeholder": "Anička",
+            "submit": "Continue",
+            "privacy": "We never share your phone number. It is the only key to your wallet."
+        },
+        "show": {
+            "title": "Wallet — :name",
+            "disabled_notice": "This wallet is currently disabled. Please see staff at the counter.",
+            "qr_heading": "Your wallet QR",
+            "qr_help": "Show this at the till to earn cashback or redeem your rewards.",
+            "lifetime_earned": "Lifetime earned",
+            "lifetime_redeemed": "Lifetime redeemed",
+            "recent_heading": "Recent activity",
+            "view_all_activity": "View full activity",
+            "barcode_heading": "Barcode",
+            "barcode_help": "For till scanners that don't read QR. Same token as the QR above."
+        },
+        "activity": {
+            "title": "Activity — :name",
+            "heading": "Activity",
+            "subheading": "Every change to :name's wallet balance.",
+            "back": "Back to wallet",
+            "empty": "No activity yet."
+        },
+        "balance": {
+            "available": "Available rewards",
+            "discount": "Available discount"
+        },
+        "transactions": {
+            "empty": "No transactions yet.",
+            "purchase": "Purchase: :amount Kč",
+            "balance_after": "Balance: :amount Kč",
+            "types": {
+                "purchase_cashback": "Cashback",
+                "redeem": "Redemption",
+                "manual_add": "Manual credit",
+                "manual_subtract": "Manual debit",
+                "manual_set": "Manual adjustment"
+            }
+        }
+    },
+    "pwa": {
+        "offline": {
+            "title": "Offline",
+            "heading": "You're offline",
+            "body": "We can't reach Teacha Rewards right now. Reconnect to see your wallet or open a new one.",
+            "retry": "Try again"
+        },
+        "install": {
+            "banner_heading": "Add Teacha to your home screen",
+            "banner_body": "Open your wallet with one tap. Works even without signal.",
+            "banner_install": "Add to home screen",
+            "banner_dismiss": "Not now",
+            "ios_step_1": "Tap the Share button in your browser.",
+            "ios_step_2": "Choose \"Add to Home Screen\" from the menu.",
+            "ios_step_3": "Confirm by tapping Add.",
+            "guide_title": "How to install Teacha",
+            "guide_intro": "For the fastest access to your wallet, install Teacha as an app.",
+            "guide_ios": "On iPhone or iPad",
+            "guide_android": "On Android",
+            "guide_chrome": "In Chrome on desktop",
+            "guide_chrome_body": "Click the install icon in the address bar or use the browser menu."
         }
     }
 }

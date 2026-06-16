@@ -7,10 +7,10 @@ import {
     Receipt,
     Settings as SettingsIcon,
     LogOut,
-    ExternalLink,
 } from '@lucide/vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import Brand from '@/components/ui/Brand.vue';
 import FlashAlerts from '@/components/ui/FlashAlerts.vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
 import { useSharedProps } from '@/composables/useSharedProps';
@@ -21,8 +21,8 @@ defineProps<{
 
 const { auth, activeUrl } = useSharedProps();
 const { t } = useI18n();
-
 useBoundLocale();
+const mobileHistoryOpen = ref(false);
 
 interface NavItem {
     href: string;
@@ -35,31 +35,31 @@ interface NavItem {
 const navItems = computed<NavItem[]>(() => [
     {
         href: '/dashboard',
-        labelKey: 'staff.nav.dashboard',
+        labelKey: 'dashboard.nav.dashboard',
         match: /^\/dashboard\/?$/,
         icon: LayoutDashboard,
     },
     {
         href: '/dashboard/scan',
-        labelKey: 'staff.nav.scan',
+        labelKey: 'dashboard.nav.scan',
         match: /^\/dashboard\/scan/,
         icon: QrCode,
     },
     {
         href: '/dashboard/wallets',
-        labelKey: 'staff.nav.wallets',
+        labelKey: 'dashboard.nav.wallets',
         match: /^\/dashboard\/wallets/,
         icon: WalletIcon,
     },
     {
         href: '/dashboard/transactions',
-        labelKey: 'staff.nav.transactions',
+        labelKey: 'dashboard.nav.transactions',
         match: /^\/dashboard\/transactions/,
         icon: Receipt,
     },
     {
         href: '/dashboard/settings',
-        labelKey: 'staff.nav.settings',
+        labelKey: 'dashboard.nav.settings',
         match: /^\/dashboard\/settings/,
         icon: SettingsIcon,
         requireAdmin: true,
@@ -85,15 +85,23 @@ function logout(): void {
     router.post('/logout');
 }
 
-const roleLabel = computed(() => {
-    const role = auth.value.user?.role;
-    if (role === 'admin') {
-        return t('staff.layout.role_admin');
+const userInitials = computed(() => {
+    const email = auth.value.user?.email ?? '';
+    if (email === '') {
+        return '?';
     }
-    if (role === 'staff') {
-        return t('staff.layout.role_staff');
+    return email.substring(0, 2).toUpperCase();
+});
+
+const userLabel = computed(() => {
+    const user = auth.value.user;
+    if (user === null) {
+        return '';
     }
-    return '';
+    if (user.name !== null && user.name !== '') {
+        return user.name;
+    }
+    return user.email.split('@')[0] ?? '';
 });
 </script>
 
@@ -107,162 +115,178 @@ const roleLabel = computed(() => {
         {{ t('nav.skip_to_main') }}
     </a>
 
-    <div class="flex min-h-screen bg-surface-bg font-sans antialiased">
-        <!-- Desktop sidebar -->
+    <div
+        class="theme-matcha flex h-screen flex-col overflow-hidden bg-surface-bg font-sans antialiased md:flex-row"
+    >
+        <!-- Desktop Persistent Sidebar -->
         <aside
-            class="sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-outline-glass bg-white lg:flex"
+            class="sticky top-0 z-20 hidden h-screen w-64 flex-col border-r border-outline-glass bg-surface-container px-4 py-6 text-left md:flex"
         >
-            <div class="flex items-center gap-2 border-b border-outline-glass px-5 py-4">
-                <Link
-                    href="/"
-                    class="flex items-center gap-2 text-charcoal-700 transition hover:text-charcoal-900"
-                >
-                    <div
-                        class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-matcha-500 to-matcha-700 text-xs font-bold text-white"
-                    >
-                        T
-                    </div>
-                    <div class="flex flex-col leading-tight">
-                        <span class="text-sm font-semibold">
-                            {{ t('staff.layout.app_name') }}
-                        </span>
-                        <span
-                            v-if="roleLabel"
-                            class="text-[10px] font-semibold uppercase tracking-wider text-charcoal-500"
-                        >
-                            {{ roleLabel }}
-                        </span>
-                    </div>
-                </Link>
+            <div class="mb-8 px-2">
+                <Brand href="/dashboard" />
             </div>
 
-            <nav class="flex-1 overflow-y-auto p-3">
-                <ul class="space-y-1">
-                    <li
-                        v-for="item in visibleNav"
-                        :key="item.href"
-                    >
-                        <Link
-                            :href="item.href"
-                            :class="[
-                                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
-                                isActive(item)
-                                    ? 'bg-matcha-50 text-matcha-800'
-                                    : 'text-charcoal-700 hover:bg-sage-50 hover:text-charcoal-900',
-                            ]"
-                        >
-                            <component
-                                :is="item.icon"
-                                :size="18"
-                                :stroke-width="isActive(item) ? 2.5 : 2"
-                            />
-                            <span>{{ t(item.labelKey) }}</span>
-                        </Link>
-                    </li>
-                </ul>
+            <nav class="flex-1 space-y-1.5 overflow-y-auto">
+                <Link
+                    v-for="item in visibleNav"
+                    :key="item.href"
+                    :href="item.href"
+                    :class="[
+                        'flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold transition-all',
+                        isActive(item)
+                            ? 'border-r-2 border-primary bg-surface-container-low font-bold text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]'
+                            : 'text-on-surface-variant hover:bg-surface-container-low',
+                    ]"
+                >
+                    <component :is="item.icon" :size="16" />
+                    {{ t(item.labelKey) }}
+                </Link>
             </nav>
 
-            <div class="border-t border-outline-glass p-3">
-                <Link
-                    href="/"
-                    class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-charcoal-700 transition hover:bg-sage-50 hover:text-charcoal-900"
-                >
-                    <ExternalLink :size="16" />
-                    <span>{{ t('marketing.tagline') }}</span>
-                </Link>
-                <button
-                    type="button"
-                    class="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-charcoal-700 transition hover:bg-sage-50 hover:text-charcoal-900"
-                    @click="logout"
-                >
-                    <LogOut :size="16" />
-                    <span>{{ t('staff.nav.logout') }}</span>
-                </button>
+            <!-- Footer: User Identity -->
+            <div
+                class="flex items-center justify-between gap-2 border-t border-outline-glass pt-4 px-2"
+            >
+                <div class="flex min-w-0 flex-1 items-center gap-3">
+                    <div
+                        aria-hidden="true"
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-outline-glass bg-surface-container-low font-heading text-xs font-bold text-primary"
+                    >
+                        {{ userInitials }}
+                    </div>
+                    <div class="min-w-0 overflow-hidden">
+                        <p
+                            class="truncate text-xs font-semibold text-on-surface"
+                        >
+                            {{ userLabel }}
+                        </p>
+                        <p
+                            class="truncate text-[9px] text-on-surface-variant opacity-85 font-medium"
+                        >
+                            {{ auth.user ? auth.user.email : '' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-1">
+                    <button
+                        @click="logout"
+                        class="cursor-pointer rounded-lg p-1.5 text-on-surface-variant transition-all hover:bg-error-red/10 hover:text-error-red"
+                        :title="t('dashboard.nav.logout')"
+                        :aria-label="t('dashboard.nav.logout')"
+                    >
+                        <LogOut :size="14" />
+                    </button>
+                </div>
             </div>
         </aside>
 
-        <!-- Main column -->
-        <div class="flex min-h-screen min-w-0 flex-1 flex-col">
-            <!-- Top bar (mobile + desktop right rail) -->
-            <header
-                class="sticky top-0 z-20 flex items-center justify-between border-b border-outline-glass bg-white px-4 py-3 shadow-sm lg:px-8"
-            >
-                <div class="flex items-center gap-2 lg:hidden">
-                    <div
-                        class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-matcha-500 to-matcha-700 text-xs font-bold text-white"
-                    >
-                        T
-                    </div>
-                    <div class="flex flex-col leading-tight">
-                        <span class="text-sm font-semibold text-charcoal-900">
-                            {{ t('staff.layout.app_name') }}
-                        </span>
-                        <span
-                            v-if="roleLabel"
-                            class="text-[10px] font-semibold uppercase tracking-wider text-charcoal-500"
-                        >
-                            {{ roleLabel }}
-                        </span>
-                    </div>
-                </div>
+        <!-- Mobile Top Navigation Header -->
+        <header
+            class="glass-panel sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-outline-glass px-4 shadow-sm md:hidden"
+        >
+            <div class="flex items-center gap-2">
+                <Brand href="/dashboard" />
+            </div>
 
-                <div class="flex items-center gap-3 lg:ml-auto">
-                    <span
-                        v-if="auth.user?.name"
-                        class="hidden text-sm text-charcoal-700 sm:inline"
-                    >
-                        {{ auth.user.name }}
-                    </span>
-                    <button
-                        type="button"
-                        class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-outline-glass bg-white px-3 text-xs font-semibold text-charcoal-700 transition hover:bg-sage-50"
-                        @click="logout"
-                    >
-                        <LogOut :size="14" />
-                        <span class="hidden sm:inline">
-                            {{ t('staff.nav.logout') }}
-                        </span>
-                    </button>
-                </div>
-            </header>
+            <div class="flex items-center gap-1.5">
+                <button
+                    type="button"
+                    class="rounded-lg p-2 text-on-surface-variant transition-all"
+                    :class="
+                        mobileHistoryOpen
+                            ? 'bg-surface-container-low text-primary'
+                            : ''
+                    "
+                    :title="t('dashboard.nav.scan')"
+                    :aria-label="t('dashboard.nav.scan')"
+                    :aria-expanded="mobileHistoryOpen"
+                    @click="mobileHistoryOpen = !mobileHistoryOpen"
+                >
+                    <QrCode :size="16" />
+                </button>
+                <Link
+                    href="/dashboard"
+                    :class="[
+                        'rounded-lg p-2 transition-all',
+                        isActive(navItems[0]!)
+                            ? 'font-bold text-primary bg-surface-container-low'
+                            : 'text-on-surface-variant',
+                    ]"
+                    @click="mobileHistoryOpen = false"
+                >
+                    <LayoutDashboard :size="16" />
+                </Link>
+                <Link
+                    href="/dashboard/wallets"
+                    :class="[
+                        'rounded-lg p-2 transition-all',
+                        activeUrl.startsWith('/dashboard/wallets')
+                            ? 'font-bold text-primary bg-surface-container-low'
+                            : 'text-on-surface-variant',
+                    ]"
+                    @click="mobileHistoryOpen = false"
+                >
+                    <WalletIcon :size="16" />
+                </Link>
+                <Link
+                    href="/dashboard/transactions"
+                    :class="[
+                        'rounded-lg p-2 transition-all',
+                        activeUrl.startsWith('/dashboard/transactions')
+                            ? 'font-bold text-primary bg-surface-container-low'
+                            : 'text-on-surface-variant',
+                    ]"
+                    @click="mobileHistoryOpen = false"
+                >
+                    <Receipt :size="16" />
+                </Link>
+                <Link
+                    v-if="auth.user?.role === 'admin'"
+                    href="/dashboard/settings"
+                    :class="[
+                        'rounded-lg p-2 transition-all',
+                        activeUrl.startsWith('/dashboard/settings')
+                            ? 'font-bold text-primary bg-surface-container-low'
+                            : 'text-on-surface-variant',
+                    ]"
+                    @click="mobileHistoryOpen = false"
+                >
+                    <SettingsIcon :size="16" />
+                </Link>
+                <button
+                    @click="logout"
+                    class="rounded-lg p-2 text-on-surface-variant transition-all hover:text-error-red"
+                >
+                    <LogOut :size="16" />
+                </button>
+            </div>
+        </header>
 
-            <main
-                id="main-content"
-                class="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10"
-            >
-                <FlashAlerts />
-                <slot />
-            </main>
-
-            <!-- Mobile bottom tab bar (lg:hidden shows it) -->
-            <nav
-                class="sticky bottom-0 z-20 border-t border-outline-glass bg-white shadow-[0_-2px_8px_rgba(15,23,42,0.04)] lg:hidden"
-            >
-                <ul class="grid grid-flow-col auto-cols-fr">
-                    <li
-                        v-for="item in visibleNav"
-                        :key="item.href"
-                        class="flex"
-                    >
-                        <Link
-                            :href="item.href"
-                            :class="[
-                                'flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-semibold uppercase tracking-wide transition',
-                                isActive(item)
-                                    ? 'text-matcha-700'
-                                    : 'text-charcoal-500 hover:text-charcoal-700',
-                            ]"
-                        >
-                            <component
-                                :is="item.icon"
-                                :size="20"
-                                :stroke-width="isActive(item) ? 2.5 : 2"
-                            />
-                            <span>{{ t(item.labelKey) }}</span>
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+        <div
+            v-if="mobileHistoryOpen"
+            class="glass-panel z-20 max-h-64 overflow-y-auto border-b border-outline-glass px-4 py-3 md:hidden"
+        >
+            <div class="space-y-1">
+                <Link
+                    v-for="item in visibleNav"
+                    :key="item.href"
+                    :href="item.href"
+                    class="flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low"
+                    @click="mobileHistoryOpen = false"
+                >
+                    <component :is="item.icon" :size="14" />
+                    {{ t(item.labelKey) }}
+                </Link>
+            </div>
         </div>
+
+        <main
+            id="main-content"
+            class="flex-1 overflow-y-auto bg-surface-bg px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10"
+        >
+            <FlashAlerts />
+            <slot />
+        </main>
     </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSharedProps } from '@/composables/useSharedProps';
 
@@ -14,6 +15,11 @@ withDefaults(
 
 const { app } = useSharedProps();
 const { t } = useI18n();
+
+const letter = computed(() => {
+    const name = app.value.name?.trim() ?? '';
+    return name.charAt(0).toUpperCase() || '?';
+});
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const { t } = useI18n();
         <div
             class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary font-heading text-base font-bold text-white shadow-[0_2px_8px_rgba(15,23,42,0.2)]"
         >
-            S
+            {{ letter }}
         </div>
         <div class="text-left">
             <h1
