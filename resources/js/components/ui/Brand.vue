@@ -1,35 +1,37 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useSharedProps } from '@/composables/useSharedProps';
+import { useI18n } from 'vue-i18n';
 
 withDefaults(
     defineProps<{
         href?: string;
+        // 'mark' renders just the logo mark; 'full' (default) renders
+        // the mark + the wordmark + the small REWARDS subtitle.
+        variant?: 'mark' | 'full';
     }>(),
     {
         href: '/',
+        variant: 'full',
     },
 );
 
 const { app } = useSharedProps();
 const { t } = useI18n();
-
-const letter = computed(() => {
-    const name = app.value.name?.trim() ?? '';
-    return name.charAt(0).toUpperCase() || '?';
-});
 </script>
 
 <template>
-    <Link :href="href" class="flex items-center gap-3 font-medium select-none">
-        <div
-            class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary font-heading text-base font-bold text-white shadow-[0_2px_8px_rgba(15,23,42,0.2)]"
+    <Link :href="href" class="flex items-center gap-2.5 font-medium select-none">
+        <img
+            :src="'/favicon.svg'"
+            :alt="app.name"
+            class="h-9 w-9 shrink-0"
+            aria-hidden="true"
         >
-            {{ letter }}
-        </div>
-        <div class="text-left">
+        <div
+            v-if="variant === 'full'"
+            class="text-left"
+        >
             <h1
                 class="mb-0.5 font-heading text-sm font-bold tracking-tight text-on-surface leading-none"
             >

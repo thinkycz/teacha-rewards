@@ -9,7 +9,7 @@
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#f8fafc",
-    "theme_color": "#0f172a",
+    "theme_color": "#344c28",
     "categories": ["shopping", "lifestyle", "food"],
     "icons": [
         {
