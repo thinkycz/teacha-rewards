@@ -144,7 +144,7 @@
             "index": {
                 "title": "Wallets",
                 "heading": "Customer wallets",
-                "search_placeholder": "Search by name, phone, or wallet #",
+                "search_placeholder": "Search by name, phone, wallet #, or scanned code",
                 "status_all": "All",
                 "status_active": "Active",
                 "status_disabled": "Disabled",

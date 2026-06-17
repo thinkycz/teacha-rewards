@@ -14,7 +14,12 @@ const props = withDefaults(
     {
         format: 'CODE128',
         height: 64,
-        displayValue: true,
+        // Default to false: callers typically render a human-readable
+        // label (wallet_number) below the bars themselves, and the
+        // encoded value (e.g. public_token) is a secret-ish token we
+        // don't want printed under the barcode for shoulder-surfing
+        // reasons.
+        displayValue: false,
         fontSize: 12,
         margin: 8,
     },

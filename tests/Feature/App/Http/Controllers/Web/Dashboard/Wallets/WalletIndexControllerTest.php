@@ -59,6 +59,18 @@ use App\Models\User;
     \expect(\App\Models\RewardWallet::query()->where('first_name', 'Anička')->count())->toBe(1);
 });
 
+\test('GET /wallets?q=<public_token> matches a freshly scanned barcode', function (): void {
+    $staff = User::factory()->staff()->create();
+    $match = RewardWallet::factory()->create();
+    RewardWallet::factory()->create();
+    $token = $match->getPublicToken();
+
+    $response = $this->actingAs($staff)->get('/wallets?q=' . urlencode($token));
+
+    $response->assertOk();
+    \expect(\App\Models\RewardWallet::query()->where('public_token', $token)->count())->toBe(1);
+});
+
 \test('GET /wallets redirects guests to login', function (): void {
     $response = $this->get('/wallets');
 

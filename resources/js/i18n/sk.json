@@ -144,7 +144,7 @@
             "index": {
                 "title": "Peňaženky",
                 "heading": "Peňaženky zákazníkov",
-                "search_placeholder": "Hľadať podľa mena, telefónu alebo čísla peňaženky",
+                "search_placeholder": "Hľadať podľa mena, telefónu, čísla peňaženky alebo naskenovaného kódu",
                 "status_all": "Všetky",
                 "status_active": "Aktívne",
                 "status_disabled": "Deaktivované",

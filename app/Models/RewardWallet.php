@@ -50,9 +50,11 @@ class RewardWallet extends BaseModel
     /**
      * Search scope.
      *
-     * Matches against first name, phone (display), normalized phone, and
-     * wallet number — the columns the staff search field actually
-     * presents to the cashier.
+     * Matches against first name, phone (display), normalized phone,
+     * wallet number, and the public token (the value encoded in the
+     * barcode / QR the customer carries) - the columns the staff
+     * search field actually presents to the cashier, including a
+     * freshly scanned barcode.
      *
      * @param Builder<static> $builder
      */
@@ -63,7 +65,8 @@ class RewardWallet extends BaseModel
             $query->where($query->qualifyColumn('first_name'), 'LIKE', $like)
                 ->orWhere($query->qualifyColumn('phone'), 'LIKE', $like)
                 ->orWhere($query->qualifyColumn('phone_normalized'), 'LIKE', $like)
-                ->orWhere($query->qualifyColumn('wallet_number'), 'LIKE', $like);
+                ->orWhere($query->qualifyColumn('wallet_number'), 'LIKE', $like)
+                ->orWhere($query->qualifyColumn('public_token'), 'LIKE', $like);
         });
     }
 
