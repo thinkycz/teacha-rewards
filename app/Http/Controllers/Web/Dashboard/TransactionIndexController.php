@@ -25,7 +25,7 @@ class TransactionIndexController
     public function __invoke(Request $request): Response
     {
         $query = RewardTransaction::query()
-            ->with(['wallet:id,first_name,wallet_number,public_token', 'user:id,name']);
+            ->with(['wallet:id,first_name,wallet_number,public_token,type', 'user:id,name']);
 
         $type = $request->str('type')->toString();
         if ($type !== '' && \in_array($type, TransactionTypeEnum::values(), true)) {
@@ -57,6 +57,7 @@ class TransactionIndexController
                     'balance_after' => $tx->getBalanceAfter(),
                     'note' => $tx->getNote(),
                     'wallet_id' => $tx->reward_wallet_id,
+                    'wallet_type' => $tx->wallet?->getType()->value,
                     'wallet_first_name' => $tx->wallet?->getFirstName(),
                     'wallet_number' => $tx->wallet?->getWalletNumber(),
                     'wallet_public_token' => $tx->wallet?->getPublicToken(),

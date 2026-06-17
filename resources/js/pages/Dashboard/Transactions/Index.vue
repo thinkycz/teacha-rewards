@@ -21,6 +21,7 @@ interface Transaction {
     balance_after: string;
     note: string | null;
     wallet_id: number;
+    wallet_type: 'cashback' | 'stamps' | null;
     wallet_first_name: string | null;
     wallet_number: string | null;
     wallet_public_token: string | null;
@@ -73,6 +74,10 @@ function typeLabel(value: string): string {
             return t('dashboard.transactions.index.type_purchase_cashback');
         case 'redeem':
             return t('dashboard.transactions.index.type_redeem');
+        case 'stamp_earn':
+            return t('dashboard.transactions.index.type_stamp_earn');
+        case 'stamp_redeem':
+            return t('dashboard.transactions.index.type_stamp_redeem');
         case 'manual_add':
             return t('dashboard.transactions.index.type_manual_add');
         case 'manual_subtract':
@@ -95,6 +100,23 @@ function signedAmount(value: string): string {
     const num = Number(value);
     const sign = num >= 0 ? '+' : '−';
     return sign + formatAmount(value);
+}
+
+// Stamps amounts are integer counts (never decimals, never a currency).
+// `formatAmount` would render 3 as "3.00" which reads as money, not a
+// stamp count, so use a plain signed integer here.
+function signedCount(value: string): string {
+    const num = Number(value);
+    const sign = num >= 0 ? '+' : '−';
+    return sign + Math.abs(num).toString();
+}
+
+// A row belongs to a wallet; the wallet's `type` is what decides
+// whether the right-side amount is shown as Kč (cashback) or as a
+// plain stamp count (stamps). `wallet_type` is null for legacy rows
+// where the wallet was soft-deleted or the relation failed to load.
+function isStampsRow(tx: Transaction): boolean {
+    return tx.wallet_type === 'stamps';
 }
 
 
@@ -221,6 +243,14 @@ const typeOptions = computed(() => [
                             </div>
                             <div class="text-right">
                                 <p
+                                    v-if="isStampsRow(tx)"
+                                    class="text-sm font-semibold tabular-nums"
+                                    :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
+                                >
+                                    {{ signedCount(tx.amount) }}
+                                </p>
+                                <p
+                                    v-else
                                     class="text-sm font-semibold"
                                     :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
                                 >
@@ -229,7 +259,16 @@ const typeOptions = computed(() => [
                                 <p class="label-eyebrow">
                                     {{ t('dashboard.transactions.index.balance_after') }}
                                 </p>
-                                <p class="text-xs text-on-surface">
+                                <p
+                                    v-if="isStampsRow(tx)"
+                                    class="text-xs text-on-surface tabular-nums"
+                                >
+                                    {{ tx.balance_after }}
+                                </p>
+                                <p
+                                    v-else
+                                    class="text-xs text-on-surface"
+                                >
                                     {{ tx.balance_after }}&nbsp;Kč
                                 </p>
                             </div>
