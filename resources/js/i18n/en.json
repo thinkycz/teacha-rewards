@@ -386,7 +386,9 @@
             }
         },
         "stamps": {
-            "card_label": "{filled} of {total} stamps collected toward {label}"
+            "card_label": "{filled} of {total} stamps collected toward {label}",
+            "filled": "Stamp earned",
+            "empty": "Empty slot"
         }
     },
     "pwa": {

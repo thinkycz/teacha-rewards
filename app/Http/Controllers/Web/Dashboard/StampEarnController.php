@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
 use App\Models\User;
 use App\Services\Reward\RewardTransactionService;
+use App\Services\Settings\SettingsService;
 use App\Validation\Web\Staff\StampEarnValidity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,12 @@ use Thinkycz\LaravelCore\Support\Resolver;
  * The amount field is the number of stamps to credit. The cashier
  * tile defaults to 1 and uses +/- buttons for batch adds (so the
  * single submit covers N drinks in one click).
+ *
+ * Mode gate: this endpoint is only valid in `program_mode = stamps`.
+ * In cashback mode the cashier should be clicking "Log purchase"
+ * instead. Mixing the two would silently let a stamps card grow
+ * under a cashback program, so the controller refuses and flashes
+ * an error.
  */
 class StampEarnController
 {
@@ -28,6 +35,15 @@ class StampEarnController
 
     public function __invoke(Request $request, RewardWallet $wallet): RedirectResponse
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
+        if ($settings->getProgramMode() !== 'stamps') {
+            Inertia::flash('error', \__('reward.action_requires_stamps_mode'));
+
+            return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
+        }
+
         $validity = StampEarnValidity::inject();
 
         $validated = $this->validateRequest($request, [

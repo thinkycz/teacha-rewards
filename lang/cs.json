@@ -36,5 +36,10 @@
     "reward.note_required": "U ručních úprav je vyžadován důvod.",
     "reward.purchase_logged": "Nákup zaznamenán. Odměny přidány.",
     "reward.redeemed": "Odměny uplatněny.",
-    "reward.adjusted": "Zůstatek upraven."
+    "reward.adjusted": "Zůstatek upraven.",
+    "reward.invalid_phone": "Toto telefonní číslo nevypadá správně.",
+    "reward.action_requires_cashback_mode": "Tuto akci lze provést pouze v režimu cashback.",
+    "reward.action_requires_stamps_mode": "Tuto akci lze provést pouze v režimu razítek.",
+    "reward.stamps_added": "Razítka přidána.",
+    "reward.stamps_redeemed": "Odměna uplatněna."
 }

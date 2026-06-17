@@ -386,7 +386,9 @@
             }
         },
         "stamps": {
-            "card_label": "{filled} z {total} razítek nasbíráno k {label}"
+            "card_label": "{filled} z {total} razítek nasbíráno k {label}",
+            "filled": "Razítko získáno",
+            "empty": "Prázdné místo"
         }
     },
     "pwa": {

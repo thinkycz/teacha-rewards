@@ -9,6 +9,8 @@ use App\Models\Setting;
 use App\Models\User;
 
 \test('POST /wallets/{id}/stamps/earn increments stamps_count and writes a stamp_earn row', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
+
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create(['stamps_count' => 2]);
 
@@ -56,6 +58,8 @@ use App\Models\User;
 });
 
 \test('cashier stamps-mode actions leave rewards_balance untouched (mode flip is non-destructive)', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
+
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([
         'rewards_balance' => '50.00',
@@ -89,4 +93,108 @@ use App\Models\User;
 
     Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
     \expect($service->getProgramMode())->toBe('stamps');
+});
+
+/*
+ * Mode-mismatch gates.
+ *
+ * The two program modes (cashback / stamps) must never bleed into
+ * each other: a cashier logging a cashback-style purchase while the
+ * shop is in stamps mode (or vice versa) would silently corrupt the
+ * balance. Each of the four reward endpoints refuses with a
+ * translated error flash when the active mode doesn't match.
+ */
+
+\test('POST /wallets/{id}/purchase is refused in stamps mode and does not move the balance', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
+
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->create([
+        'rewards_balance' => '12.00',
+        'stamps_count' => 4,
+    ]);
+
+    $response = $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/purchase",
+        ['purchase_amount' => '100.00'],
+    );
+
+    $response->assertRedirect(\route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]));
+    $response->assertSessionHas('inertia.flash_data.error', \__('reward.action_requires_cashback_mode'));
+
+    $wallet->refresh();
+    \expect($wallet->getRewardsBalance())->toBe('12.00');
+    \expect($wallet->getStampsCount())->toBe(4);
+
+    // No transaction row should be written for the refused action.
+    \expect(RewardTransaction::query()->count())->toBe(0);
+});
+
+\test('POST /wallets/{id}/redeem is refused in stamps mode and does not move the balance', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
+
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->create([
+        'rewards_balance' => '12.00',
+        'stamps_count' => 4,
+    ]);
+
+    $response = $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/redeem",
+        ['amount' => '5.00'],
+    );
+
+    $response->assertRedirect(\route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]));
+    $response->assertSessionHas('inertia.flash_data.error', \__('reward.action_requires_cashback_mode'));
+
+    $wallet->refresh();
+    \expect($wallet->getRewardsBalance())->toBe('12.00');
+    \expect($wallet->getStampsCount())->toBe(4);
+    \expect(RewardTransaction::query()->count())->toBe(0);
+});
+
+\test('POST /wallets/{id}/stamps/earn is refused in cashback mode and does not move the balance', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'cashback']);
+
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->create([
+        'rewards_balance' => '12.00',
+        'stamps_count' => 4,
+    ]);
+
+    $response = $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/stamps/earn",
+        ['count' => '3'],
+    );
+
+    $response->assertRedirect(\route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]));
+    $response->assertSessionHas('inertia.flash_data.error', \__('reward.action_requires_stamps_mode'));
+
+    $wallet->refresh();
+    \expect($wallet->getRewardsBalance())->toBe('12.00');
+    \expect($wallet->getStampsCount())->toBe(4);
+    \expect(RewardTransaction::query()->count())->toBe(0);
+});
+
+\test('POST /wallets/{id}/stamps/redeem is refused in cashback mode and does not move the balance', function (): void {
+    Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'cashback']);
+
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->create([
+        'rewards_balance' => '12.00',
+        'stamps_count' => 25,
+    ]);
+
+    $response = $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/stamps/redeem",
+        ['rewards' => '1'],
+    );
+
+    $response->assertRedirect(\route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]));
+    $response->assertSessionHas('inertia.flash_data.error', \__('reward.action_requires_stamps_mode'));
+
+    $wallet->refresh();
+    \expect($wallet->getRewardsBalance())->toBe('12.00');
+    \expect($wallet->getStampsCount())->toBe(25);
+    \expect(RewardTransaction::query()->count())->toBe(0);
 });

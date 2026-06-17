@@ -98,11 +98,10 @@ function formatSigned(value: string): string {
                 <span>{{ t('wallet.show.disabled_notice') }}</span>
             </section>
 
-            <!-- Combined card: navy header with identity + balance (or
-                 stamp count); white body with the barcode the staff
-                 scans at checkout. In stamps mode the slot grid sits
-                 between the header and the barcode so the customer can
-                 see how close they are to a free reward. -->
+            <!-- Top card: navy identity header with name + balance.
+                 In cashback mode this is the wallet hero. In stamps
+                 mode the paper loyalty card (next section) is the
+                 hero, so this card shrinks to just identity. -->
             <section class="surface-card overflow-hidden">
                 <header class="bg-primary p-5 text-on-primary">
                     <div class="flex items-start justify-between gap-4">
@@ -135,19 +134,27 @@ function formatSigned(value: string): string {
                             </p>
                         </div>
                     </div>
-                    <div
-                        v-if="isStamps"
-                        class="mt-4 rounded-2xl bg-white/10 p-4"
-                    >
-                        <StampCard
-                            :stamps="wallet.stamps_count"
-                            :total="program.stamps_per_reward"
-                            :reward-label="program.stamps_per_reward_label"
-                            :icon="program.stamp_icon"
-                            compact
-                        />
-                    </div>
                 </header>
+            </section>
+
+            <!-- Paper loyalty card. Real-paper aesthetic: cream
+                 surface, business-card aspect ratio, sits as its own
+                 hero element. Only visible in stamps mode. -->
+            <section
+                v-if="isStamps"
+                class="flex justify-center"
+            >
+                <StampCard
+                    :stamps="wallet.stamps_count"
+                    :total="program.stamps_per_reward"
+                    :reward-label="program.stamps_per_reward_label"
+                    :icon="program.stamp_icon"
+                />
+            </section>
+
+            <!-- Barcode: the staff scans this at checkout. White body
+                 so the code prints crisply even in bright light. -->
+            <section class="surface-card overflow-hidden">
                 <div class="p-5">
                     <BarcodeBlock
                         :value="wallet.public_token"

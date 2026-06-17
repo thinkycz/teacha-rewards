@@ -10,11 +10,13 @@ const props = withDefaults(
         total: number;
         rewardLabel?: string;
         icon?: string;
+        /** Compact = small horizontal admin/header use. False = full
+         *  paper-card aesthetic for the customer page. */
         compact?: boolean;
     }>(),
     {
         rewardLabel: '',
-        icon: '\u{1F375}', // matcha bowl 🍵
+        icon: '\u{1F375}',
         compact: false,
     },
 );
@@ -30,79 +32,93 @@ const slots = computed(() =>
     })),
 );
 
-// Square-ish slot grid. 5 cols up to 10, scale up beyond.
-const columnsClass = computed(() => {
+// Layout: aim for roughly a 2-row grid so the card looks like a
+// real loyalty card. Compact mode flattens it for admin headers.
+const layout = computed(() => {
     const n = Math.max(1, props.total);
-    if (n <= 4) return 'grid-cols-4';
-    if (n <= 5) return 'grid-cols-5';
-    if (n <= 6) return 'grid-cols-6';
-    if (n <= 8) return 'grid-cols-4';
-    if (n <= 9) return 'grid-cols-3';
-    if (n <= 10) return 'grid-cols-5';
-    if (n <= 12) return 'grid-cols-4';
-    if (n <= 15) return 'grid-cols-5';
-    if (n <= 16) return 'grid-cols-4';
-    if (n <= 20) return 'grid-cols-5';
-    return 'grid-cols-6';
+    if (props.compact) {
+        if (n <= 5) return { cols: 'grid-cols-5', rows: 1 };
+        if (n <= 10) return { cols: 'grid-cols-5', rows: 2 };
+        if (n <= 15) return { cols: 'grid-cols-5', rows: 3 };
+        return { cols: 'grid-cols-5', rows: 4 };
+    }
+    // Customer-facing: 5 cols feels like a real 5-stamp row.
+    if (n <= 5) return { cols: 'grid-cols-5', rows: 1 };
+    if (n <= 8) return { cols: 'grid-cols-4', rows: 2 };
+    if (n <= 10) return { cols: 'grid-cols-5', rows: 2 };
+    if (n <= 12) return { cols: 'grid-cols-4', rows: 3 };
+    if (n <= 15) return { cols: 'grid-cols-5', rows: 3 };
+    if (n <= 16) return { cols: 'grid-cols-4', rows: 4 };
+    if (n <= 20) return { cols: 'grid-cols-5', rows: 4 };
+    return { cols: 'grid-cols-6', rows: 4 };
 });
-
-// Tile sizes — generous in the full customer view, smaller in the
-// admin sidebar header.
-const tileClass = computed(() =>
-    props.compact
-        ? 'h-11 w-11 text-lg rounded-xl'
-        : 'h-16 w-16 sm:h-20 sm:w-20 text-3xl sm:text-4xl rounded-2xl',
-);
 </script>
 
 <template>
-    <div>
+    <!-- Paper card. Customer-facing: business-card aspect ratio
+         (85 x 55mm). Admin-facing: compact, no aspect ratio so the
+         parent controls width. -->
+    <article
+        class="paper-card"
+        :class="compact ? 'paper-card-compact' : 'paper-card-full'"
+        role="group"
+        :aria-label="
+            t('wallet.stamps.card_label', {
+                filled: filledCount,
+                total,
+                label: rewardLabel,
+            })
+        "
+    >
+        <header class="paper-card-brand">
+            <span class="brand-name">Teacha Rewards</span>
+            <span
+                v-if="rewardLabel"
+                aria-hidden="true"
+                class="brand-sep"
+            >·</span>
+            <span
+                v-if="rewardLabel"
+                class="brand-reward"
+            >{{ rewardLabel }}</span>
+            <span
+                v-if="!compact"
+                aria-hidden="true"
+                class="brand-icon"
+            >{{ icon }}</span>
+        </header>
+
         <div
-            class="grid gap-2 sm:gap-3"
-            :class="columnsClass"
-            role="list"
-            :aria-label="
-                t('wallet.stamps.card_label', {
-                    filled: filledCount,
-                    total,
-                    label: rewardLabel,
-                })
-            "
+            class="paper-card-slots"
+            :class="layout.cols"
+            :style="{ gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))` }"
         >
             <div
                 v-for="slot in slots"
                 :key="slot.index"
-                role="listitem"
-                class="relative flex items-center justify-center border-2 transition"
-                :class="[
-                    tileClass,
+                role="img"
+                :aria-label="
                     slot.filled
-                        ? 'border-transparent bg-primary text-on-primary shadow-[0_4px_12px_rgba(15,23,42,0.25)]'
-                        : 'border-dashed border-outline-glass bg-surface-container-lowest/60 text-on-surface-variant/40',
+                        ? t('wallet.stamps.filled', { icon })
+                        : t('wallet.stamps.empty', { icon })
+                "
+                class="paper-slot"
+                :class="[
+                    compact ? 'paper-slot-compact' : 'paper-slot-full',
+                    slot.filled ? 'paper-slot-filled' : 'paper-slot-empty',
                 ]"
             >
                 <span
                     v-if="slot.filled"
                     aria-hidden="true"
-                    class="leading-none select-none drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]"
+                    class="slot-emoji"
                 >{{ icon }}</span>
-                <span
-                    v-else
-                    aria-hidden="true"
-                    class="leading-none select-none"
-                >{{ icon }}</span>
-                <!-- Inner ring on filled slots so the icon reads as
-                     'stamped' rather than just 'in a circle'. -->
-                <span
-                    v-if="slot.filled"
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-1 rounded-[inherit] border border-white/20"
-                />
             </div>
         </div>
-        <p
-            v-if="rewardLabel"
-            class="mt-3 text-center text-xs text-on-surface-variant"
+
+        <footer
+            v-if="!compact"
+            class="paper-card-counter"
         >
             <span
                 v-if="isFull"
@@ -111,7 +127,10 @@ const tileClass = computed(() =>
                 <span aria-hidden="true">{{ icon }}</span>
                 {{ t('dashboard.wallets.show.card_full', { label: rewardLabel }) }}
             </span>
-            <span v-else>
+            <span
+                v-else
+                class="font-mono text-sm tabular-nums text-on-surface-variant"
+            >
                 {{
                     t('dashboard.wallets.show.stamps_until_reward', {
                         remaining,
@@ -119,6 +138,172 @@ const tileClass = computed(() =>
                     })
                 }}
             </span>
-        </p>
-    </div>
+        </footer>
+    </article>
 </template>
+
+<style scoped>
+.paper-card {
+    background: #fdfbf6;
+    border: 1px solid #e7e2d5;
+    border-radius: 0.75rem;
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 4px 14px rgba(15, 23, 42, 0.08),
+        0 10px 24px -8px rgba(15, 23, 42, 0.06);
+    color: #1e293b;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Faint 'paper' grain so the surface doesn't look like a flat
+   div. Two stacked SVG noise gradients at very low opacity. */
+.paper-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image:
+        radial-gradient(circle at 25% 30%, rgba(15, 23, 42, 0.02) 0, transparent 60%),
+        radial-gradient(circle at 75% 70%, rgba(15, 23, 42, 0.025) 0, transparent 65%);
+}
+
+/* Customer card: business-card aspect ratio (85mm x 55mm = 1.545:1),
+   centered with a max width so the page doesn't end up with a single
+   card stretched edge-to-edge on a wide viewport. */
+.paper-card-full {
+    width: 100%;
+    max-width: 26rem; /* 416px - close to a real card scaled up */
+    aspect-ratio: 85 / 55;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Admin compact: shorter, wider feeling. Fits inline next to a
+   metadata grid. */
+.paper-card-compact {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    max-width: 16rem;
+}
+
+.paper-card-brand {
+    background: #0f172a;
+    color: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex: 0 0 auto;
+}
+
+.paper-card-compact .paper-card-brand {
+    display: none;
+}
+
+.brand-name {
+    font-weight: 700;
+}
+
+.brand-sep {
+    opacity: 0.5;
+}
+
+.brand-reward {
+    color: #cbd5e1;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+
+.brand-icon {
+    margin-left: auto;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.paper-card-slots {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.875rem;
+    flex: 1 1 auto;
+    align-items: center;
+    align-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.paper-card-compact .paper-card-slots {
+    padding: 0.375rem;
+    gap: 0.25rem;
+}
+
+/* Customer slot: bigger circles, more breathing room. */
+.paper-slot-full {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.paper-slot-compact {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paper-slot-empty {
+    border: 1.5px dashed #cbd5e1;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.paper-slot-filled {
+    background: #0f172a;
+    color: #f8fafc;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.08) inset,
+        0 2px 6px rgba(15, 23, 42, 0.18);
+    /* A tiny tilt so filled slots read as 'stamped' rather than
+       'placed in a grid'. */
+    transform: rotate(-2deg);
+}
+
+.paper-slot-filled:hover {
+    transform: rotate(0deg) scale(1.04);
+}
+
+.paper-card-compact .paper-slot-filled {
+    transform: none;
+}
+
+.slot-emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+    /* Emoji glyph rendering is browser-dependent; nudge the size up
+       a hair on the larger customer tile so the matcha bowl fills
+       the disc rather than floating in the middle. */
+}
+
+.paper-card-full .slot-emoji {
+    font-size: 1.65rem;
+}
+
+.paper-card-counter {
+    text-align: center;
+    padding: 0.5rem 0.75rem 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+</style>

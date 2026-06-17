@@ -36,5 +36,10 @@
     "reward.note_required": "A reason is required for manual adjustments.",
     "reward.purchase_logged": "Purchase logged. Rewards added.",
     "reward.redeemed": "Rewards redeemed.",
-    "reward.adjusted": "Balance adjusted."
+    "reward.adjusted": "Balance adjusted.",
+    "reward.invalid_phone": "That phone number doesn't look right.",
+    "reward.action_requires_cashback_mode": "This action is only available in cashback mode.",
+    "reward.action_requires_stamps_mode": "This action is only available in stamps mode.",
+    "reward.stamps_added": "Stamps added.",
+    "reward.stamps_redeemed": "Reward redeemed."
 }

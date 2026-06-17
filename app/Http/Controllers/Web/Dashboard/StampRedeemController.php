@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
 use App\Models\User;
 use App\Services\Reward\RewardTransactionService;
+use App\Services\Settings\SettingsService;
 use App\Validation\Web\Staff\StampRedeemValidity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,12 @@ use Thinkycz\LaravelCore\Support\Resolver;
  * service enforces the `floor(stamps_count / stamps_per_reward)`
  * ceiling and writes a `STAMP_REDEEM` row carrying the negative
  * rewards count. Leftover stamps stay on the card.
+ *
+ * Mode gate: this endpoint is only valid in `program_mode = stamps`.
+ * In cashback mode the cashier should be clicking "Redeem rewards"
+ * (the cashback redeem flow) instead. Mixing the two would silently
+ * subtract stamp-redemptions from a cashback-mode balance, so the
+ * controller refuses and flashes an error.
  */
 class StampRedeemController
 {
@@ -28,6 +35,15 @@ class StampRedeemController
 
     public function __invoke(Request $request, RewardWallet $wallet): RedirectResponse
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
+        if ($settings->getProgramMode() !== 'stamps') {
+            Inertia::flash('error', \__('reward.action_requires_stamps_mode'));
+
+            return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
+        }
+
         $validity = StampRedeemValidity::inject();
 
         $validated = $this->validateRequest($request, [

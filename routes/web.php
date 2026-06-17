@@ -15,6 +15,8 @@ use App\Http\Controllers\Web\Dashboard\DisableController;
 use App\Http\Controllers\Web\Dashboard\EnableController;
 use App\Http\Controllers\Web\Dashboard\LogPurchaseController;
 use App\Http\Controllers\Web\Dashboard\RedeemController;
+use App\Http\Controllers\Web\Dashboard\StampEarnController;
+use App\Http\Controllers\Web\Dashboard\StampRedeemController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsEditController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsUpdateController;
 use App\Http\Controllers\Web\Dashboard\StoreQrPrintController;
@@ -103,7 +105,9 @@ Resolver::resolveRouteRegistrar()
         $router->get('wallets', WalletIndexController::class)->name('wallets.index');
         $router->get('wallets/{wallet}', WalletShowController::class)->name('wallets.show');
         $router->post('wallets/{wallet}/purchase', LogPurchaseController::class)->name('wallets.purchase');
+        $router->post('wallets/{wallet}/stamps/redeem', StampRedeemController::class)->name('wallets.stamps.redeem');
         $router->post('wallets/{wallet}/redeem', RedeemController::class)->name('wallets.redeem');
+        $router->post('wallets/{wallet}/stamps/earn', StampEarnController::class)->name('wallets.stamps.earn');
         $router->post('wallets/{wallet}/adjust', AdjustController::class)->name('wallets.adjust');
         $router->post('wallets/{wallet}/disable', DisableController::class)->name('wallets.disable');
         $router->post('wallets/{wallet}/enable', EnableController::class)->name('wallets.enable');

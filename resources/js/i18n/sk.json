@@ -386,7 +386,9 @@
             }
         },
         "stamps": {
-            "card_label": "{filled} z {total} pečiatok nazbieraných k {label}"
+            "card_label": "{filled} z {total} pečiatok nazbieraných k {label}",
+            "filled": "Pečiatka získaná",
+            "empty": "Prázdne miesto"
         }
     },
     "pwa": {

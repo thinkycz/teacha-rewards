@@ -53,7 +53,6 @@ const isStamps = computed(() => form.program_mode === 'stamps');
 // also paste their own emoji.
 const presets: { icon: string; key: string }[] = [
     { icon: '\u{1F375}', key: 'matcha' }, // 🍵
-    { icon: '\u{1F375}\uFE0F', key: 'matcha_strict' }, // 🍵️
     { icon: '\u{1F964}', key: 'boba' }, // 🧋
     { icon: '\u{2615}', key: 'coffee' }, // ☕
     { icon: '\u{1F353}', key: 'strawberry' }, // 🍓

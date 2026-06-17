@@ -218,7 +218,9 @@ async function toggleStatus(): Promise<void> {
                 </div>
             </section>
 
-            <!-- Combined header card: brand + identity + balance + metadata. -->
+            <!-- Top card: navy identity header (name + balance)
+                 plus customer metadata. The paper loyalty card
+                 (next section) is the visual hero in stamps mode. -->
             <section class="surface-card overflow-hidden">
                 <header class="bg-primary p-5 text-on-primary">
                     <div class="flex items-start justify-between gap-4">
@@ -250,18 +252,6 @@ async function toggleStatus(): Promise<void> {
                                 {{ balanceFormatted }}&nbsp;Kč
                             </p>
                         </div>
-                    </div>
-                    <div
-                        v-if="isStamps"
-                        class="mt-4 rounded-2xl bg-white/10 p-4"
-                    >
-                        <StampCard
-                            :stamps="wallet.stamps_count"
-                            :total="program.stamps_per_reward"
-                            :reward-label="program.stamps_per_reward_label"
-                            :icon="program.stamp_icon"
-                            compact
-                        />
                     </div>
                 </header>
 
@@ -309,6 +299,22 @@ async function toggleStatus(): Promise<void> {
                         <ExternalLink :size="12" />
                     </Link>
                 </footer>
+            </section>
+
+            <!-- Paper loyalty card. Compact admin version: real-paper
+                 aesthetic without the brand strip so the admin grid
+                 stays dense. Only visible in stamps mode. -->
+            <section
+                v-if="isStamps"
+                class="flex justify-center"
+            >
+                <StampCard
+                    :stamps="wallet.stamps_count"
+                    :total="program.stamps_per_reward"
+                    :reward-label="program.stamps_per_reward_label"
+                    :icon="program.stamp_icon"
+                    compact
+                />
             </section>
 
             <section>
