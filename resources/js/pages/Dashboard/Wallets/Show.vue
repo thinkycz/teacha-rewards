@@ -60,6 +60,7 @@ interface ProgramConfig {
     mode: 'cashback' | 'stamps';
     stamps_per_reward: number;
     stamps_per_reward_label: string;
+    stamp_icon: string;
 }
 
 const props = defineProps<{
@@ -258,6 +259,7 @@ async function toggleStatus(): Promise<void> {
                             :stamps="wallet.stamps_count"
                             :total="program.stamps_per_reward"
                             :reward-label="program.stamps_per_reward_label"
+                            :icon="program.stamp_icon"
                             compact
                         />
                     </div>

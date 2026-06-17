@@ -2,12 +2,13 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Save, ArrowRight, Printer } from '@lucide/vue';
+import { Save, ArrowRight, Printer, Check } from '@lucide/vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 import FieldError from '@/components/ui/FieldError.vue';
+import StampCard from '@/components/reward/StampCard.vue';
 import { fieldError } from '@/composables/useFieldError';
 
 const { t } = useI18n();
@@ -20,6 +21,7 @@ interface Settings {
     program_mode: 'cashback' | 'stamps';
     stamps_per_reward: string;
     stamps_per_reward_label: string;
+    stamp_icon: string;
 }
 
 const props = defineProps<{
@@ -34,6 +36,7 @@ const form = useForm({
     program_mode: props.settings.program_mode,
     stamps_per_reward: props.settings.stamps_per_reward,
     stamps_per_reward_label: props.settings.stamps_per_reward_label,
+    stamp_icon: props.settings.stamp_icon,
 });
 
 function submit(): void {
@@ -44,6 +47,22 @@ function submit(): void {
 
 const isCashback = computed(() => form.program_mode === 'cashback');
 const isStamps = computed(() => form.program_mode === 'stamps');
+
+// Curated presets — chosen for the Teacha Rewards shop (matcha +
+// bubble tea) with a couple of universal options. The admin can
+// also paste their own emoji.
+const presets: { icon: string; key: string }[] = [
+    { icon: '\u{1F375}', key: 'matcha' }, // 🍵
+    { icon: '\u{1F375}\uFE0F', key: 'matcha_strict' }, // 🍵️
+    { icon: '\u{1F964}', key: 'boba' }, // 🧋
+    { icon: '\u{2615}', key: 'coffee' }, // ☕
+    { icon: '\u{1F353}', key: 'strawberry' }, // 🍓
+    { icon: '\u{1F33F}', key: 'leaf' }, // 🌿
+    { icon: '\u{1F338}', key: 'blossom' }, // 🌸
+    { icon: '\u{2728}', key: 'sparkle' }, // ✨
+    { icon: '\u{2B50}', key: 'star' }, // ⭐
+    { icon: '\u{1F31F}', key: 'glow' }, // 🌟
+];
 </script>
 
 <template>
@@ -168,49 +187,116 @@ const isStamps = computed(() => form.program_mode === 'stamps');
                 <!-- Stamps-mode fields -->
                 <div
                     v-if="isStamps"
-                    class="grid gap-5 sm:grid-cols-2"
+                    class="space-y-6"
                 >
-                    <div class="space-y-2">
-                        <Label for="stamps_per_reward" required>
-                            {{ t('settings.stamps_per_reward_label') }}
-                        </Label>
-                        <Input
-                            id="stamps_per_reward"
-                            v-model="form.stamps_per_reward"
-                            type="number"
-                            inputmode="numeric"
-                            step="1"
-                            min="1"
-                            max="1000"
-                            :invalid="fieldError(form.errors, 'stamps_per_reward', 'settings').invalid"
-                            :described-by="fieldError(form.errors, 'stamps_per_reward', 'settings').describedBy"
-                            required
-                        />
-                        <p class="label-help">
-                            {{ t('settings.stamps_per_reward_help') }}
-                        </p>
-                        <FieldError v-bind="fieldError(form.errors, 'stamps_per_reward', 'settings')" />
+                    <div class="grid gap-5 sm:grid-cols-2">
+                        <div class="space-y-2">
+                            <Label for="stamps_per_reward" required>
+                                {{ t('settings.stamps_per_reward_label') }}
+                            </Label>
+                            <Input
+                                id="stamps_per_reward"
+                                v-model="form.stamps_per_reward"
+                                type="number"
+                                inputmode="numeric"
+                                step="1"
+                                min="1"
+                                max="1000"
+                                :invalid="fieldError(form.errors, 'stamps_per_reward', 'settings').invalid"
+                                :described-by="fieldError(form.errors, 'stamps_per_reward', 'settings').describedBy"
+                                required
+                            />
+                            <p class="label-help">
+                                {{ t('settings.stamps_per_reward_help') }}
+                            </p>
+                            <FieldError v-bind="fieldError(form.errors, 'stamps_per_reward', 'settings')" />
+                        </div>
+
+                        <div class="space-y-2">
+                            <Label for="stamps_per_reward_label" required>
+                                {{ t('settings.stamps_per_reward_label_label') }}
+                            </Label>
+                            <Input
+                                id="stamps_per_reward_label"
+                                v-model="form.stamps_per_reward_label"
+                                type="text"
+                                maxlength="64"
+                                :placeholder="t('settings.stamps_per_reward_label_label')"
+                                :invalid="fieldError(form.errors, 'stamps_per_reward_label', 'settings').invalid"
+                                :described-by="fieldError(form.errors, 'stamps_per_reward_label', 'settings').describedBy"
+                                required
+                            />
+                            <p class="label-help">
+                                {{ t('settings.stamps_per_reward_label_help') }}
+                            </p>
+                            <FieldError v-bind="fieldError(form.errors, 'stamps_per_reward_label', 'settings')" />
+                        </div>
                     </div>
 
-                    <div class="space-y-2">
-                        <Label for="stamps_per_reward_label" required>
-                            {{ t('settings.stamps_per_reward_label_label') }}
-                        </Label>
-                        <Input
-                            id="stamps_per_reward_label"
-                            v-model="form.stamps_per_reward_label"
-                            type="text"
-                            maxlength="64"
-                            :placeholder="t('settings.stamps_per_reward_label_label')"
-                            :invalid="fieldError(form.errors, 'stamps_per_reward_label', 'settings').invalid"
-                            :described-by="fieldError(form.errors, 'stamps_per_reward_label', 'settings').describedBy"
-                            required
-                        />
-                        <p class="label-help">
-                            {{ t('settings.stamps_per_reward_label_help') }}
-                        </p>
-                        <FieldError v-bind="fieldError(form.errors, 'stamps_per_reward_label', 'settings')" />
-                    </div>
+                    <!-- Stamp icon picker -->
+                    <fieldset class="space-y-3">
+                        <legend class="block">
+                            <span class="font-sans text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+                                {{ t('settings.stamp_icon_label') }}
+                            </span>
+                        </legend>
+                        <p class="label-help">{{ t('settings.stamp_icon_help') }}</p>
+
+                        <div class="grid gap-2 grid-cols-5 sm:grid-cols-10">
+                            <label
+                                v-for="preset in presets"
+                                :key="preset.icon + preset.key"
+                                class="group relative flex aspect-square cursor-pointer items-center justify-center rounded-2xl border-2 text-3xl transition"
+                                :class="form.stamp_icon === preset.icon ? 'border-primary bg-primary-soft' : 'border-outline-glass bg-surface-container-lowest hover:border-primary'"
+                            >
+                                <input
+                                    v-model="form.stamp_icon"
+                                    type="radio"
+                                    :value="preset.icon"
+                                    name="stamp_icon"
+                                    class="sr-only"
+                                >
+                                <span aria-hidden="true">{{ preset.icon }}</span>
+                                <span
+                                    v-if="form.stamp_icon === preset.icon"
+                                    class="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-on-primary shadow-sm"
+                                >
+                                    <Check :size="10" />
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="space-y-2">
+                            <Label for="stamp_icon_custom">
+                                {{ t('settings.stamp_icon_custom_label') }}
+                            </Label>
+                            <Input
+                                id="stamp_icon_custom"
+                                v-model="form.stamp_icon"
+                                type="text"
+                                maxlength="16"
+                                :placeholder="t('settings.stamp_icon_custom_help')"
+                                :invalid="fieldError(form.errors, 'stamp_icon', 'settings').invalid"
+                                :described-by="fieldError(form.errors, 'stamp_icon', 'settings').describedBy"
+                            />
+                            <p class="label-help">{{ t('settings.stamp_icon_custom_help') }}</p>
+                            <FieldError v-bind="fieldError(form.errors, 'stamp_icon', 'settings')" />
+                        </div>
+
+                        <!-- Live preview of the chosen icon on a card -->
+                        <div
+                            v-if="form.stamp_icon"
+                            class="mt-2 rounded-2xl border border-outline-glass bg-surface-container-lowest p-5"
+                        >
+                            <p class="label-eyebrow mb-3">{{ t('settings.stamp_icon_presets_label') }}</p>
+                            <StampCard
+                                :stamps="4"
+                                :total="Number(form.stamps_per_reward) || 10"
+                                :reward-label="form.stamps_per_reward_label"
+                                :icon="form.stamp_icon"
+                            />
+                        </div>
+                    </fieldset>
                 </div>
 
                 <!-- Common fields -->

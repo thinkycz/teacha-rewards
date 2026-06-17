@@ -98,7 +98,12 @@
         "stamps_per_reward_label": "Pečiatok na odmenu",
         "stamps_per_reward_help": "Koľko pečiatok musí zákazník nazbierať, kým môže uplatniť jednu odmenu.",
         "stamps_per_reward_label_label": "Názov odmeny",
-        "stamps_per_reward_label_help": "Názov odmeny, ktorý sa zobrazí zákazníkovi aj personálu."
+        "stamps_per_reward_label_help": "Názov odmeny, ktorý sa zobrazí zákazníkovi aj personálu.",
+        "stamp_icon_label": "Ikona pečiatky",
+        "stamp_icon_help": "Emoji zobrazené na každej aktívnej pečiatke a slabo na prázdnych poliach. Vyberte si z predlôh alebo vložte vlastné.",
+        "stamp_icon_presets_label": "Predlohy",
+        "stamp_icon_custom_label": "Vlastné emoji",
+        "stamp_icon_custom_help": "Vložte ľubovoľné jedno emoji (napr. 🍵, ☕, 🍓)."
     },
     "dashboard": {
         "nav": {

@@ -38,6 +38,7 @@ class SettingsUpdateController
             'program_mode' => $validity->programMode()->toArray(),
             'stamps_per_reward' => $validity->stampsPerReward()->toArray(),
             'stamps_per_reward_label' => $validity->stampsRewardLabel()->toArray(),
+            'stamp_icon' => $validity->stampIcon()->toArray(),
         ]);
 
         /** @var SettingsService $settings */
@@ -50,6 +51,7 @@ class SettingsUpdateController
         $settings->set('program_mode', $validated->assertString('program_mode'));
         $settings->set('stamps_per_reward', $validated->assertString('stamps_per_reward'));
         $settings->set('stamps_per_reward_label', $validated->assertString('stamps_per_reward_label'));
+        $settings->set('stamp_icon', $validated->assertString('stamp_icon'));
 
         Inertia::flash('success', \__('Settings updated.'));
 

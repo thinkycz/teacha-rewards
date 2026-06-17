@@ -98,7 +98,12 @@
         "stamps_per_reward_label": "Razítek na odměnu",
         "stamps_per_reward_help": "Kolik razítek musí zákazník nasbírat, než může uplatnit jednu odměnu.",
         "stamps_per_reward_label_label": "Název odměny",
-        "stamps_per_reward_label_help": "Název odměny, který se zobrazí zákazníkovi i personálu."
+        "stamps_per_reward_label_help": "Název odměny, který se zobrazí zákazníkovi i personálu.",
+        "stamp_icon_label": "Ikona razítka",
+        "stamp_icon_help": "Emoji zobrazené na každém aktivním razítku a slabě na prázdných polích. Vyberte si z předloh nebo vložte vlastní.",
+        "stamp_icon_presets_label": "Předlohy",
+        "stamp_icon_custom_label": "Vlastní emoji",
+        "stamp_icon_custom_help": "Vložte libovolné jedno emoji (např. 🍵, ☕, 🍓)."
     },
     "dashboard": {
         "nav": {

@@ -71,6 +71,7 @@ class WalletShowController
                 'mode' => $settings->getProgramMode(),
                 'stamps_per_reward' => $settings->getStampsPerReward(),
                 'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
+                'stamp_icon' => $settings->getStampIcon(),
             ],
         ]);
     }

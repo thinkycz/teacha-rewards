@@ -98,7 +98,12 @@
         "stamps_per_reward_label": "Stamps per reward",
         "stamps_per_reward_help": "How many stamps the customer needs to earn before they can redeem one free reward.",
         "stamps_per_reward_label_label": "Reward label",
-        "stamps_per_reward_label_help": "The free reward name shown to the customer and to staff."
+        "stamps_per_reward_label_help": "The free reward name shown to the customer and to staff.",
+        "stamp_icon_label": "Stamp icon",
+        "stamp_icon_help": "The emoji shown on each filled stamp and faintly on each empty slot. Pick a preset that fits the shop or paste your own.",
+        "stamp_icon_presets_label": "Presets",
+        "stamp_icon_custom_label": "Custom emoji",
+        "stamp_icon_custom_help": "Paste any single emoji (e.g. 🍵, ☕, 🍓)."
     },
     "dashboard": {
         "nav": {

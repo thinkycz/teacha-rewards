@@ -15,6 +15,7 @@ function fullPayload(): array
         'program_mode' => 'cashback',
         'stamps_per_reward' => '10',
         'stamps_per_reward_label' => 'Free drink',
+        'stamp_icon' => '🍵',
     ];
 }
 
@@ -69,6 +70,7 @@ function fullPayload(): array
     \expect(Setting::query()->where('key', 'program_mode')->value('value'))->toBe('cashback');
     \expect(Setting::query()->where('key', 'stamps_per_reward')->value('value'))->toBe('10');
     \expect(Setting::query()->where('key', 'stamps_per_reward_label')->value('value'))->toBe('Free drink');
+    \expect(Setting::query()->where('key', 'stamp_icon')->value('value'))->toBe('🍵');
 });
 
 \test('POST /settings rejects a cashback rate above 100', function (): void {

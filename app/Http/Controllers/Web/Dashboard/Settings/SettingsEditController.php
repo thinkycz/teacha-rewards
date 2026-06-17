@@ -36,6 +36,7 @@ class SettingsEditController
         $programMode = $settings->getProgramMode();
         $stampsPerReward = $settings->getStampsPerReward();
         $stampsRewardLabel = $settings->getStampsRewardLabel();
+        $stampIcon = $settings->getStampIcon();
 
         return Inertia::render('Dashboard/Settings/Index', [
             'settings' => [
@@ -46,6 +47,7 @@ class SettingsEditController
                 'program_mode' => $programMode,
                 'stamps_per_reward' => (string) $stampsPerReward,
                 'stamps_per_reward_label' => $stampsRewardLabel,
+                'stamp_icon' => $stampIcon,
             ],
         ]);
     }

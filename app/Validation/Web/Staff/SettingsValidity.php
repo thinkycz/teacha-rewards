@@ -91,4 +91,16 @@ class SettingsValidity
             ->required()
             ->max(64);
     }
+
+    public function stampIcon(): Validity
+    {
+        // Emoji can be multi-codepoint (skin tone modifiers, ZWJ
+        // sequences). 16 chars is plenty for one emoji or a short pair
+        // and still rejects accidentally pasted paragraphs.
+        return $this->baseValidity
+            ->make()
+            ->varchar()
+            ->required()
+            ->max(16);
+    }
 }

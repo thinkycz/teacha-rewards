@@ -158,6 +158,30 @@ class SettingsService
     }
 
     /**
+     * Read the stamp icon (emoji) the admin picked from the picker.
+     * Defaults to a matcha bowl emoji so a fresh install looks on-brand.
+     */
+    public function getStampIcon(): string
+    {
+        $raw = $this->get('stamp_icon', '🍵');
+
+        if (! \is_string($raw)) {
+            return '🍵';
+        }
+
+        $trimmed = \trim($raw);
+
+        // Cap at 8 chars so a pasted multi-emoji + ZWJ sequence doesn't
+        // blow up a 3xl tile. The picker exposes a curated shortlist so
+        // in practice this is a single emoji or ZWJ pair.
+        if ($trimmed === '' || \mb_strlen($trimmed) > 8) {
+            return '🍵';
+        }
+
+        return $trimmed;
+    }
+
+    /**
      * Coerce a value to its stored `text` representation.
      */
     protected function serialize(mixed $value): string
