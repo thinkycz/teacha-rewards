@@ -11,7 +11,6 @@ import {
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Brand from '@/components/ui/Brand.vue';
-import ConfirmDialog from '@/components/ui/ConfirmDialog.vue';
 import FlashAlerts from '@/components/ui/FlashAlerts.vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
 import { useConfirmDialog } from '@/composables/useConfirmDialog';
@@ -338,7 +337,6 @@ function closeMobileHistory(): void {
                     class="z-10 flex flex-1 flex-col overflow-hidden max-w-4xl w-full mx-auto"
                 >
                     <FlashAlerts />
-                    <ConfirmDialog />
 
                     <div class="flex flex-1 flex-col overflow-hidden">
                         <slot />

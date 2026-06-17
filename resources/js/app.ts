@@ -36,11 +36,15 @@ createInertiaApp({
         const PwaInstallBanner = defineAsyncComponent(
             () => import('./components/pwa/PwaInstallBanner.vue'),
         );
+        const ConfirmDialog = defineAsyncComponent(
+            () => import('./components/ui/ConfirmDialog.vue'),
+        );
 
         const root = createApp({
             render: () => [
                 h(App, props),
                 h(PwaInstallBanner),
+                h(ConfirmDialog),
             ],
         });
 
