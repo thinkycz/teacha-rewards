@@ -269,12 +269,11 @@
         },
         "store_qr": {
             "title": "Store QR — print",
-            "headline": "Open your cashback wallet in a single scan",
+            "headline": "Open your loyalty card in a single scan",
             "back": "Back to dashboard",
             "print": "Print",
             "qr_alt": "QR code to open the wallet at {url}",
             "scan_prompt": "Scan the code with your phone camera. The wallet opens in the browser — no app, no email.",
-            "footer": "Printed from the Teacha Rewards admin.",
             "admin_hint": "Prints on A4 / Letter. For label printing, set the printer size to 10 × 10 cm."
         }
     },
@@ -329,8 +328,8 @@
     },
     "marketing": {
         "tagline": "Teacha Rewards",
-        "headline": "Get rewarded for every matcha.",
-        "subheadline": "Earn cashback on every matcha, bubble tea, and seasonal drop. Open your wallet in under thirty seconds.",
+        "headline": "Get rewarded for every drink.",
+        "subheadline": "Earn rewards on every drink. Open your wallet in under thirty seconds.",
         "how_it_works": "How it works",
         "step_1": "Open your wallet with your phone number and first name.",
         "step_2": "Show the QR code at the till to earn cashback on every purchase.",
@@ -436,8 +435,5 @@
     "dashboard.wallets.show.balance_stamps": "Stamps",
     "dashboard.wallets.index.balance_stamps": "Stamps",
     "dashboard.dashboard.today_stamps_earned": "Stamps earned today",
-    "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today",
-    "dashboard.store_qr.headline": "Open your loyalty card in a single scan",
-    "marketing.headline": "Get rewarded for every drink.",
-    "marketing.subheadline": "Earn rewards on every drink. Open your wallet in under thirty seconds."
+    "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today"
 }

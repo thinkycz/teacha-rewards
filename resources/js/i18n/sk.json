@@ -269,12 +269,11 @@
         },
         "store_qr": {
             "title": "QR kód obchodu — tlač",
-            "headline": "Otvorte si cashbackovú peňaženku jedným naskenovaním",
+            "headline": "Otvorte si vernostnú kartičku jedným naskenovaním",
             "back": "Späť na prehľad",
             "print": "Vytlačiť",
             "qr_alt": "QR kód na otvorenie peňaženky na adrese {url}",
             "scan_prompt": "Naskenujte kód fotoaparátom telefónu. Peňaženka sa otvorí v prehliadači — žiadna aplikácia, žiadny e-mail.",
-            "footer": "Vytlačené z administrácie Teacha Rewards.",
             "admin_hint": "Tlač na A4 / Letter. Pre tlač na etikety nastavte v tlačiarni rozmer 10 × 10 cm."
         }
     },
@@ -329,8 +328,8 @@
     },
     "marketing": {
         "tagline": "Teacha Rewards",
-        "headline": "Odmena za každý matcha.",
-        "subheadline": "Získajte cashback za každý matcha, bubble tea aj sezónny špeciál. Otvorte si peňaženku za tridsať sekúnd.",
+        "headline": "Odmena za každý drink.",
+        "subheadline": "Získajte odmeny za každý drink. Otvorte si peňaženku za tridsať sekúnd.",
         "how_it_works": "Ako to funguje",
         "step_1": "Otvorte si peňaženku pomocou telefónneho čísla a mena.",
         "step_2": "Ukážte QR kód na pokladni a získajte cashback z každého nákupu.",
@@ -436,8 +435,5 @@
     "dashboard.wallets.show.balance_stamps": "Pečiatok",
     "dashboard.wallets.index.balance_stamps": "Pečiatok",
     "dashboard.dashboard.today_stamps_earned": "Dnešné pečiatky",
-    "dashboard.dashboard.today_rewards_redeemed": "Dnešné uplatnené odmeny",
-    "dashboard.store_qr.headline": "Otvorte si vernostnú kartičku jedným naskenovaním",
-    "marketing.headline": "Odmena za každý drink.",
-    "marketing.subheadline": "Získajte odmeny za každý drink. Otvorte si peňaženku za tridsať sekúnd."
+    "dashboard.dashboard.today_rewards_redeemed": "Dnešné uplatnené odmeny"
 }
