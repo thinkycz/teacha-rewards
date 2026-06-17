@@ -15,10 +15,12 @@ use Thinkycz\LaravelCore\Support\Resolver;
 /**
  * Admin settings update.
  *
- * Writes the four settings through `SettingsService::set`. The
+ * Writes the seven settings through `SettingsService::set`. The
  * `cashback_rate` value is stored as the raw string and re-rounded
  * on read; the form does its own rounding so the cashier sees the
- * "10.00" form they're entering.
+ * "10.00" form they're entering. Stamps-mode fields are validated
+ * alongside cashback-mode ones - the form always sends all seven,
+ * the controller accepts whichever the current mode needs.
  */
 class SettingsUpdateController
 {
@@ -33,6 +35,9 @@ class SettingsUpdateController
             'currency' => $validity->currency()->toArray(),
             'program_name' => $validity->programName()->toArray(),
             'store_name' => $validity->storeName()->toArray(),
+            'program_mode' => $validity->programMode()->toArray(),
+            'stamps_per_reward' => $validity->stampsPerReward()->toArray(),
+            'stamps_per_reward_label' => $validity->stampsRewardLabel()->toArray(),
         ]);
 
         /** @var SettingsService $settings */
@@ -42,6 +47,9 @@ class SettingsUpdateController
         $settings->set('currency', $validated->assertString('currency'));
         $settings->set('program_name', $validated->assertString('program_name'));
         $settings->set('store_name', $validated->assertString('store_name'));
+        $settings->set('program_mode', $validated->assertString('program_mode'));
+        $settings->set('stamps_per_reward', $validated->assertString('stamps_per_reward'));
+        $settings->set('stamps_per_reward_label', $validated->assertString('stamps_per_reward_label'));
 
         Inertia::flash('success', \__('Settings updated.'));
 

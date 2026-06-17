@@ -21,6 +21,7 @@ use Thinkycz\LaravelCore\Models\BaseModel;
  * @property string $phone
  * @property string $phone_normalized
  * @property string $rewards_balance
+ * @property int $stamps_count
  * @property string $lifetime_earned
  * @property string $lifetime_redeemed
  * @property string $status
@@ -138,6 +139,19 @@ class RewardWallet extends BaseModel
     }
 
     /**
+     * Stamps count getter.
+     *
+     * Integer counter used when the store is in `program_mode = stamps`.
+     * Stays at zero in cashback mode so flipping the mode toggle is
+     * non-destructive: existing cashback balances are preserved and a
+     * new stamps program starts with empty cards.
+     */
+    public function getStampsCount(): int
+    {
+        return $this->assertInt('stamps_count');
+    }
+
+    /**
      * Lifetime earned getter.
      */
     public function getLifetimeEarned(): string
@@ -193,6 +207,7 @@ class RewardWallet extends BaseModel
         return [
             'last_used_at' => 'datetime',
             'rewards_balance' => 'decimal:2',
+            'stamps_count' => 'integer',
             'lifetime_earned' => 'decimal:2',
             'lifetime_redeemed' => 'decimal:2',
         ];

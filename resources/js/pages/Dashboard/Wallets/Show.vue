@@ -10,6 +10,9 @@ import {
     Power,
     PowerOff,
     AlertTriangle,
+    Plus,
+    Minus,
+    Gift,
 } from '@lucide/vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import Button from '@/components/ui/Button.vue';
@@ -17,6 +20,7 @@ import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 import Select from '@/components/ui/Select.vue';
 import FieldError from '@/components/ui/FieldError.vue';
+import StampCard from '@/components/reward/StampCard.vue';
 import TransactionList from '@/components/reward/TransactionList.vue';
 import { useConfirmDialog } from '@/composables/useConfirmDialog';
 import { fieldError } from '@/composables/useFieldError';
@@ -32,6 +36,7 @@ interface WalletSummary {
     phone: string;
     phone_normalized: string;
     rewards_balance: string;
+    stamps_count: number;
     lifetime_earned: string;
     lifetime_redeemed: string;
     status: 'active' | 'disabled';
@@ -51,12 +56,20 @@ interface WalletTransaction {
     created_at: string | null;
 }
 
+interface ProgramConfig {
+    mode: 'cashback' | 'stamps';
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
+}
+
 const props = defineProps<{
     wallet: WalletSummary;
     transactions: WalletTransaction[];
+    program: ProgramConfig;
 }>();
 
 const isActive = computed(() => props.wallet.status === 'active');
+const isStamps = computed(() => props.program.mode === 'stamps');
 
 const balanceNumber = computed(() => Number(props.wallet.rewards_balance));
 const balanceFormatted = computed(() =>
@@ -79,13 +92,20 @@ const lifetimeRedeemedFormatted = computed(() =>
     }).format(Number(props.wallet.lifetime_redeemed)),
 );
 
-type Action = 'purchase' | 'redeem' | 'adjust' | null;
+// Stamps-mode: how many rewards can the cashier redeem right now?
+const maxRedeemable = computed(() => {
+    const per = Math.max(1, props.program.stamps_per_reward);
+    return Math.floor(props.wallet.stamps_count / per);
+});
+
+type Action = 'purchase' | 'redeem' | 'adjust' | 'earn' | 'redeemStamps' | null;
 const openAction = ref<Action>(null);
 
 function openPanel(action: Action): void {
     openAction.value = openAction.value === action ? null : action;
 }
 
+// Cashback forms
 const purchaseForm = useForm({ purchase_amount: '' });
 const redeemForm = useForm({ amount: '' });
 const adjustForm = useForm({
@@ -93,6 +113,20 @@ const adjustForm = useForm({
     amount: '',
     note: '',
 });
+
+// Stamps forms
+const earnForm = useForm<{ count: string }>({ count: '1' });
+const stampRedeemForm = useForm<{ rewards: string }>({ rewards: '1' });
+
+function bumpEarn(delta: number): void {
+    const next = Math.max(1, Math.min(100, Number(earnForm.count) + delta));
+    earnForm.count = String(next);
+}
+
+function bumpRedeem(delta: number): void {
+    const next = Math.max(1, Math.min(maxRedeemable.value, Number(stampRedeemForm.rewards) + delta));
+    stampRedeemForm.rewards = String(next);
+}
 
 function submitPurchase(): void {
     purchaseForm.post(`/wallets/${props.wallet.id}/purchase`, {
@@ -119,6 +153,26 @@ function submitAdjust(): void {
         preserveScroll: true,
         onSuccess: () => {
             adjustForm.reset();
+            openAction.value = null;
+        },
+    });
+}
+
+function submitEarn(): void {
+    earnForm.post(`/wallets/${props.wallet.id}/stamps/earn`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            earnForm.count = '1';
+            openAction.value = null;
+        },
+    });
+}
+
+function submitStampRedeem(): void {
+    stampRedeemForm.post(`/wallets/${props.wallet.id}/stamps/redeem`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            stampRedeemForm.rewards = '1';
             openAction.value = null;
         },
     });
@@ -182,10 +236,30 @@ async function toggleStatus(): Promise<void> {
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
                                 {{ t('dashboard.wallets.show.balance') }}
                             </p>
-                            <p class="mt-0.5 text-2xl font-bold tracking-tight">
+                            <p
+                                v-if="isStamps"
+                                class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
+                            >
+                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
+                            </p>
+                            <p
+                                v-else
+                                class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
+                            >
                                 {{ balanceFormatted }}&nbsp;Kč
                             </p>
                         </div>
+                    </div>
+                    <div
+                        v-if="isStamps"
+                        class="mt-4 rounded-2xl bg-white/10 p-4"
+                    >
+                        <StampCard
+                            :stamps="wallet.stamps_count"
+                            :total="program.stamps_per_reward"
+                            :reward-label="program.stamps_per_reward_label"
+                            compact
+                        />
                     </div>
                 </header>
 
@@ -239,7 +313,12 @@ async function toggleStatus(): Promise<void> {
                 <h2 class="label-eyebrow mb-3">
                     {{ t('dashboard.wallets.show.actions_heading') }}
                 </h2>
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+
+                <!-- Cashback mode actions -->
+                <div
+                    v-if="!isStamps"
+                    class="grid grid-cols-2 gap-3 sm:grid-cols-4"
+                >
                     <button
                         type="button"
                         :disabled="!isActive"
@@ -282,11 +361,65 @@ async function toggleStatus(): Promise<void> {
                         {{ isActive ? t('dashboard.wallets.show.disable') : t('dashboard.wallets.show.enable') }}
                     </button>
                 </div>
+
+                <!-- Stamps mode actions -->
+                <div
+                    v-else
+                    class="grid grid-cols-2 gap-3 sm:grid-cols-4"
+                >
+                    <button
+                        type="button"
+                        :disabled="!isActive"
+                        class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'earn' }"
+                        @click="openPanel('earn')"
+                    >
+                        <Plus :size="16" />
+                        {{ t('dashboard.wallets.show.add_stamps') }}
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="!isActive || maxRedeemable < 1"
+                        class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'redeemStamps' }"
+                        @click="openPanel('redeemStamps')"
+                    >
+                        <Gift :size="16" />
+                        {{ t('dashboard.wallets.show.redeem_stamps') }}
+                        <span
+                            v-if="maxRedeemable > 0"
+                            class="ml-1 rounded-full bg-primary-soft px-1.5 text-[10px] font-bold text-primary"
+                        >
+                            {{ maxRedeemable }}
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="!isActive"
+                        class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                        :class="{ 'border-primary bg-primary-soft': openAction === 'adjust' }"
+                        @click="openPanel('adjust')"
+                    >
+                        <Sliders :size="16" />
+                        {{ t('dashboard.wallets.show.manual_adjust') }}
+                    </button>
+                    <button
+                        type="button"
+                        class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-warning hover:bg-warning-soft"
+                        @click="toggleStatus"
+                    >
+                        <component
+                            :is="isActive ? PowerOff : Power"
+                            :size="16"
+                        />
+                        {{ isActive ? t('dashboard.wallets.show.disable') : t('dashboard.wallets.show.enable') }}
+                    </button>
+                </div>
             </section>
 
-            <!-- Log purchase panel -->
+            <!-- Cashback: Log purchase -->
             <section
-                v-if="openAction === 'purchase'"
+                v-if="!isStamps && openAction === 'purchase'"
                 class="surface-card border-primary p-5"
             >
                 <form
@@ -323,9 +456,9 @@ async function toggleStatus(): Promise<void> {
                 </form>
             </section>
 
-            <!-- Redeem panel -->
+            <!-- Cashback: Redeem -->
             <section
-                v-if="openAction === 'redeem'"
+                v-if="!isStamps && openAction === 'redeem'"
                 class="surface-card border-primary p-5"
             >
                 <form
@@ -363,7 +496,135 @@ async function toggleStatus(): Promise<void> {
                 </form>
             </section>
 
-            <!-- Adjust panel -->
+            <!-- Stamps: Add stamps -->
+            <section
+                v-if="isStamps && openAction === 'earn'"
+                class="surface-card border-primary p-5"
+            >
+                <form
+                    class="space-y-4"
+                    @submit.prevent="submitEarn"
+                >
+                    <div class="space-y-2">
+                        <Label for="earn_count" required>
+                            {{ t('dashboard.wallets.show.stamp_count') }}
+                        </Label>
+                        <div class="flex items-center gap-2">
+                            <button
+                                type="button"
+                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-outline-glass bg-surface-container-lowest text-on-surface transition hover:border-primary disabled:opacity-40"
+                                :disabled="Number(earnForm.count) <= 1"
+                                @click="bumpEarn(-1)"
+                            >
+                                <Minus :size="14" />
+                            </button>
+                            <Input
+                                id="earn_count"
+                                v-model="earnForm.count"
+                                type="number"
+                                inputmode="numeric"
+                                step="1"
+                                min="1"
+                                max="100"
+                                class="text-center"
+                                :invalid="fieldError(earnForm.errors, 'count', 'earn').invalid"
+                                :described-by="fieldError(earnForm.errors, 'count', 'earn').describedBy"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-outline-glass bg-surface-container-lowest text-on-surface transition hover:border-primary disabled:opacity-40"
+                                :disabled="Number(earnForm.count) >= 100"
+                                @click="bumpEarn(1)"
+                            >
+                                <Plus :size="14" />
+                            </button>
+                        </div>
+                        <p class="label-help">
+                            {{ t('dashboard.wallets.show.stamp_count_help') }}
+                        </p>
+                        <FieldError v-bind="fieldError(earnForm.errors, 'count', 'earn')" />
+                    </div>
+                    <Button
+                        type="submit"
+                        :disabled="earnForm.processing"
+                    >
+                        {{ t('dashboard.wallets.show.submit_add_stamps') }}
+                    </Button>
+                </form>
+            </section>
+
+            <!-- Stamps: Redeem free reward -->
+            <section
+                v-if="isStamps && openAction === 'redeemStamps'"
+                class="surface-card border-primary p-5"
+            >
+                <form
+                    class="space-y-4"
+                    @submit.prevent="submitStampRedeem"
+                >
+                    <div class="space-y-2">
+                        <Label for="redeem_rewards" required>
+                            {{ t('dashboard.wallets.show.rewards_count') }}
+                        </Label>
+                        <div class="flex items-center gap-2">
+                            <button
+                                type="button"
+                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-outline-glass bg-surface-container-lowest text-on-surface transition hover:border-primary disabled:opacity-40"
+                                :disabled="Number(stampRedeemForm.rewards) <= 1"
+                                @click="bumpRedeem(-1)"
+                            >
+                                <Minus :size="14" />
+                            </button>
+                            <Input
+                                id="redeem_rewards"
+                                v-model="stampRedeemForm.rewards"
+                                type="number"
+                                inputmode="numeric"
+                                step="1"
+                                min="1"
+                                :max="maxRedeemable"
+                                class="text-center"
+                                :invalid="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem').invalid"
+                                :described-by="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem').describedBy"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-outline-glass bg-surface-container-lowest text-on-surface transition hover:border-primary disabled:opacity-40"
+                                :disabled="Number(stampRedeemForm.rewards) >= maxRedeemable"
+                                @click="bumpRedeem(1)"
+                            >
+                                <Plus :size="14" />
+                            </button>
+                        </div>
+                        <p class="label-help">
+                            {{
+                                t('dashboard.wallets.show.rewards_count_help', {
+                                    per_reward: program.stamps_per_reward,
+                                })
+                            }}
+                        </p>
+                        <FieldError v-bind="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem')" />
+                        <button
+                            v-if="maxRedeemable > 0"
+                            type="button"
+                            class="text-xs font-semibold text-primary transition hover:text-primary-container"
+                            @click="stampRedeemForm.rewards = String(maxRedeemable)"
+                        >
+                            {{ t('dashboard.wallets.show.redeem_max', { count: maxRedeemable }) }}
+                        </button>
+                    </div>
+                    <Button
+                        type="submit"
+                        :disabled="stampRedeemForm.processing"
+                    >
+                        {{ t('dashboard.wallets.show.submit_redeem_stamps') }}
+                    </Button>
+                </form>
+            </section>
+
+            <!-- Manual adjust (both modes) -->
             <section
                 v-if="openAction === 'adjust'"
                 class="surface-card border-primary p-5"
@@ -448,7 +709,8 @@ async function toggleStatus(): Promise<void> {
                 </h2>
                 <TransactionList
                     :transactions="transactions"
-                    show-balance-after
+                    :show-balance-after="true"
+                    :stamps-mode="isStamps"
                     :empty-message="t('dashboard.transactions.index.empty')"
                 />
             </section>

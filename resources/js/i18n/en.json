@@ -21,7 +21,8 @@
             "Sat",
             "Sun"
         ],
-        "yes": "Yes"
+        "yes": "Yes",
+        "stamps": "stamps"
     },
     "nav": {
         "skip_to_main": "Skip to main content",
@@ -87,7 +88,17 @@
         "password": {
             "title": "Password",
             "submit": "Update password"
-        }
+        },
+        "program_mode_label": "Program mode",
+        "program_mode_help": "Switch between cashback (money off future purchases) and stamps (collect N for a free reward).",
+        "mode_cashback": "Cashback",
+        "mode_cashback_help": "Every purchase credits a percentage of the spend back to the wallet.",
+        "mode_stamps": "Stamps",
+        "mode_stamps_help": "The cashier adds one stamp per drink paid at full price. Fill the card for a free reward.",
+        "stamps_per_reward_label": "Stamps per reward",
+        "stamps_per_reward_help": "How many stamps the customer needs to earn before they can redeem one free reward.",
+        "stamps_per_reward_label_label": "Reward label",
+        "stamps_per_reward_label_help": "The free reward name shown to the customer and to staff."
     },
     "dashboard": {
         "nav": {
@@ -117,7 +128,8 @@
             "view_wallets": "Browse wallets",
             "subtitle": "Today at a glance",
             "scan": "Scan a customer QR",
-            "view": "Browse wallets"
+            "view": "Browse wallets",
+            "stamps_until_reward": "{remaining} more for a {label}"
         },
         "scan": {
             "index": {
@@ -176,7 +188,21 @@
                 "lifetime_earned": "Lifetime earned",
                 "lifetime_redeemed": "Lifetime redeemed",
                 "last_used": "Last activity",
-                "never_used": "No activity yet"
+                "never_used": "No activity yet",
+                "add_stamps": "Add stamps",
+                "redeem_stamps": "Redeem reward",
+                "stamp_count": "Stamps",
+                "stamp_count_help": "How many drinks the cashier is adding now.",
+                "rewards_count": "Rewards",
+                "rewards_count_help": "How many free rewards to redeem. Max: floor(stamps / {per_reward}).",
+                "stamp_earn_confirm": "Add {count} stamp(s) to this wallet?",
+                "stamp_redeem_confirm": "Redeem {count} free reward(s) from this wallet?",
+                "submit_add_stamps": "Add stamps",
+                "submit_redeem_stamps": "Redeem",
+                "card_full": "Card full",
+                "stamps_until_reward": "{remaining} more stamp(s) for a {label}",
+                "redeem_available": "Redeem {count} free {label}",
+                "redeem_max": "Redeem max ({count})"
             }
         },
         "transactions": {
@@ -193,7 +219,9 @@
                 "empty": "No transactions match your filters.",
                 "balance_after": "Balance after",
                 "purchase_amount": "Purchase",
-                "note": "Note"
+                "note": "Note",
+                "type_stamp_earn": "Stamp earned",
+                "type_stamp_redeem": "Free reward redeemed"
             }
         },
         "settings": {
@@ -347,8 +375,13 @@
                 "redeem": "Redemption",
                 "manual_add": "Manual credit",
                 "manual_subtract": "Manual debit",
-                "manual_set": "Manual adjustment"
+                "manual_set": "Manual adjustment",
+                "stamp_earn": "Stamp earned",
+                "stamp_redeem": "Free reward redeemed"
             }
+        },
+        "stamps": {
+            "card_label": "{filled} of {total} stamps collected toward {label}"
         }
     },
     "pwa": {

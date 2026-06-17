@@ -105,6 +105,59 @@ class SettingsService
     }
 
     /**
+     * Read the loyalty program mode.
+     *
+     * `cashback` is the default; `stamps` swaps the active balance
+     * from `reward_wallets.rewards_balance` (Kc) to
+     * `reward_wallets.stamps_count` (integer) and re-skins the
+     * customer + admin surfaces accordingly.
+     */
+    public function getProgramMode(): string
+    {
+        $raw = $this->get('program_mode', 'cashback');
+
+        if ($raw === 'stamps') {
+            return 'stamps';
+        }
+
+        return 'cashback';
+    }
+
+    /**
+     * Read the stamp threshold: how many stamps the customer needs
+     * to earn before they can redeem one free reward. Default is 10
+     * (the classic Starbucks-style card).
+     */
+    public function getStampsPerReward(): int
+    {
+        $raw = $this->get('stamps_per_reward', '10');
+
+        if (! \is_scalar($raw)) {
+            return 10;
+        }
+
+        $int = (int) $raw;
+
+        return $int >= 1 ? $int : 10;
+    }
+
+    /**
+     * Read the human-readable reward label shown beneath the slot
+     * grid on `/w/{token}` and on the cashier "redeem" tile.
+     * Defaults to "Free drink".
+     */
+    public function getStampsRewardLabel(): string
+    {
+        $raw = $this->get('stamps_per_reward_label', 'Free drink');
+
+        if (! \is_string($raw) || \trim($raw) === '') {
+            return 'Free drink';
+        }
+
+        return $raw;
+    }
+
+    /**
      * Coerce a value to its stored `text` representation.
      */
     protected function serialize(mixed $value): string

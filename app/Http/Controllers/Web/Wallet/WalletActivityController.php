@@ -57,6 +57,7 @@ class WalletActivityController
                 'wallet_number' => $wallet->getWalletNumber(),
                 'first_name' => $wallet->getFirstName(),
                 'rewards_balance' => $wallet->getRewardsBalance(),
+                'stamps_count' => $wallet->getStampsCount(),
                 'lifetime_earned' => $wallet->getLifetimeEarned(),
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
             ],

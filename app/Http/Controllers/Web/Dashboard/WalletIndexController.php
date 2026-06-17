@@ -7,16 +7,22 @@ namespace App\Http\Controllers\Web\Dashboard;
 use App\Enums\WalletStatusEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
+use App\Services\Settings\SettingsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Thinkycz\LaravelCore\Support\Resolver;
 
 /**
  * Staff wallet list.
  *
- * Searchable by first name, phone, or wallet number. Filter by
- * `status` (`active` | `disabled` | all). Sort by recent activity,
- * lifetime earned, or lifetime redeemed.
+ * Searchable by first name, phone, wallet number, or scanned
+ * barcode (public_token). Filter by `status` (`active` | `disabled` |
+ * all). Sort by recent activity, lifetime earned, lifetime redeemed,
+ * or balance (cashback-mode) / stamps count (stamps-mode).
+ *
+ * `program.mode` is shared so the list page can render the right
+ * column (balance or stamp count) per the current mode.
  */
 class WalletIndexController
 {
@@ -24,6 +30,9 @@ class WalletIndexController
 
     public function __invoke(Request $request): Response
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
         $query = RewardWallet::query();
 
         $search = $request->str('q')->toString();
@@ -38,11 +47,13 @@ class WalletIndexController
             $query->where('status', WalletStatusEnum::DISABLED->value);
         }
 
+        $mode = $settings->getProgramMode();
+
         $sort = $request->str('sort')->toString();
         match ($sort) {
             'earned' => $query->orderByDesc('lifetime_earned'),
             'redeemed' => $query->orderByDesc('lifetime_redeemed'),
-            'balance' => $query->orderByDesc('rewards_balance'),
+            'balance' => $query->orderByDesc($mode === 'stamps' ? 'stamps_count' : 'rewards_balance'),
             default => $query->orderByDesc('last_used_at')->orderByDesc('id'),
         };
 
@@ -56,6 +67,7 @@ class WalletIndexController
                 'first_name' => $w->getFirstName(),
                 'phone' => $w->getPhone(),
                 'rewards_balance' => $w->getRewardsBalance(),
+                'stamps_count' => $w->getStampsCount(),
                 'lifetime_earned' => $w->getLifetimeEarned(),
                 'lifetime_redeemed' => $w->getLifetimeRedeemed(),
                 'status' => $w->getStatus()->value,
@@ -65,6 +77,11 @@ class WalletIndexController
                 'q' => $search,
                 'status' => $status,
                 'sort' => $sort,
+            ],
+            'program' => [
+                'mode' => $mode,
+                'stamps_per_reward' => $settings->getStampsPerReward(),
+                'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
             ],
         ]);
     }

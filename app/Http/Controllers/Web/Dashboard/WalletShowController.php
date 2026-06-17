@@ -7,17 +7,20 @@ namespace App\Http\Controllers\Web\Dashboard;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
+use App\Services\Settings\SettingsService;
 use Inertia\Inertia;
 use Inertia\Response;
-use Thinkycz\LaravelCore\Support\Thrower;
+use Thinkycz\LaravelCore\Support\Resolver;
 
 /**
  * Staff wallet detail.
  *
  * The cashier-facing full wallet view: customer info, recent
- * transactions, plus the three action buttons (log purchase, redeem,
- * manual adjust). The scan result page is a simpler version of this
- * for fast in-store use.
+ * transactions, plus the four action buttons (log purchase / redeem /
+ * manual adjust / toggle status in cashback mode; add stamps / redeem
+ * free reward / manual adjust / toggle status in stamps mode). The
+ * mode + stamps config is shared with the customer-facing surface so
+ * the same rendering rules apply on both sides.
  */
 class WalletShowController
 {
@@ -25,6 +28,9 @@ class WalletShowController
 
     public function __invoke(RewardWallet $wallet): Response
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
         $recent = $wallet->transactions()
             ->with('user:id,name')
             ->orderByDesc('created_at')
@@ -40,6 +46,7 @@ class WalletShowController
                 'phone' => $wallet->getPhone(),
                 'phone_normalized' => $wallet->getPhoneNormalized(),
                 'rewards_balance' => $wallet->getRewardsBalance(),
+                'stamps_count' => $wallet->getStampsCount(),
                 'lifetime_earned' => $wallet->getLifetimeEarned(),
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
                 'status' => $wallet->getStatus()->value,
@@ -60,6 +67,11 @@ class WalletShowController
                     'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
                 ];
             })->all(),
+            'program' => [
+                'mode' => $settings->getProgramMode(),
+                'stamps_per_reward' => $settings->getStampsPerReward(),
+                'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
+            ],
         ]);
     }
 }

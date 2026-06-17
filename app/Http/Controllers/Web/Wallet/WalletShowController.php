@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Web\Wallet;
 
 use App\Models\RewardWallet;
 use App\Services\Reward\RewardWalletService;
+use App\Services\Settings\SettingsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,6 +21,10 @@ use Thinkycz\LaravelCore\Support\Thrower;
  * `RewardWalletService::getByPublicToken`, which throws
  * `ModelNotFoundException` on a miss — Inertia's exception handler
  * turns that into a 404.
+ *
+ * The mode + stamps config is shared with the staff surface so the
+ * customer-facing page shows either the cashback balance or the
+ * stamps slot grid depending on the current program mode.
  */
 class WalletShowController
 {
@@ -30,6 +35,9 @@ class WalletShowController
     {
         /** @var RewardWalletService $service */
         $service = Resolver::resolve(RewardWalletService::class);
+
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
 
         $wallet = $service->getByPublicToken($token);
 
@@ -59,12 +67,17 @@ class WalletShowController
                 'wallet_number' => $wallet->getWalletNumber(),
                 'first_name' => $wallet->getFirstName(),
                 'rewards_balance' => $wallet->getRewardsBalance(),
+                'stamps_count' => $wallet->getStampsCount(),
                 'lifetime_earned' => $wallet->getLifetimeEarned(),
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
                 'status' => $wallet->getStatus()->value,
             ],
             'recent_transactions' => $items,
-            'wallet_url' => $request->url(),
+            'program' => [
+                'mode' => $settings->getProgramMode(),
+                'stamps_per_reward' => $settings->getStampsPerReward(),
+                'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
+            ],
         ]);
     }
 }

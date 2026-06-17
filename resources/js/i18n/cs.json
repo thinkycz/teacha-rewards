@@ -21,7 +21,8 @@
             "So",
             "Ne"
         ],
-        "yes": "Ano"
+        "yes": "Ano",
+        "stamps": "razítka"
     },
     "nav": {
         "skip_to_main": "Přeskočit na hlavní obsah",
@@ -87,7 +88,17 @@
         "password": {
             "title": "Heslo",
             "submit": "Aktualizovat heslo"
-        }
+        },
+        "program_mode_label": "Režim programu",
+        "program_mode_help": "Přepíná mezi cashbackem (sleva z budoucích nákupů) a razítky (nasbírejte N a získejte odměnu).",
+        "mode_cashback": "Cashback",
+        "mode_cashback_help": "Z každého nákupu se vrací určité procento částky zpět na peněženku.",
+        "mode_stamps": "Razítka",
+        "mode_stamps_help": "Personál přidá jedno razítko za každý nápoj zaplacený v plné ceně. Po naplnění kartičky získá zákazník odměnu.",
+        "stamps_per_reward_label": "Razítek na odměnu",
+        "stamps_per_reward_help": "Kolik razítek musí zákazník nasbírat, než může uplatnit jednu odměnu.",
+        "stamps_per_reward_label_label": "Název odměny",
+        "stamps_per_reward_label_help": "Název odměny, který se zobrazí zákazníkovi i personálu."
     },
     "dashboard": {
         "nav": {
@@ -117,7 +128,8 @@
             "view_wallets": "Procházet peněženky",
             "subtitle": "Dnešní souhrn v kostce",
             "scan": "Skenovat QR zákazníka",
-            "view": "Zobrazit peněženky"
+            "view": "Zobrazit peněženky",
+            "stamps_until_reward": "Ještě {remaining} do {label}"
         },
         "scan": {
             "index": {
@@ -176,7 +188,21 @@
                 "lifetime_earned": "Celkově vyděláno",
                 "lifetime_redeemed": "Celkově uplatněno",
                 "last_used": "Poslední aktivita",
-                "never_used": "Zatím žádná aktivita"
+                "never_used": "Zatím žádná aktivita",
+                "add_stamps": "Přidat razítka",
+                "redeem_stamps": "Uplatnit odměnu",
+                "stamp_count": "Razítek",
+                "stamp_count_help": "Kolik nápojů personál právě přidává.",
+                "rewards_count": "Odměn",
+                "rewards_count_help": "Kolik odměn uplatnit. Maximum: floor(razítka / {per_reward}).",
+                "stamp_earn_confirm": "Přidat {count} razítek této peněžence?",
+                "stamp_redeem_confirm": "Uplatnit {count} odměn z této peněženky?",
+                "submit_add_stamps": "Přidat razítka",
+                "submit_redeem_stamps": "Uplatnit",
+                "card_full": "Kartička je plná",
+                "stamps_until_reward": "Ještě {remaining} razítek do {label}",
+                "redeem_available": "Uplatnit {count}× {label}",
+                "redeem_max": "Uplatnit maximum ({count})"
             }
         },
         "transactions": {
@@ -193,7 +219,9 @@
                 "empty": "Vašim filtrům neodpovídají žádné transakce.",
                 "balance_after": "Zůstatek po",
                 "purchase_amount": "Nákup",
-                "note": "Poznámka"
+                "note": "Poznámka",
+                "type_stamp_earn": "Razítko přidáno",
+                "type_stamp_redeem": "Odměna uplatněna"
             }
         },
         "settings": {
@@ -347,8 +375,13 @@
                 "redeem": "Uplatnění",
                 "manual_add": "Ruční navýšení",
                 "manual_subtract": "Ruční snížení",
-                "manual_set": "Ruční úprava"
+                "manual_set": "Ruční úprava",
+                "stamp_earn": "Razítko přidáno",
+                "stamp_redeem": "Odměna uplatněna"
             }
+        },
+        "stamps": {
+            "card_label": "{filled} z {total} razítek nasbíráno k {label}"
         }
     },
     "pwa": {

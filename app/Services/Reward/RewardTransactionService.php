@@ -285,4 +285,92 @@ class RewardTransactionService
 
         return $locked;
     }
+
+    /**
+     * Award stamps to a wallet (cashier clicked "Add stamps" N
+     * times for N drinks paid at full price).
+     *
+     * Writes a `STAMP_EARN` row with `amount = N` (stamps credited)
+     * and increments `stamps_count`. Cashback-mode balances are
+     * untouched: both columns stay live so the mode toggle is
+     * non-destructive.
+     */
+    public function stampEarn(RewardWallet $wallet, int $count, User $user): RewardTransaction
+    {
+        if ($count < 1) {
+            Thrower::default()->message('count', \__('reward.stamp_count_positive'))->throw();
+        }
+
+        return DB::transaction(function () use ($wallet, $count, $user): RewardTransaction {
+            $locked = $this->lockWallet($wallet);
+
+            $before = $locked->getStampsCount();
+            $after = $before + $count;
+
+            $transaction = RewardTransaction::query()->create([
+                'uuid' => (string) Str::uuid(),
+                'reward_wallet_id' => $locked->getKey(),
+                'user_id' => $user->getKey(),
+                'type' => TransactionTypeEnum::STAMP_EARN->value,
+                'amount' => number_format($count, 2, '.', ''),
+                'balance_before' => number_format($before, 2, '.', ''),
+                'balance_after' => number_format($after, 2, '.', ''),
+            ]);
+
+            $locked->forceFill([
+                'stamps_count' => $after,
+                'last_used_at' => Carbon::now(),
+            ])->save();
+
+            return $transaction;
+        });
+    }
+
+    /**
+     * Redeem $rewards free rewards from the wallet.
+     *
+     * The cashier can redeem any number from 1 up to
+     * `floor(stamps_count / stamps_per_reward)`. The leftover
+     * stamps stay (21 stamps, threshold 10, redeem 2 -> 1 stamp
+     * left). The transaction row carries `amount = -rewards` so
+     * the history log shows how many were redeemed at once.
+     */
+    public function stampRedeem(RewardWallet $wallet, int $rewards, User $user): RewardTransaction
+    {
+        if ($rewards < 1) {
+            Thrower::default()->message('rewards', \__('reward.stamp_rewards_positive'))->throw();
+        }
+
+        $perReward = $this->settings->getStampsPerReward();
+
+        return DB::transaction(function () use ($wallet, $rewards, $perReward, $user): RewardTransaction {
+            $locked = $this->lockWallet($wallet);
+
+            $before = $locked->getStampsCount();
+            $cost = $rewards * $perReward;
+
+            if ($before < $cost) {
+                Thrower::default()->message('rewards', \__('reward.stamp_rewards_exceed_card'))->throw();
+            }
+
+            $after = $before - $cost;
+
+            $transaction = RewardTransaction::query()->create([
+                'uuid' => (string) Str::uuid(),
+                'reward_wallet_id' => $locked->getKey(),
+                'user_id' => $user->getKey(),
+                'type' => TransactionTypeEnum::STAMP_REDEEM->value,
+                'amount' => number_format(-$rewards, 2, '.', ''),
+                'balance_before' => number_format($before, 2, '.', ''),
+                'balance_after' => number_format($after, 2, '.', ''),
+            ]);
+
+            $locked->forceFill([
+                'stamps_count' => $after,
+                'last_used_at' => Carbon::now(),
+            ])->save();
+
+            return $transaction;
+        });
+    }
 }

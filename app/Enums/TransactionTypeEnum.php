@@ -10,6 +10,10 @@ enum TransactionTypeEnum: string
 
     case REDEEM = 'redeem';
 
+    case STAMP_EARN = 'stamp_earn';
+
+    case STAMP_REDEEM = 'stamp_redeem';
+
     case MANUAL_ADD = 'manual_add';
 
     case MANUAL_SUBTRACT = 'manual_subtract';

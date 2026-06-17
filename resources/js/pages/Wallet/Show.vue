@@ -6,6 +6,7 @@ import { ArrowRight, AlertTriangle } from '@lucide/vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
 import Brand from '@/components/ui/Brand.vue';
 import BarcodeBlock from '@/components/reward/BarcodeBlock.vue';
+import StampCard from '@/components/reward/StampCard.vue';
 import { formatDateTime } from '@/lib/date';
 
 useBoundLocale();
@@ -16,6 +17,7 @@ interface WalletSummary {
     wallet_number: string;
     first_name: string;
     rewards_balance: string;
+    stamps_count: number;
     status: string;
 }
 
@@ -23,16 +25,24 @@ interface Transaction {
     id: number;
     type: string;
     amount: string;
-    purchase_amount: string | null;
     created_at: string | null;
+    purchase_amount: string | null;
+}
+
+interface ProgramConfig {
+    mode: 'cashback' | 'stamps';
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
 }
 
 const props = defineProps<{
     wallet: WalletSummary;
     recent_transactions: Transaction[];
+    program: ProgramConfig;
 }>();
 
 const isActive = computed(() => props.wallet.status === 'active');
+const isStamps = computed(() => props.program.mode === 'stamps');
 
 const balanceFormatted = computed(() =>
     new Intl.NumberFormat('cs-CZ', {
@@ -40,23 +50,6 @@ const balanceFormatted = computed(() =>
         maximumFractionDigits: 2,
     }).format(Number(props.wallet.rewards_balance)),
 );
-
-function typeLabel(type: string): string {
-    switch (type) {
-        case 'purchase_cashback':
-            return t('wallet.transactions.types.purchase_cashback');
-        case 'redeem':
-            return t('wallet.transactions.types.redeem');
-        case 'manual_add':
-            return t('wallet.transactions.types.manual_add');
-        case 'manual_subtract':
-            return t('wallet.transactions.types.manual_subtract');
-        case 'manual_set':
-            return t('wallet.transactions.types.manual_set');
-        default:
-            return type;
-    }
-}
 
 function rowSubtitle(tx: Transaction): string {
     const parts: string[] = [];
@@ -72,11 +65,16 @@ function rowSubtitle(tx: Transaction): string {
 
 function formatSigned(value: string): string {
     const num = Number(value);
-    const abs = new Intl.NumberFormat('cs-CZ', {
+    const abs = Math.abs(num);
+    if (isStamps.value) {
+        const intStr = new Intl.NumberFormat('cs-CZ').format(abs);
+        return (num >= 0 ? '+' : '−') + intStr;
+    }
+    const formatted = new Intl.NumberFormat('cs-CZ', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-    }).format(Math.abs(num));
-    return (num >= 0 ? '+' : '−') + abs;
+    }).format(abs);
+    return (num >= 0 ? '+' : '−') + formatted;
 }
 </script>
 
@@ -99,9 +97,11 @@ function formatSigned(value: string): string {
                 <span>{{ t('wallet.show.disabled_notice') }}</span>
             </section>
 
-            <!-- Combined card: navy header band with the wallet
-                 identity + balance, white body holding the barcode
-                 the staff scans at checkout. -->
+            <!-- Combined card: navy header with identity + balance (or
+                 stamp count); white body with the barcode the staff
+                 scans at checkout. In stamps mode the slot grid sits
+                 between the header and the barcode so the customer can
+                 see how close they are to a free reward. -->
             <section class="surface-card overflow-hidden">
                 <header class="bg-primary p-5 text-on-primary">
                     <div class="flex items-start justify-between gap-4">
@@ -120,10 +120,30 @@ function formatSigned(value: string): string {
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
                                 {{ t('wallet.show.balance') }}
                             </p>
-                            <p class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums">
+                            <p
+                                v-if="isStamps"
+                                class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
+                            >
+                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
+                            </p>
+                            <p
+                                v-else
+                                class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
+                            >
                                 {{ balanceFormatted }}&nbsp;Kč
                             </p>
                         </div>
+                    </div>
+                    <div
+                        v-if="isStamps"
+                        class="mt-4 rounded-2xl bg-white/10 p-4"
+                    >
+                        <StampCard
+                            :stamps="wallet.stamps_count"
+                            :total="program.stamps_per_reward"
+                            :reward-label="program.stamps_per_reward_label"
+                            compact
+                        />
                     </div>
                 </header>
                 <div class="p-5">
@@ -138,8 +158,7 @@ function formatSigned(value: string): string {
                 </div>
             </section>
 
-            <!-- Recent activity - tight list inside a single card,
-                 one row per transaction separated by a hairline. -->
+            <!-- Recent activity - tight list inside a single card -->
             <section
                 v-if="recent_transactions.length > 0"
                 class="surface-card overflow-hidden"
@@ -165,7 +184,7 @@ function formatSigned(value: string): string {
                     >
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-semibold text-on-surface">
-                                {{ typeLabel(tx.type) }}
+                                {{ t('transactions.types.' + tx.type, tx.type) }}
                             </p>
                             <p
                                 v-if="rowSubtitle(tx)"
@@ -177,9 +196,8 @@ function formatSigned(value: string): string {
                         <p
                             class="shrink-0 text-sm font-bold tabular-nums"
                             :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
-                        >
-                            {{ formatSigned(tx.amount) }}&nbsp;Kč
-                        </p>
+                            v-html="formatSigned(tx.amount) + (isStamps ? ' ' + t('common.stamps') : '&nbsp;Kč')"
+                        />
                     </li>
                 </ul>
             </section>

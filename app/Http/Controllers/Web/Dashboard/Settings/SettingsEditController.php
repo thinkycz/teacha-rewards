@@ -12,11 +12,13 @@ use Thinkycz\LaravelCore\Support\Resolver;
 use Thinkycz\LaravelCore\Support\Typer;
 
 /**
- * Admin settings page (cashback rate, currency, program name,
- * store name).
+ * Admin settings page.
  *
- * All four values are stored as key/value strings in the
- * `settings` table. The service normalizes them on read.
+ * Renders the program-mode toggle plus the cashback-mode fields
+ * (rate, currency) and the stamps-mode fields
+ * (stamps_per_reward, stamps_per_reward_label). All seven values
+ * are stored as key/value strings in the `settings` table; the
+ * service normalizes them on read.
  */
 class SettingsEditController
 {
@@ -31,6 +33,9 @@ class SettingsEditController
         $currency = $settings->get('currency', 'CZK');
         $programName = $settings->get('program_name', 'Teacha Rewards');
         $storeName = $settings->get('store_name', 'Teacha');
+        $programMode = $settings->getProgramMode();
+        $stampsPerReward = $settings->getStampsPerReward();
+        $stampsRewardLabel = $settings->getStampsRewardLabel();
 
         return Inertia::render('Dashboard/Settings/Index', [
             'settings' => [
@@ -38,6 +43,9 @@ class SettingsEditController
                 'currency' => Typer::assertString(\is_scalar($currency) ? (string) $currency : 'CZK'),
                 'program_name' => Typer::assertString(\is_scalar($programName) ? (string) $programName : 'Teacha Rewards'),
                 'store_name' => Typer::assertString(\is_scalar($storeName) ? (string) $storeName : 'Teacha'),
+                'program_mode' => $programMode,
+                'stamps_per_reward' => (string) $stampsPerReward,
+                'stamps_per_reward_label' => $stampsRewardLabel,
             ],
         ]);
     }

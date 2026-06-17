@@ -20,10 +20,12 @@ withDefaults(
     defineProps<{
         transactions: Transaction[];
         showBalanceAfter?: boolean;
+        stampsMode?: boolean;
         emptyMessage?: string;
     }>(),
     {
         showBalanceAfter: false,
+        stampsMode: false,
         emptyMessage: '',
     },
 );
@@ -44,6 +46,7 @@ withDefaults(
             <TransactionItem
                 :transaction="tx"
                 :show-balance-after="showBalanceAfter"
+                :stamps-mode="stampsMode"
             />
         </li>
     </ul>

@@ -21,7 +21,8 @@
             "So",
             "Ne"
         ],
-        "yes": "Áno"
+        "yes": "Áno",
+        "stamps": "pečiatky"
     },
     "nav": {
         "skip_to_main": "Preskočiť na hlavný obsah",
@@ -87,7 +88,17 @@
         "password": {
             "title": "Heslo",
             "submit": "Aktualizovať heslo"
-        }
+        },
+        "program_mode_label": "Režim programu",
+        "program_mode_help": "Prepína medzi cashbackom (zľava z budúcich nákupov) a pečiatkami (nazbierajte N a získajte odmenu).",
+        "mode_cashback": "Cashback",
+        "mode_cashback_help": "Z každého nákupu sa vracia určité percento sumy späť na peňaženku.",
+        "mode_stamps": "Pečiatky",
+        "mode_stamps_help": "Personál pridá jednu pečiatku za každý nápoj zaplatený v plnej cene. Po naplnení kartičky získa zákazník odmenu.",
+        "stamps_per_reward_label": "Pečiatok na odmenu",
+        "stamps_per_reward_help": "Koľko pečiatok musí zákazník nazbierať, kým môže uplatniť jednu odmenu.",
+        "stamps_per_reward_label_label": "Názov odmeny",
+        "stamps_per_reward_label_help": "Názov odmeny, ktorý sa zobrazí zákazníkovi aj personálu."
     },
     "dashboard": {
         "nav": {
@@ -117,7 +128,8 @@
             "view_wallets": "Prehliadať peňaženky",
             "subtitle": "Dnešný súhrn v skratke",
             "scan": "Naskenovať QR zákazníka",
-            "view": "Zobraziť peňaženky"
+            "view": "Zobraziť peňaženky",
+            "stamps_until_reward": "Ešte {remaining} do {label}"
         },
         "scan": {
             "index": {
@@ -176,7 +188,21 @@
                 "lifetime_earned": "Celkovo zarobené",
                 "lifetime_redeemed": "Celkovo uplatnené",
                 "last_used": "Posledná aktivita",
-                "never_used": "Zatiaľ žiadna aktivita"
+                "never_used": "Zatiaľ žiadna aktivita",
+                "add_stamps": "Pridať pečiatky",
+                "redeem_stamps": "Uplatniť odmenu",
+                "stamp_count": "Pečiatok",
+                "stamp_count_help": "Koľko nápojov personál práve pridáva.",
+                "rewards_count": "Odmien",
+                "rewards_count_help": "Koľko odmien uplatniť. Maximum: floor(pečiatky / {per_reward}).",
+                "stamp_earn_confirm": "Pridať {count} pečiatok tejto peňaženke?",
+                "stamp_redeem_confirm": "Uplatniť {count} odmien z tejto peňaženky?",
+                "submit_add_stamps": "Pridať pečiatky",
+                "submit_redeem_stamps": "Uplatniť",
+                "card_full": "Kartička je plná",
+                "stamps_until_reward": "Ešte {remaining} pečiatok do {label}",
+                "redeem_available": "Uplatniť {count}× {label}",
+                "redeem_max": "Uplatniť maximum ({count})"
             }
         },
         "transactions": {
@@ -193,7 +219,9 @@
                 "empty": "Vašim filtrom nevyhovujú žiadne transakcie.",
                 "balance_after": "Zostatok po",
                 "purchase_amount": "Nákup",
-                "note": "Poznámka"
+                "note": "Poznámka",
+                "type_stamp_earn": "Pečiatka pridaná",
+                "type_stamp_redeem": "Odmenu uplatnená"
             }
         },
         "settings": {
@@ -347,8 +375,13 @@
                 "redeem": "Uplatnenie",
                 "manual_add": "Ručné navýšenie",
                 "manual_subtract": "Ručné zníženie",
-                "manual_set": "Ručná úprava"
+                "manual_set": "Ručná úprava",
+                "stamp_earn": "Pečiatka pridaná",
+                "stamp_redeem": "Odmenu uplatnená"
             }
+        },
+        "stamps": {
+            "card_label": "{filled} z {total} pečiatok nazbieraných k {label}"
         }
     },
     "pwa": {

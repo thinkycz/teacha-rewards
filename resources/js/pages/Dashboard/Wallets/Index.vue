@@ -18,10 +18,17 @@ interface Wallet {
     first_name: string;
     phone: string;
     rewards_balance: string;
+    stamps_count: number;
     lifetime_earned: string;
     lifetime_redeemed: string;
     status: 'active' | 'disabled';
     last_used_at: string | null;
+}
+
+interface ProgramConfig {
+    mode: 'cashback' | 'stamps';
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
 }
 
 interface Filters {
@@ -33,7 +40,10 @@ interface Filters {
 const props = defineProps<{
     wallets: Wallet[];
     filters: Filters;
+    program: ProgramConfig;
 }>();
+
+const isStamps = computed(() => props.program.mode === 'stamps');
 
 const search = ref(props.filters.q);
 const status = ref<Filters['status']>(props.filters.status);
@@ -184,9 +194,17 @@ function formatAmount(value: string): string {
                             </p>
                         </div>
                         <div class="text-right">
-                            <p class="text-sm font-bold text-on-surface">
-                                {{ formatAmount(wallet.rewards_balance) }}&nbsp;Kč
+                            <p
+                                v-if="isStamps"
+                                class="text-sm font-bold text-on-surface tabular-nums"
+                            >
+                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
                             </p>
+                            <p
+                                v-else
+                                class="text-sm font-bold text-on-surface tabular-nums"
+                                v-html="formatAmount(wallet.rewards_balance) + '&nbsp;Kč'"
+                            />
                             <p class="label-eyebrow">
                                 {{ t('dashboard.wallets.index.balance') }}
                             </p>
