@@ -49,7 +49,7 @@ const localeOptions = computed(() =>
                 </h2>
                 <Form
                     v-slot="{ errors, processing }"
-                    action="/settings/profile"
+                    action="/profile"
                     method="post"
                     class="space-y-5"
                 >
@@ -116,7 +116,7 @@ const localeOptions = computed(() =>
                 </h2>
                 <Form
                     v-slot="{ errors, processing }"
-                    action="/settings/password"
+                    action="/profile/password"
                     method="post"
                     :reset-on-success="['password', 'new_password']"
                     class="space-y-5"

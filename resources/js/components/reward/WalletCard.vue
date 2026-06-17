@@ -13,13 +13,13 @@ defineProps<{
 
 <template>
     <article
-        class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-matcha-500 via-matcha-600 to-matcha-700 p-6 text-white shadow-matcha"
+        class="relative overflow-hidden rounded-3xl bg-primary p-6 text-on-primary shadow-lg"
     >
         <div class="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-white/10" />
         <div class="absolute bottom-0 left-0 h-24 w-24 -translate-x-8 translate-y-8 rounded-full bg-white/5" />
 
         <div class="relative">
-            <p class="text-xs font-medium uppercase tracking-widest text-white/70">
+            <p class="text-xs font-medium uppercase tracking-widest text-on-primary/70">
                 Teacha Rewards
             </p>
             <p class="mt-1 text-2xl font-semibold">

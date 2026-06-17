@@ -51,6 +51,6 @@ class LogPurchaseController
             'amount' => $tx->getAmount(),
         ]));
 
-        return \redirect()->route('dashboard.scan.show', ['token' => $wallet->getPublicToken()]);
+        return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
     }
 }

@@ -34,8 +34,8 @@ function render(): void {
             displayValue: props.displayValue,
             fontSize: props.fontSize,
             margin: props.margin,
-            background: '#faf7f0',
-            lineColor: '#1e1b16',
+            background: '#f8fafc',
+            lineColor: '#0f172a',
         });
         error.value = null;
     } catch (err) {

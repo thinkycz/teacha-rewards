@@ -23,12 +23,12 @@ use App\Models\User;
 
 \test('EnsureAdminRole allows admin users through', function (): void {
     $admin = User::factory()->admin()->create();
-    $response = $this->actingAs($admin)->get('/dashboard/settings');
+    $response = $this->actingAs($admin)->get('/settings');
     $response->assertOk();
 });
 
 \test('EnsureAdminRole blocks regular staff with a 403', function (): void {
     $staff = User::factory()->staff()->create();
-    $response = $this->actingAs($staff)->get('/dashboard/settings');
+    $response = $this->actingAs($staff)->get('/settings');
     $response->assertStatus(403);
 });

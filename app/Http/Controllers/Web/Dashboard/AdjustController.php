@@ -56,6 +56,6 @@ class AdjustController
 
         Inertia::flash('success', \__('reward.adjusted'));
 
-        return \redirect()->route('dashboard.scan.show', ['token' => $wallet->getPublicToken()]);
+        return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
     }
 }

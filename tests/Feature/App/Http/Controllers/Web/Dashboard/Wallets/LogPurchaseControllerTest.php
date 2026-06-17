@@ -7,12 +7,12 @@ use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Models\User;
 
-\test('POST /dashboard/wallets/{wallet}/purchase credits cashback based on the current rate', function (): void {
+\test('POST /wallets/{wallet}/purchase credits cashback based on the current rate', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/purchase",
+        "/wallets/{$wallet->getKey()}/purchase",
         ['purchase_amount' => '200.00'],
         $this->inertiaHeaders(),
     );
@@ -35,14 +35,14 @@ use App\Models\User;
     \expect($tx?->getBalanceAfter())->toBe('20.00');
 });
 
-\test('POST /dashboard/wallets/{wallet}/purchase applies a custom cashback rate from settings', function (): void {
+\test('POST /wallets/{wallet}/purchase applies a custom cashback rate from settings', function (): void {
     \App\Models\Setting::query()->updateOrCreate(['key' => 'cashback_rate'], ['value' => '25']);
 
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/purchase",
+        "/wallets/{$wallet->getKey()}/purchase",
         ['purchase_amount' => '80.00'],
         $this->inertiaHeaders(),
     );
@@ -52,12 +52,12 @@ use App\Models\User;
     \expect($wallet->getRewardsBalance())->toBe('20.00');
 });
 
-\test('POST /dashboard/wallets/{wallet}/purchase rejects a non-positive amount', function (): void {
+\test('POST /wallets/{wallet}/purchase rejects a non-positive amount', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/purchase",
+        "/wallets/{$wallet->getKey()}/purchase",
         ['purchase_amount' => '0'],
         $this->inertiaHeaders(),
     );
@@ -67,11 +67,11 @@ use App\Models\User;
     \expect(\count($response->json('props.errors.purchase_amount')))->toBeGreaterThan(0);
 });
 
-\test('POST /dashboard/wallets/{wallet}/purchase rejects an unknown wallet', function (): void {
+\test('POST /wallets/{wallet}/purchase rejects an unknown wallet', function (): void {
     $staff = User::factory()->staff()->create();
 
     $response = $this->actingAs($staff)->post(
-        '/dashboard/wallets/999999/purchase',
+        '/wallets/999999/purchase',
         ['purchase_amount' => '50.00'],
         $this->inertiaHeaders(),
     );
@@ -79,11 +79,11 @@ use App\Models\User;
     $response->assertStatus(404);
 });
 
-\test('POST /dashboard/wallets/{wallet}/purchase is forbidden to a guest', function (): void {
+\test('POST /wallets/{wallet}/purchase is forbidden to a guest', function (): void {
     $wallet = RewardWallet::factory()->create();
 
     $response = $this->post(
-        "/dashboard/wallets/{$wallet->getKey()}/purchase",
+        "/wallets/{$wallet->getKey()}/purchase",
         ['purchase_amount' => '50.00'],
         $this->inertiaHeaders(),
     );

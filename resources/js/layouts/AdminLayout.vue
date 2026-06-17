@@ -2,7 +2,6 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
     LayoutDashboard,
-    QrCode,
     Wallet as WalletIcon,
     Receipt,
     Settings as SettingsIcon,
@@ -40,27 +39,21 @@ const navItems = computed<NavItem[]>(() => [
         icon: LayoutDashboard,
     },
     {
-        href: '/dashboard/scan',
-        labelKey: 'dashboard.nav.scan',
-        match: /^\/dashboard\/scan/,
-        icon: QrCode,
-    },
-    {
-        href: '/dashboard/wallets',
+        href: '/wallets',
         labelKey: 'dashboard.nav.wallets',
-        match: /^\/dashboard\/wallets/,
+        match: /^\/wallets/,
         icon: WalletIcon,
     },
     {
-        href: '/dashboard/transactions',
+        href: '/transactions',
         labelKey: 'dashboard.nav.transactions',
-        match: /^\/dashboard\/transactions/,
+        match: /^\/transactions/,
         icon: Receipt,
     },
     {
-        href: '/dashboard/settings',
+        href: '/settings',
         labelKey: 'dashboard.nav.settings',
-        match: /^\/dashboard\/settings/,
+        match: /^\/settings\/?$/,
         icon: SettingsIcon,
         requireAdmin: true,
     },
@@ -110,7 +103,7 @@ const userLabel = computed(() => {
 
     <a
         href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-primary focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-white"
+        class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-primary focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-on-primary"
     >
         {{ t('nav.skip_to_main') }}
     </a>
@@ -171,7 +164,7 @@ const userLabel = computed(() => {
                 <div class="flex shrink-0 items-center gap-1">
                     <button
                         @click="logout"
-                        class="cursor-pointer rounded-lg p-1.5 text-on-surface-variant transition-all hover:bg-error-red/10 hover:text-error-red"
+                        class="cursor-pointer rounded-lg p-1.5 text-on-surface-variant transition-all hover:bg-error-soft hover:text-error-red"
                         :title="t('dashboard.nav.logout')"
                         :aria-label="t('dashboard.nav.logout')"
                     >
@@ -190,21 +183,6 @@ const userLabel = computed(() => {
             </div>
 
             <div class="flex items-center gap-1.5">
-                <button
-                    type="button"
-                    class="rounded-lg p-2 text-on-surface-variant transition-all"
-                    :class="
-                        mobileHistoryOpen
-                            ? 'bg-surface-container-low text-primary'
-                            : ''
-                    "
-                    :title="t('dashboard.nav.scan')"
-                    :aria-label="t('dashboard.nav.scan')"
-                    :aria-expanded="mobileHistoryOpen"
-                    @click="mobileHistoryOpen = !mobileHistoryOpen"
-                >
-                    <QrCode :size="16" />
-                </button>
                 <Link
                     href="/dashboard"
                     :class="[
@@ -213,44 +191,40 @@ const userLabel = computed(() => {
                             ? 'font-bold text-primary bg-surface-container-low'
                             : 'text-on-surface-variant',
                     ]"
-                    @click="mobileHistoryOpen = false"
                 >
                     <LayoutDashboard :size="16" />
                 </Link>
                 <Link
-                    href="/dashboard/wallets"
+                    href="/wallets"
                     :class="[
                         'rounded-lg p-2 transition-all',
-                        activeUrl.startsWith('/dashboard/wallets')
+                        activeUrl.startsWith('/wallets')
                             ? 'font-bold text-primary bg-surface-container-low'
                             : 'text-on-surface-variant',
                     ]"
-                    @click="mobileHistoryOpen = false"
                 >
                     <WalletIcon :size="16" />
                 </Link>
                 <Link
-                    href="/dashboard/transactions"
+                    href="/transactions"
                     :class="[
                         'rounded-lg p-2 transition-all',
-                        activeUrl.startsWith('/dashboard/transactions')
+                        activeUrl.startsWith('/transactions')
                             ? 'font-bold text-primary bg-surface-container-low'
                             : 'text-on-surface-variant',
                     ]"
-                    @click="mobileHistoryOpen = false"
                 >
                     <Receipt :size="16" />
                 </Link>
                 <Link
                     v-if="auth.user?.role === 'admin'"
-                    href="/dashboard/settings"
+                    href="/settings"
                     :class="[
                         'rounded-lg p-2 transition-all',
-                        activeUrl.startsWith('/dashboard/settings')
+                        activeUrl === '/settings'
                             ? 'font-bold text-primary bg-surface-container-low'
                             : 'text-on-surface-variant',
                     ]"
-                    @click="mobileHistoryOpen = false"
                 >
                     <SettingsIcon :size="16" />
                 </Link>
@@ -261,6 +235,22 @@ const userLabel = computed(() => {
                     <LogOut :size="16" />
                 </button>
             </div>
+
+            <button
+                type="button"
+                class="ml-1 rounded-lg p-2 text-on-surface-variant transition-all md:hidden"
+                :class="
+                    mobileHistoryOpen
+                        ? 'bg-surface-container-low text-primary'
+                        : ''
+                "
+                :title="t('common.menu')"
+                :aria-label="t('common.menu')"
+                :aria-expanded="mobileHistoryOpen"
+                @click="mobileHistoryOpen = !mobileHistoryOpen"
+            >
+                <span class="text-xs">⋯</span>
+            </button>
         </header>
 
         <div

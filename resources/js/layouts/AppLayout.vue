@@ -38,7 +38,7 @@ const activeConversationId = computed(() => {
 });
 
 const currentTab = computed(() => {
-    if (activeUrl.value.startsWith('/settings')) {
+    if (activeUrl.value.startsWith('/profile')) {
         return 'settings';
     }
     return 'dashboard';

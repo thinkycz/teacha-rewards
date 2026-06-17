@@ -7,7 +7,6 @@ import {
     UserX,
     ShoppingBag,
     CircleDollarSign,
-    QrCode,
     Wallet as WalletIcon,
     ArrowRight,
 } from '@lucide/vue';
@@ -120,23 +119,7 @@ function tileBg(accent: Tile['accent']): string {
                 </h2>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <Link
-                        href="/dashboard/scan"
-                        class="group flex items-center gap-4 surface-card p-4 transition hover:border-primary"
-                    >
-                        <div
-                            class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-primary transition group-hover:bg-primary group-hover:text-on-primary"
-                        >
-                            <QrCode :size="20" />
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-on-surface">
-                                {{ t('dashboard.dashboard.scan_qr') }}
-                            </p>
-                        </div>
-                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
-                    </Link>
-                    <Link
-                        href="/dashboard/wallets"
+                        href="/wallets"
                         class="group flex items-center gap-4 surface-card p-4 transition hover:border-primary"
                     >
                         <div
@@ -151,6 +134,22 @@ function tileBg(accent: Tile['accent']): string {
                         </div>
                         <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
                     </Link>
+                    <Link
+                        href="/store-qr"
+                        class="group flex items-center gap-4 surface-card p-4 transition hover:border-primary"
+                    >
+                        <div
+                            class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-primary transition group-hover:bg-primary group-hover:text-on-primary"
+                        >
+                            <ShoppingBag :size="20" />
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-on-surface">
+                                {{ t('dashboard.store_qr.title') }}
+                            </p>
+                        </div>
+                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
+                    </Link>
                 </div>
             </section>
 
@@ -160,7 +159,7 @@ function tileBg(accent: Tile['accent']): string {
                         {{ t('dashboard.dashboard.recent') }}
                     </h2>
                     <Link
-                        href="/dashboard/transactions"
+                        href="/transactions"
                         class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
                     >
                         {{ t('dashboard.dashboard.view_all_transactions') }}

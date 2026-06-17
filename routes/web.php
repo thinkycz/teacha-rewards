@@ -15,8 +15,6 @@ use App\Http\Controllers\Web\Dashboard\DisableController;
 use App\Http\Controllers\Web\Dashboard\EnableController;
 use App\Http\Controllers\Web\Dashboard\LogPurchaseController;
 use App\Http\Controllers\Web\Dashboard\RedeemController;
-use App\Http\Controllers\Web\Dashboard\Scan\ScanIndexController;
-use App\Http\Controllers\Web\Dashboard\Scan\ScanShowController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsEditController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsUpdateController;
 use App\Http\Controllers\Web\Dashboard\StoreQrPrintController;
@@ -87,23 +85,21 @@ Resolver::resolveRouteRegistrar()
         $router->post('logout', LogoutController::class);
         $router->get('verify-email', [VerifyEmailController::class, 'create']);
         $router->post('verify-email', [VerifyEmailController::class, 'store']);
-        $router->get('settings', [SettingsController::class, 'edit']);
-        $router->post('settings/profile', [SettingsController::class, 'updateProfile']);
-        $router->post('settings/password', [SettingsController::class, 'updatePassword']);
+        $router->get('profile', [SettingsController::class, 'edit'])->name('profile.edit');
+        $router->post('profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
+        $router->post('profile/password', [SettingsController::class, 'updatePassword'])->name('profile.password');
     });
 
-// Admin / dashboard surface. The middleware chain gates the whole
-// /dashboard/* subtree behind the `staff` role guard (admin or
-// staff), with `admin` re-applied to /dashboard/settings for the
-// program + store settings form.
+// Admin / dashboard surface. The /dashboard home is the only route
+// keeping the `dashboard.` prefix — every other admin endpoint is
+// flat at the root. The middleware chain gates the surface behind
+// the `staff` role guard (admin or staff), with `admin` re-applied
+// to /settings for the program + store settings form.
 Resolver::resolveRouteRegistrar()
     ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'staff'])
-    ->prefix('dashboard')
     ->name('dashboard.')
     ->group(static function (Router $router): void {
-        $router->get('/', DashboardController::class)->name('index');
-        $router->get('scan', ScanIndexController::class)->name('scan.index');
-        $router->get('scan/{token}', ScanShowController::class)->name('scan.show');
+        $router->get('dashboard', DashboardController::class)->name('index');
         $router->get('wallets', WalletIndexController::class)->name('wallets.index');
         $router->get('wallets/{wallet}', WalletShowController::class)->name('wallets.show');
         $router->post('wallets/{wallet}/purchase', LogPurchaseController::class)->name('wallets.purchase');
@@ -118,9 +114,8 @@ Resolver::resolveRouteRegistrar()
 // Admin-only sub-tree: program + store settings.
 Resolver::resolveRouteRegistrar()
     ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'admin'])
-    ->prefix('dashboard/settings')
     ->name('dashboard.settings.')
     ->group(static function (Router $router): void {
-        $router->get('/', SettingsEditController::class)->name('edit');
-        $router->post('/', SettingsUpdateController::class)->name('update');
+        $router->get('settings', SettingsEditController::class)->name('edit');
+        $router->post('settings', SettingsUpdateController::class)->name('update');
     });

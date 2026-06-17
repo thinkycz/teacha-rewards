@@ -8,7 +8,7 @@ use App\Models\RewardWallet;
 use App\Models\User;
 use Carbon\Carbon;
 
-\test('GET /dashboard/transactions lists transactions for staff', function (): void {
+\test('GET /transactions lists transactions for staff', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
@@ -17,13 +17,13 @@ use Carbon\Carbon;
         'user_id' => $staff->getKey(),
     ]);
 
-    $response = $this->actingAs($staff)->get('/dashboard/transactions');
+    $response = $this->actingAs($staff)->get('/transactions');
 
     $response->assertOk();
     \expect(RewardTransaction::query()->count())->toBe(5);
 });
 
-\test('GET /dashboard/transactions?type=redeem filters by type', function (): void {
+\test('GET /transactions?type=redeem filters by type', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
@@ -37,13 +37,13 @@ use Carbon\Carbon;
         'note' => 'coffee discount',
     ]);
 
-    $response = $this->actingAs($staff)->get('/dashboard/transactions?type=redeem');
+    $response = $this->actingAs($staff)->get('/transactions?type=redeem');
 
     $response->assertOk();
     \expect(RewardTransaction::query()->where('type', 'redeem')->count())->toBe(1);
 });
 
-\test('GET /dashboard/transactions?q= searches by note', function (): void {
+\test('GET /transactions?q= searches by note', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
@@ -57,14 +57,14 @@ use Carbon\Carbon;
         'user_id' => $staff->getKey(),
     ]);
 
-    $response = $this->actingAs($staff)->get('/dashboard/transactions?q=birthday');
+    $response = $this->actingAs($staff)->get('/transactions?q=birthday');
 
     $response->assertOk();
     \expect(RewardTransaction::query()->where('note', 'birthday gift')->count())->toBe(1);
 });
 
-\test('GET /dashboard/transactions redirects guests to login', function (): void {
-    $response = $this->get('/dashboard/transactions');
+\test('GET /transactions redirects guests to login', function (): void {
+    $response = $this->get('/transactions');
 
     $response->assertRedirect();
 });

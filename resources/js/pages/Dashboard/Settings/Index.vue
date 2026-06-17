@@ -30,7 +30,7 @@ const form = useForm({
 });
 
 function submit(): void {
-    form.post('/dashboard/settings', {
+    form.post('/settings', {
         preserveScroll: true,
     });
 }
@@ -146,7 +146,7 @@ function submit(): void {
             </form>
 
             <Link
-                href="/dashboard/store-qr"
+                href="/store-qr"
                 class="surface-card group flex items-center justify-between gap-4 p-5 transition hover:border-primary"
             >
                 <div>

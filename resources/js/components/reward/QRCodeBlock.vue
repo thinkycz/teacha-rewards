@@ -22,8 +22,8 @@ async function render(): Promise<void> {
             margin: 1,
             width: props.size,
             color: {
-                dark: '#1f2937',
-                light: '#FAF8F1',
+                dark: '#0f172a',
+                light: '#f8fafc',
             },
         });
     } catch (err) {

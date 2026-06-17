@@ -9,32 +9,35 @@
 /*
  * Teacha Rewards design tokens.
  *
- * Single-font stack (Inter for everything), purple primary
- * (violet-600, premium / loyalty feel), warm cream surfaces so
- * the matcha brand color on the wallet card itself still pops.
+ * Single-font stack (Inter for everything), deep navy primary
+ * (slate-900, premium / loyalty feel) on a cool white surface
+ * (slate-50). No matcha greens anywhere in the chrome — the
+ * wallet card visual uses the new primary.
  */
 @theme {
-    /* Brand */
-    --color-primary: #7c3aed;
-    --color-primary-container: #a78bfa;
-    --color-primary-soft: #ede9fe;
-    --color-on-primary: #ffffff;
+    /* Brand — deep navy */
+    --color-primary: #0f172a;
+    --color-primary-container: #1e293b;
+    --color-primary-soft: #e2e8f0;
+    --color-on-primary: #f8fafc;
+    --color-on-primary-container: #0f172a;
 
-    /* Surfaces (warm cream so the matcha card stands out) */
-    --color-surface-bg: #faf7f0;
-    --color-surface-container: #f3eee2;
-    --color-surface-container-low: #f7f3e8;
+    /* Surfaces — cool white */
+    --color-surface-bg: #f8fafc;
+    --color-surface-container: #ffffff;
+    --color-surface-container-low: #f1f5f9;
     --color-surface-container-lowest: #ffffff;
 
     /* Text */
-    --color-on-surface: #1e1b16;
-    --color-on-surface-variant: #6b635a;
+    --color-on-surface: #0f172a;
+    --color-on-surface-variant: #475569;
 
     /* Lines */
-    --color-outline-glass: #ebe5d4;
-    --color-outline: #d8d1bf;
+    --color-outline-glass: #e2e8f0;
+    --color-outline: #cbd5e1;
 
-    /* Semantic */
+    /* Semantic — keep financial conventions but rebalanced so
+       nothing reads as "matcha green". */
     --color-error-red: #b91c1c;
     --color-error-soft: #fef2f2;
     --color-success: #047857;
@@ -42,16 +45,17 @@
     --color-warning: #b45309;
     --color-warning-soft: #fffbeb;
 
-    /* Matcha (kept for the wallet card visual only) */
-    --color-matcha-50: #f7fee7;
-    --color-matcha-100: #ecfccb;
-    --color-matcha-200: #d9f99d;
-    --color-matcha-300: #bef264;
-    --color-matcha-400: #a3e635;
-    --color-matcha-500: #84cc16;
-    --color-matcha-600: #65a30d;
-    --color-matcha-700: #4d7c0f;
-    --color-matcha-800: #3f6212;
+    /* Slate scale (cool gray, used for chips, badges, secondary) */
+    --color-slate-50: #f8fafc;
+    --color-slate-100: #f1f5f9;
+    --color-slate-200: #e2e8f0;
+    --color-slate-300: #cbd5e1;
+    --color-slate-400: #94a3b8;
+    --color-slate-500: #64748b;
+    --color-slate-600: #475569;
+    --color-slate-700: #334155;
+    --color-slate-800: #1e293b;
+    --color-slate-900: #0f172a;
 
     /* Fonts — single Inter family for body and headings. Mono
        stays as ui-monospace for the brand mark / wallet number. */

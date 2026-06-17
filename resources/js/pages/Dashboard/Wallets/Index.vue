@@ -50,7 +50,7 @@ function applyFilters(): void {
     if (sort.value !== '') {
         params['sort'] = sort.value;
     }
-    router.visit('/dashboard/wallets', {
+    router.visit('/wallets', {
         method: 'get',
         data: params,
         preserveState: true,
@@ -159,7 +159,7 @@ function formatAmount(value: string): string {
                     :key="wallet.id"
                 >
                     <Link
-                        :href="`/dashboard/wallets/${wallet.id}`"
+                        :href="`/wallets/${wallet.id}`"
                         class="group flex items-center gap-3 surface-card p-4 transition hover:border-primary"
                     >
                         <div

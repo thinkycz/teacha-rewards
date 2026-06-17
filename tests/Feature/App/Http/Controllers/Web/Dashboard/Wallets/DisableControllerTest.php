@@ -6,14 +6,14 @@ use App\Enums\WalletStatusEnum;
 use App\Models\RewardWallet;
 use App\Models\User;
 
-\test('POST /dashboard/wallets/{wallet}/disable flips status to disabled', function (): void {
+\test('POST /wallets/{wallet}/disable flips status to disabled', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([
         'status' => WalletStatusEnum::ACTIVE->value,
     ]);
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/disable",
+        "/wallets/{$wallet->getKey()}/disable",
         [],
         $this->inertiaHeaders(),
     );
@@ -23,12 +23,12 @@ use App\Models\User;
     \expect($wallet->getStatus())->toBe(WalletStatusEnum::DISABLED);
 });
 
-\test('POST /dashboard/wallets/{wallet}/enable flips status back to active', function (): void {
+\test('POST /wallets/{wallet}/enable flips status back to active', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->disabled()->create();
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/enable",
+        "/wallets/{$wallet->getKey()}/enable",
         [],
         $this->inertiaHeaders(),
     );
@@ -38,11 +38,11 @@ use App\Models\User;
     \expect($wallet->getStatus())->toBe(WalletStatusEnum::ACTIVE);
 });
 
-\test('POST /dashboard/wallets/{wallet}/disable is forbidden to a guest', function (): void {
+\test('POST /wallets/{wallet}/disable is forbidden to a guest', function (): void {
     $wallet = RewardWallet::factory()->create();
 
     $response = $this->post(
-        "/dashboard/wallets/{$wallet->getKey()}/disable",
+        "/wallets/{$wallet->getKey()}/disable",
         [],
         $this->inertiaHeaders(),
     );

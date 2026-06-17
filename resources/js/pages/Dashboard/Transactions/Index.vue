@@ -50,7 +50,7 @@ function applyFilters(): void {
     if (type.value !== '') {
         params['type'] = type.value;
     }
-    router.visit('/dashboard/transactions', {
+    router.visit('/transactions', {
         method: 'get',
         data: params,
         preserveState: true,
@@ -183,7 +183,7 @@ const typeOptions = computed(() => [
                 >
                     <component
                         :is="tx.wallet_id ? Link : 'div'"
-                        :href="tx.wallet_id ? `/dashboard/wallets/${tx.wallet_id}` : undefined"
+                        :href="tx.wallet_id ? `/wallets/${tx.wallet_id}` : undefined"
                         class="group block surface-card p-4 transition hover:border-primary"
                         :class="{ 'cursor-pointer': !!tx.wallet_id }"
                     >

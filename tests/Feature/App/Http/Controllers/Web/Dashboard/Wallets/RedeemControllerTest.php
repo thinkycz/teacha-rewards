@@ -7,7 +7,7 @@ use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Models\User;
 
-\test('POST /dashboard/wallets/{wallet}/redeem debits the wallet balance', function (): void {
+\test('POST /wallets/{wallet}/redeem debits the wallet balance', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([
         'rewards_balance' => '50.00',
@@ -15,7 +15,7 @@ use App\Models\User;
     ]);
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/redeem",
+        "/wallets/{$wallet->getKey()}/redeem",
         ['amount' => '20.00'],
         $this->inertiaHeaders(),
     );
@@ -36,14 +36,14 @@ use App\Models\User;
     \expect($tx?->getBalanceAfter())->toBe('30.00');
 });
 
-\test('POST /dashboard/wallets/{wallet}/redeem rejects an amount larger than the balance with a friendly error', function (): void {
+\test('POST /wallets/{wallet}/redeem rejects an amount larger than the balance with a friendly error', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([
         'rewards_balance' => '10.00',
     ]);
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/redeem",
+        "/wallets/{$wallet->getKey()}/redeem",
         ['amount' => '50.00'],
         $this->inertiaHeaders(),
     );
@@ -58,14 +58,14 @@ use App\Models\User;
     \expect($wallet->getRewardsBalance())->toBe('10.00');
 });
 
-\test('POST /dashboard/wallets/{wallet}/redeem rejects a non-positive amount', function (): void {
+\test('POST /wallets/{wallet}/redeem rejects a non-positive amount', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([
         'rewards_balance' => '50.00',
     ]);
 
     $response = $this->actingAs($staff)->post(
-        "/dashboard/wallets/{$wallet->getKey()}/redeem",
+        "/wallets/{$wallet->getKey()}/redeem",
         ['amount' => '0'],
         $this->inertiaHeaders(),
     );
@@ -75,13 +75,13 @@ use App\Models\User;
     \expect(\count($response->json('props.errors.amount')))->toBeGreaterThan(0);
 });
 
-\test('POST /dashboard/wallets/{wallet}/redeem is forbidden to a guest', function (): void {
+\test('POST /wallets/{wallet}/redeem is forbidden to a guest', function (): void {
     $wallet = RewardWallet::factory()->create([
         'rewards_balance' => '50.00',
     ]);
 
     $response = $this->post(
-        "/dashboard/wallets/{$wallet->getKey()}/redeem",
+        "/wallets/{$wallet->getKey()}/redeem",
         ['amount' => '10.00'],
         $this->inertiaHeaders(),
     );

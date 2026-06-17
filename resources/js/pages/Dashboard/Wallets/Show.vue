@@ -75,7 +75,7 @@ const adjustForm = useForm({
 });
 
 function submitPurchase(): void {
-    purchaseForm.post(`/dashboard/wallets/${props.wallet.id}/purchase`, {
+    purchaseForm.post(`/wallets/${props.wallet.id}/purchase`, {
         preserveScroll: true,
         onSuccess: () => {
             purchaseForm.reset();
@@ -85,7 +85,7 @@ function submitPurchase(): void {
 }
 
 function submitRedeem(): void {
-    redeemForm.post(`/dashboard/wallets/${props.wallet.id}/redeem`, {
+    redeemForm.post(`/wallets/${props.wallet.id}/redeem`, {
         preserveScroll: true,
         onSuccess: () => {
             redeemForm.reset();
@@ -95,7 +95,7 @@ function submitRedeem(): void {
 }
 
 function submitAdjust(): void {
-    adjustForm.post(`/dashboard/wallets/${props.wallet.id}/adjust`, {
+    adjustForm.post(`/wallets/${props.wallet.id}/adjust`, {
         preserveScroll: true,
         onSuccess: () => {
             adjustForm.reset();
@@ -115,7 +115,7 @@ async function toggleStatus(): Promise<void> {
         if (!ok) {
             return;
         }
-        router.post(`/dashboard/wallets/${props.wallet.id}/disable`, {}, { preserveScroll: true });
+        router.post(`/wallets/${props.wallet.id}/disable`, {}, { preserveScroll: true });
     } else {
         const ok = await confirmDialog.confirm(t('dashboard.wallets.show.enable_confirm'), {
             confirmLabel: t('dashboard.wallets.show.enable'),
@@ -123,7 +123,7 @@ async function toggleStatus(): Promise<void> {
         if (!ok) {
             return;
         }
-        router.post(`/dashboard/wallets/${props.wallet.id}/enable`, {}, { preserveScroll: true });
+        router.post(`/wallets/${props.wallet.id}/enable`, {}, { preserveScroll: true });
     }
 }
 
