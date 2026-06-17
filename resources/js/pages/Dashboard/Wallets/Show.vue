@@ -53,6 +53,7 @@ interface WalletTransaction {
     balance_before: string;
     balance_after: string;
     note: string | null;
+    wallet_type: 'cashback' | 'stamps' | null;
     staff_name: string | null;
     created_at: string | null;
 }
@@ -242,7 +243,7 @@ async function toggleStatus(): Promise<void> {
                         </div>
                         <div class="shrink-0 text-right">
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
-                                {{ t('dashboard.wallets.show.balance') }}
+                                {{ isStamps ? t('dashboard.wallets.show.balance_stamps') : t('dashboard.wallets.show.balance') }}
                             </p>
                             <p
                                 v-if="isStamps"
@@ -269,7 +270,7 @@ async function toggleStatus(): Promise<void> {
                             {{ wallet.phone }}
                         </dd>
                     </div>
-                    <div>
+                    <div v-if="!isStamps">
                         <dt class="label-eyebrow">
                             {{ t('dashboard.wallets.show.lifetime_earned') }}
                         </dt>
@@ -277,7 +278,7 @@ async function toggleStatus(): Promise<void> {
                             {{ lifetimeEarnedFormatted }}&nbsp;Kč
                         </dd>
                     </div>
-                    <div>
+                    <div v-if="!isStamps">
                         <dt class="label-eyebrow">
                             {{ t('dashboard.wallets.show.lifetime_redeemed') }}
                         </dt>
@@ -666,22 +667,22 @@ async function toggleStatus(): Promise<void> {
 
                     <div class="space-y-2">
                         <Label for="adjust_amount" required>
-                            {{ t('dashboard.forms.adjust_amount') }}
+                            {{ isStamps ? t('dashboard.forms.adjust_amount_stamps') : t('dashboard.forms.adjust_amount') }}
                         </Label>
                         <Input
                             id="adjust_amount"
                             v-model="adjustForm.amount"
                             type="number"
-                            inputmode="decimal"
-                            step="0.01"
-                            min="0.01"
-                            :placeholder="t('dashboard.forms.adjust_amount')"
+                            :inputmode="isStamps ? 'numeric' : 'decimal'"
+                            :step="isStamps ? '1' : '0.01'"
+                            :min="isStamps ? '1' : '0.01'"
+                            :placeholder="isStamps ? t('dashboard.forms.adjust_amount_stamps') : t('dashboard.forms.adjust_amount')"
                             :invalid="fieldError(adjustForm.errors, 'amount', 'adjust').invalid"
                             :described-by="fieldError(adjustForm.errors, 'amount', 'adjust').describedBy"
                             required
                         />
                         <p class="label-help">
-                            {{ t('dashboard.forms.adjust_amount_help') }}
+                            {{ isStamps ? t('dashboard.forms.adjust_amount_help_stamps') : t('dashboard.forms.adjust_amount_help') }}
                         </p>
                         <FieldError v-bind="fieldError(adjustForm.errors, 'amount', 'adjust')" />
                     </div>
@@ -723,6 +724,8 @@ async function toggleStatus(): Promise<void> {
                     :transactions="transactions"
                     :show-balance-after="true"
                     :stamps-mode="isStamps"
+                    :stamps-per-reward="program.stamps_per_reward"
+                    :reward-label="program.stamps_per_reward_label"
                     :empty-message="t('dashboard.transactions.index.empty')"
                 />
             </section>

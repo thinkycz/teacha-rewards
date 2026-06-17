@@ -213,7 +213,7 @@ function formatAmount(value: string): string {
                                 v-html="formatAmount(wallet.rewards_balance) + '&nbsp;Kč'"
                             />
                             <p class="label-eyebrow">
-                                {{ t('dashboard.wallets.index.balance') }}
+                                {{ wallet.type === 'stamps' ? t('dashboard.wallets.index.balance_stamps') : t('dashboard.wallets.index.balance') }}
                             </p>
                         </div>
                         <ChevronRight

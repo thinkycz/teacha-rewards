@@ -54,7 +54,7 @@ class WalletShowController
                 'status' => $wallet->getStatus()->value,
                 'last_used_at' => $wallet->getLastUsedAt()?->format(\DateTimeInterface::ATOM),
             ],
-            'transactions' => $recent->map(static function (RewardTransaction $tx): array {
+            'transactions' => $recent->map(static function (RewardTransaction $tx) use ($wallet): array {
                 $createdAt = $tx->getAttribute('created_at');
                 return [
                     'id' => $tx->getKey(),
@@ -65,6 +65,7 @@ class WalletShowController
                     'balance_before' => $tx->getBalanceBefore(),
                     'balance_after' => $tx->getBalanceAfter(),
                     'note' => $tx->getNote(),
+                    'wallet_type' => $wallet->getType()->value,
                     'staff_name' => $tx->user?->getName(),
                     'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
                 ];

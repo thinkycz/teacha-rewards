@@ -8,6 +8,7 @@ use App\Enums\TransactionTypeEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
+use App\Services\Settings\SettingsService;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,6 +29,9 @@ class DashboardController
 
     public function __invoke(): Response
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
         $today = \now()->toDateString();
 
         $activeWallets = RewardWallet::query()
@@ -53,8 +57,20 @@ class DashboardController
             }
         }
 
+        // Stamps activity today: how many stamp_earn rows, and how
+        // many stamp_redeem rows (free rewards given out). A stamps
+        // shop's dashboard needs these instead of the cashback tiles.
+        $todayStampsEarned = RewardTransaction::query()
+            ->where('type', TransactionTypeEnum::STAMP_EARN->value)
+            ->whereDate('created_at', $today)
+            ->count();
+        $todayRewardsRedeemed = RewardTransaction::query()
+            ->where('type', TransactionTypeEnum::STAMP_REDEEM->value)
+            ->whereDate('created_at', $today)
+            ->count();
+
         $recentTransactions = RewardTransaction::query()
-            ->with(['wallet:id,first_name,wallet_number,public_token', 'user:id,name'])
+            ->with(['wallet:id,first_name,wallet_number,public_token,type', 'user:id,name'])
             ->orderByDesc('created_at')
             ->limit(10)
             ->get();
@@ -65,6 +81,8 @@ class DashboardController
                 'disabled_wallets' => $disabledWallets,
                 'today_purchase_count' => $todayCount,
                 'today_cashback' => $todayCashback,
+                'today_stamps_earned' => $todayStampsEarned,
+                'today_rewards_redeemed' => $todayRewardsRedeemed,
             ],
             'recent_transactions' => $recentTransactions->map(static function (RewardTransaction $tx): array {
                 $createdAt = $tx->getAttribute('created_at');
@@ -75,6 +93,8 @@ class DashboardController
                     'id' => $tx->getKey(),
                     'type' => $tx->getType()->value,
                     'amount' => $tx->getAmount(),
+                    'wallet_id' => $tx->reward_wallet_id,
+                    'wallet_type' => $wallet === null ? null : $wallet->getType()->value,
                     'wallet_first_name' => $wallet === null ? null : $wallet->getFirstName(),
                     'wallet_number' => $wallet === null ? null : $wallet->getWalletNumber(),
                     'wallet_public_token' => $wallet === null ? null : $wallet->getPublicToken(),
@@ -82,6 +102,12 @@ class DashboardController
                     'created_at' => $createdAtStr,
                 ];
             })->all(),
+            'program' => [
+                'mode' => $settings->getProgramMode(),
+                'stamps_per_reward' => $settings->getStampsPerReward(),
+                'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
+                'stamp_icon' => $settings->getStampIcon(),
+            ],
         ]);
     }
 }

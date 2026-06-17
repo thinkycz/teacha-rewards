@@ -58,6 +58,111 @@ use App\Models\User;
     \expect($wallet->getRewardsBalance())->toBe('30.00');
 });
 
+/*
+ * Manual adjust on stamps wallets must write to `stamps_count`,
+ * not `rewards_balance`. The audit found the service was always
+ * touching `rewards_balance` regardless of wallet type — a cashier
+ * adjusting a stamps wallet was silently mutating the wrong column.
+ */
+
+\test('POST /wallets/{wallet}/adjust type=add on a stamps wallet credits stamps_count, not rewards_balance', function (): void {
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->stamps()->create([
+        'stamps_count' => 4,
+        'rewards_balance' => '0.00',
+    ]);
+
+    $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/adjust",
+        [
+            'type' => ManualAdjustmentTypeEnum::ADD->value,
+            'amount' => '3',
+            'note' => 'Missed stamp',
+        ],
+        $this->inertiaHeaders(),
+    )->assertRedirect();
+
+    $wallet->refresh();
+    \expect($wallet->getStampsCount())->toBe(7);
+    // rewards_balance must stay untouched on a stamps wallet.
+    \expect($wallet->getRewardsBalance())->toBe('0.00');
+
+    $tx = RewardTransaction::query()
+        ->where('reward_wallet_id', $wallet->getKey())
+        ->where('type', TransactionTypeEnum::MANUAL_ADD->value)
+        ->first();
+    \expect($tx)->not->toBeNull();
+    \expect((int) $tx->getAmount())->toBe(3);
+    // The `balance_before` / `balance_after` columns are `decimal(10,2)`
+    // so they always read back with two decimal places (e.g. "4.00").
+    \expect($tx->getBalanceBefore())->toBe('4.00');
+    \expect($tx->getBalanceAfter())->toBe('7.00');
+});
+
+\test('POST /wallets/{wallet}/adjust type=subtract on a stamps wallet debits stamps_count', function (): void {
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->stamps()->create([
+        'stamps_count' => 10,
+    ]);
+
+    $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/adjust",
+        [
+            'type' => ManualAdjustmentTypeEnum::SUBTRACT->value,
+            'amount' => '3',
+            'note' => 'Counted wrong',
+        ],
+        $this->inertiaHeaders(),
+    )->assertRedirect();
+
+    $wallet->refresh();
+    \expect($wallet->getStampsCount())->toBe(7);
+});
+
+\test('POST /wallets/{wallet}/adjust type=set on a stamps wallet overwrites stamps_count', function (): void {
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->stamps()->create([
+        'stamps_count' => 8,
+    ]);
+
+    $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/adjust",
+        [
+            'type' => ManualAdjustmentTypeEnum::SET->value,
+            'amount' => '5',
+            'note' => 'Reconcile after audit',
+        ],
+        $this->inertiaHeaders(),
+    )->assertRedirect();
+
+    $wallet->refresh();
+    \expect($wallet->getStampsCount())->toBe(5);
+});
+
+\test('POST /wallets/{wallet}/adjust type=subtract on a stamps wallet refuses to underflow', function (): void {
+    $staff = User::factory()->staff()->create();
+    $wallet = RewardWallet::factory()->stamps()->create([
+        'stamps_count' => 2,
+    ]);
+
+    $response = $this->actingAs($staff)->post(
+        "/wallets/{$wallet->getKey()}/adjust",
+        [
+            'type' => ManualAdjustmentTypeEnum::SUBTRACT->value,
+            'amount' => '5',
+            'note' => 'Should fail',
+        ],
+        $this->inertiaHeaders(),
+    );
+
+    $response->assertStatus(422);
+    \expect($response->json('props.errors'))->toBeArray();
+
+    $wallet->refresh();
+    \expect($wallet->getStampsCount())->toBe(2);
+});
+
+
 \test('POST /wallets/{wallet}/adjust type=set overwrites the balance', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([

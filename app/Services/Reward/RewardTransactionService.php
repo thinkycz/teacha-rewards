@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Reward;
 
 use App\Enums\TransactionTypeEnum;
+use App\Enums\WalletTypeEnum;
 use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Models\User;
@@ -135,6 +136,10 @@ class RewardTransactionService
 
     /**
      * Manually credit a wallet. Requires a non-empty note.
+     *
+     * Branches on `wallet.type`: cashback wallets get a `BigDecimal`
+     * credit on `rewards_balance` and a bump to `lifetime_earned`;
+     * stamps wallets get an integer credit on `stamps_count`.
      */
     public function manualAdd(RewardWallet $wallet, BigDecimal $amount, string $note, User $user): RewardTransaction
     {
@@ -151,25 +156,35 @@ class RewardTransactionService
         return DB::transaction(function () use ($wallet, $amount, $note, $user): RewardTransaction {
             $locked = $this->lockWallet($wallet);
 
-            $before = BigDecimal::of($locked->getRewardsBalance());
-            $after = $before->plus($amount);
+            if ($locked->getType() === WalletTypeEnum::STAMPS) {
+                $delta = (int) $amount->__toString();
+                $before = $locked->getStampsCount();
+                $after = $before + $delta;
+                $amountStr = (string) $delta;
+                $update = ['stamps_count' => $after, 'last_used_at' => Carbon::now()];
+            } else {
+                $before = BigDecimal::of($locked->getRewardsBalance());
+                $after = $before->plus($amount);
+                $amountStr = $amount->__toString();
+                $update = [
+                    'rewards_balance' => $after->__toString(),
+                    'lifetime_earned' => BigDecimal::of($locked->getLifetimeEarned())->plus($amount)->__toString(),
+                    'last_used_at' => Carbon::now(),
+                ];
+            }
 
             $transaction = RewardTransaction::query()->create([
                 'uuid' => (string) Str::uuid(),
                 'reward_wallet_id' => $locked->getKey(),
                 'user_id' => $user->getKey(),
                 'type' => TransactionTypeEnum::MANUAL_ADD->value,
-                'amount' => $amount->__toString(),
-                'balance_before' => $before->__toString(),
-                'balance_after' => $after->__toString(),
+                'amount' => $amountStr,
+                'balance_before' => (string) $before,
+                'balance_after' => (string) $after,
                 'note' => $note,
             ]);
 
-            $locked->forceFill([
-                'rewards_balance' => $after->__toString(),
-                'lifetime_earned' => BigDecimal::of($locked->getLifetimeEarned())->plus($amount)->__toString(),
-                'last_used_at' => Carbon::now(),
-            ])->save();
+            $locked->forceFill($update)->save();
 
             return $transaction;
         });
@@ -178,6 +193,8 @@ class RewardTransactionService
     /**
      * Manually debit a wallet. Requires a non-empty note and rejects
      * going below zero.
+     *
+     * Branches on `wallet.type` — see `manualAdd` for the column split.
      */
     public function manualSubtract(RewardWallet $wallet, BigDecimal $amount, string $note, User $user): RewardTransaction
     {
@@ -194,40 +211,53 @@ class RewardTransactionService
         return DB::transaction(function () use ($wallet, $amount, $note, $user): RewardTransaction {
             $locked = $this->lockWallet($wallet);
 
-            $before = BigDecimal::of($locked->getRewardsBalance());
-
-            if ($amount->isGreaterThan($before)) {
-                Thrower::default()->message('amount', \__('reward.manual_subtract_exceeds_balance'))->throw();
+            if ($locked->getType() === WalletTypeEnum::STAMPS) {
+                $delta = (int) $amount->__toString();
+                $before = $locked->getStampsCount();
+                if ($delta > $before) {
+                    Thrower::default()->message('amount', \__('reward.manual_subtract_exceeds_balance'))->throw();
+                }
+                $after = $before - $delta;
+                $amountStr = (string) (-$delta);
+                $update = ['stamps_count' => $after, 'last_used_at' => Carbon::now()];
+            } else {
+                $before = BigDecimal::of($locked->getRewardsBalance());
+                if ($amount->isGreaterThan($before)) {
+                    Thrower::default()->message('amount', \__('reward.manual_subtract_exceeds_balance'))->throw();
+                }
+                $after = $before->minus($amount);
+                $amountStr = $amount->negated()->__toString();
+                $update = [
+                    'rewards_balance' => $after->__toString(),
+                    'lifetime_redeemed' => BigDecimal::of($locked->getLifetimeRedeemed())->plus($amount)->__toString(),
+                    'last_used_at' => Carbon::now(),
+                ];
             }
-
-            $after = $before->minus($amount);
 
             $transaction = RewardTransaction::query()->create([
                 'uuid' => (string) Str::uuid(),
                 'reward_wallet_id' => $locked->getKey(),
                 'user_id' => $user->getKey(),
                 'type' => TransactionTypeEnum::MANUAL_SUBTRACT->value,
-                'amount' => $amount->negated()->__toString(),
-                'balance_before' => $before->__toString(),
-                'balance_after' => $after->__toString(),
+                'amount' => $amountStr,
+                'balance_before' => (string) $before,
+                'balance_after' => (string) $after,
                 'note' => $note,
             ]);
 
-            $locked->forceFill([
-                'rewards_balance' => $after->__toString(),
-                'lifetime_redeemed' => BigDecimal::of($locked->getLifetimeRedeemed())->plus($amount)->__toString(),
-                'last_used_at' => Carbon::now(),
-            ])->save();
+            $locked->forceFill($update)->save();
 
             return $transaction;
         });
     }
 
     /**
-     * Manually set a wallet to a specific balance. Requires a
+     * Manually set a wallet to a specific value. Requires a
      * non-empty note. Result must be >= 0.
+     *
+     * Branches on `wallet.type` — see `manualAdd` for the column split.
      */
-    public function manualSet(RewardWallet $wallet, BigDecimal $newBalance, string $note, User $user): RewardTransaction
+    public function manualSet(RewardWallet $wallet, BigDecimal $newValue, string $note, User $user): RewardTransaction
     {
         $note = \trim($note);
 
@@ -235,31 +265,39 @@ class RewardTransactionService
             Thrower::default()->message('note', \__('reward.note_required'))->throw();
         }
 
-        if ($newBalance->isLessThan(BigDecimal::of('0'))) {
+        if ($newValue->isLessThan(BigDecimal::of('0'))) {
             Thrower::default()->message('amount', \__('reward.manual_set_negative'))->throw();
         }
 
-        return DB::transaction(function () use ($wallet, $newBalance, $note, $user): RewardTransaction {
+        return DB::transaction(function () use ($wallet, $newValue, $note, $user): RewardTransaction {
             $locked = $this->lockWallet($wallet);
 
-            $before = BigDecimal::of($locked->getRewardsBalance());
-            $delta = $newBalance->minus($before);
+            if ($locked->getType() === WalletTypeEnum::STAMPS) {
+                $after = (int) $newValue->__toString();
+                $before = $locked->getStampsCount();
+                $delta = $after - $before;
+                $amountStr = (string) $delta;
+                $update = ['stamps_count' => $after, 'last_used_at' => Carbon::now()];
+            } else {
+                $before = BigDecimal::of($locked->getRewardsBalance());
+                $after = $newValue;
+                $delta = $after->minus($before);
+                $amountStr = $delta->__toString();
+                $update = ['rewards_balance' => $after->__toString(), 'last_used_at' => Carbon::now()];
+            }
 
             $transaction = RewardTransaction::query()->create([
                 'uuid' => (string) Str::uuid(),
                 'reward_wallet_id' => $locked->getKey(),
                 'user_id' => $user->getKey(),
                 'type' => TransactionTypeEnum::MANUAL_SET->value,
-                'amount' => $delta->__toString(),
-                'balance_before' => $before->__toString(),
-                'balance_after' => $newBalance->__toString(),
+                'amount' => $amountStr,
+                'balance_before' => (string) $before,
+                'balance_after' => (string) $after,
                 'note' => $note,
             ]);
 
-            $locked->forceFill([
-                'rewards_balance' => $newBalance->__toString(),
-                'last_used_at' => Carbon::now(),
-            ])->save();
+            $locked->forceFill($update)->save();
 
             return $transaction;
         });

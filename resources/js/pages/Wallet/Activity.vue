@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ArrowLeft } from '@lucide/vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
@@ -12,8 +13,10 @@ const { t } = useI18n();
 interface WalletSummary {
     public_token: string;
     wallet_number: string;
+    type: 'cashback' | 'stamps';
     first_name: string;
     rewards_balance: string;
+    stamps_count: number;
     lifetime_earned: string;
     lifetime_redeemed: string;
 }
@@ -25,14 +28,24 @@ interface Transaction {
     purchase_amount: string | null;
     balance_after: string;
     note: string | null;
+    wallet_type: 'cashback' | 'stamps' | null;
     created_at: string | null;
     staff_name: string | null;
 }
 
-defineProps<{
+interface ProgramConfig {
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
+    stamp_icon: string;
+}
+
+const props = defineProps<{
     wallet: WalletSummary;
     transactions: Transaction[];
+    program: ProgramConfig;
 }>();
+
+const isStamps = computed(() => props.wallet.type === 'stamps');
 </script>
 
 <template>
@@ -75,6 +88,9 @@ defineProps<{
                 <TransactionList
                     :transactions="transactions"
                     :show-balance-after="true"
+                    :stamps-mode="isStamps"
+                    :stamps-per-reward="program.stamps_per_reward"
+                    :reward-label="program.stamps_per_reward_label"
                 />
             </section>
         </main>

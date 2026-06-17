@@ -7,9 +7,16 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Button from '@/components/ui/Button.vue';
+import { useTransactionFormat } from '@/composables/useTransactionFormat';
 import { formatDateTime } from '@/lib/date';
 
 const { t } = useI18n();
+const {
+    typeLabel,
+    formatAmount: formatTxAmount,
+    formatBalance: formatTxBalance,
+    stampsEqRewards,
+} = useTransactionFormat();
 
 interface Transaction {
     id: number;
@@ -35,10 +42,16 @@ interface Filters {
     wallet_id: number;
 }
 
+interface ProgramConfig {
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
+}
+
 const props = defineProps<{
     transactions: Transaction[];
     filters: Filters;
     type_options: string[];
+    program: ProgramConfig;
 }>();
 
 const search = ref(props.filters.q);
@@ -67,60 +80,6 @@ function clearFilters(): void {
 }
 
 const hasActiveFilters = computed(() => search.value.trim() !== '' || type.value !== '');
-
-function typeLabel(value: string): string {
-    switch (value) {
-        case 'purchase_cashback':
-            return t('dashboard.transactions.index.type_purchase_cashback');
-        case 'redeem':
-            return t('dashboard.transactions.index.type_redeem');
-        case 'stamp_earn':
-            return t('dashboard.transactions.index.type_stamp_earn');
-        case 'stamp_redeem':
-            return t('dashboard.transactions.index.type_stamp_redeem');
-        case 'manual_add':
-            return t('dashboard.transactions.index.type_manual_add');
-        case 'manual_subtract':
-            return t('dashboard.transactions.index.type_manual_subtract');
-        case 'manual_set':
-            return t('dashboard.transactions.index.type_manual_set');
-        default:
-            return value;
-    }
-}
-
-function formatAmount(value: string): string {
-    return new Intl.NumberFormat('cs-CZ', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    }).format(Math.abs(Number(value)));
-}
-
-function signedAmount(value: string): string {
-    const num = Number(value);
-    const sign = num >= 0 ? '+' : '−';
-    return sign + formatAmount(value);
-}
-
-// Stamps amounts are integer counts (never decimals, never a currency).
-// `formatAmount` would render 3 as "3.00" which reads as money, not a
-// stamp count, so use a plain signed integer here.
-function signedCount(value: string): string {
-    const num = Number(value);
-    const sign = num >= 0 ? '+' : '−';
-    return sign + Math.abs(num).toString();
-}
-
-// A row belongs to a wallet; the wallet's `type` is what decides
-// whether the right-side amount is shown as Kč (cashback) or as a
-// plain stamp count (stamps). `wallet_type` is null for legacy rows
-// where the wallet was soft-deleted or the relation failed to load.
-function isStampsRow(tx: Transaction): boolean {
-    return tx.wallet_type === 'stamps';
-}
-
-
-
 
 const typeOptions = computed(() => [
     { value: '', label: t('dashboard.transactions.index.type_all') },
@@ -223,6 +182,12 @@ const typeOptions = computed(() => [
                                     </span>
                                 </p>
                                 <p
+                                    v-if="stampsEqRewards(tx, program.stamps_per_reward_label)"
+                                    class="text-[10px] text-on-surface-variant"
+                                >
+                                    {{ stampsEqRewards(tx, program.stamps_per_reward_label) }}
+                                </p>
+                                <p
                                     v-if="tx.purchase_amount"
                                     class="text-[10px] text-on-surface-variant"
                                 >
@@ -243,33 +208,18 @@ const typeOptions = computed(() => [
                             </div>
                             <div class="text-right">
                                 <p
-                                    v-if="isStampsRow(tx)"
                                     class="text-sm font-semibold tabular-nums"
                                     :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
                                 >
-                                    {{ signedCount(tx.amount) }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="text-sm font-semibold"
-                                    :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
-                                >
-                                    {{ signedAmount(tx.amount) }}&nbsp;Kč
+                                    {{ formatTxAmount(tx, tx.wallet_type, program.stamps_per_reward) }}
                                 </p>
                                 <p class="label-eyebrow">
-                                    {{ t('dashboard.transactions.index.balance_after') }}
+                                    {{ tx.wallet_type === 'stamps' ? t('dashboard.transactions.index.balance_after_stamps') : t('dashboard.transactions.index.balance_after') }}
                                 </p>
                                 <p
-                                    v-if="isStampsRow(tx)"
                                     class="text-xs text-on-surface tabular-nums"
                                 >
-                                    {{ tx.balance_after }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="text-xs text-on-surface"
-                                >
-                                    {{ tx.balance_after }}&nbsp;Kč
+                                    {{ formatTxBalance(tx.balance_after, tx.wallet_type) }}
                                 </p>
                             </div>
                             <ChevronRight

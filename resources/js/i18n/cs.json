@@ -374,7 +374,7 @@
         "transactions": {
             "empty": "Zatím žádné transakce.",
             "purchase": "Nákup: {amount} Kč",
-            "balance_after": "Zůstatek: {amount} Kč",
+            "balance_after": "Zůstatek: {amount}",
             "types": {
                 "purchase_cashback": "Cashback",
                 "redeem": "Uplatnění",
@@ -419,5 +419,22 @@
     "dashboard.wallets.index.type_cashback": "Cashback",
     "dashboard.wallets.index.type_stamps": "Razítka",
     "dashboard.wallets.show.type_cashback": "Cashback",
-    "dashboard.wallets.show.type_stamps": "Razítka"
+    "dashboard.wallets.show.type_stamps": "Razítka",
+    "common.stamp_one": "razítko",
+    "common.stamp_few": "razítka",
+    "common.stamp_many": "razítek",
+    "common.reward_one": "odměna",
+    "common.reward_few": "odměny",
+    "common.reward_many": "odměn",
+    "common.stamps_eq_rewards_one": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_few": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_many": "= {count} {noun} · {label}",
+    "common.stamp_count": "počet razítek",
+    "dashboard.forms.adjust_amount_stamps": "Počet razítek",
+    "dashboard.forms.adjust_amount_help_stamps": "Pro 'nastavit' nový počet razítek; pro 'přidat' nebo 'odečíst' hodnota změny.",
+    "dashboard.transactions.index.balance_after_stamps": "Razítek po",
+    "dashboard.wallets.show.balance_stamps": "Razítek",
+    "dashboard.wallets.index.balance_stamps": "Razítek",
+    "dashboard.dashboard.today_stamps_earned": "Dnešní razítka",
+    "dashboard.dashboard.today_rewards_redeemed": "Dnešní uplatněné odměny"
 }

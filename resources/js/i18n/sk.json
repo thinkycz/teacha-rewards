@@ -374,7 +374,7 @@
         "transactions": {
             "empty": "Zatiaľ žiadne transakcie.",
             "purchase": "Nákup: {amount} Kč",
-            "balance_after": "Zostatok: {amount} Kč",
+            "balance_after": "Zostatok: {amount}",
             "types": {
                 "purchase_cashback": "Cashback",
                 "redeem": "Uplatnenie",
@@ -419,5 +419,22 @@
     "dashboard.wallets.index.type_cashback": "Cashback",
     "dashboard.wallets.index.type_stamps": "Pečiatky",
     "dashboard.wallets.show.type_cashback": "Cashback",
-    "dashboard.wallets.show.type_stamps": "Pečiatky"
+    "dashboard.wallets.show.type_stamps": "Pečiatky",
+    "common.stamp_one": "pečiatka",
+    "common.stamp_few": "pečiatky",
+    "common.stamp_many": "pečiatok",
+    "common.reward_one": "odmena",
+    "common.reward_few": "odmeny",
+    "common.reward_many": "odmien",
+    "common.stamps_eq_rewards_one": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_few": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_many": "= {count} {noun} · {label}",
+    "common.stamp_count": "počet pečiatok",
+    "dashboard.forms.adjust_amount_stamps": "Počet pečiatok",
+    "dashboard.forms.adjust_amount_help_stamps": "Pre 'nastaviť' nový počet pečiatok; pre 'pridať' alebo 'odpočítať' hodnota zmeny.",
+    "dashboard.transactions.index.balance_after_stamps": "Pečiatok po",
+    "dashboard.wallets.show.balance_stamps": "Pečiatok",
+    "dashboard.wallets.index.balance_stamps": "Pečiatok",
+    "dashboard.dashboard.today_stamps_earned": "Dnešné pečiatky",
+    "dashboard.dashboard.today_rewards_redeemed": "Dnešné uplatnené odmeny"
 }

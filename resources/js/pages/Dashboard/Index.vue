@@ -21,12 +21,16 @@ interface Stats {
     disabled_wallets: number;
     today_purchase_count: number;
     today_cashback: string;
+    today_stamps_earned: number;
+    today_rewards_redeemed: number;
 }
 
 interface RecentTransaction {
     id: number;
     type: string;
     amount: string;
+    wallet_id: number | null;
+    wallet_type: 'cashback' | 'stamps' | null;
     wallet_first_name: string | null;
     wallet_number: string | null;
     wallet_public_token: string | null;
@@ -34,10 +38,20 @@ interface RecentTransaction {
     created_at: string | null;
 }
 
+interface ProgramConfig {
+    mode: 'cashback' | 'stamps';
+    stamps_per_reward: number;
+    stamps_per_reward_label: string;
+    stamp_icon: string;
+}
+
 const props = defineProps<{
     stats: Stats;
     recent_transactions: RecentTransaction[];
+    program: ProgramConfig;
 }>();
+
+const isStamps = computed(() => props.program.mode === 'stamps');
 
 const cashbackNumber = computed(() => Number(props.stats.today_cashback));
 const cashbackFormatted = computed(() =>
@@ -54,12 +68,24 @@ interface Tile {
     accent: 'primary' | 'success' | 'warning' | 'error';
 }
 
-const tiles = computed<Tile[]>(() => [
-    { label: t('dashboard.dashboard.active_wallets'), value: String(props.stats.active_wallets), icon: Users, accent: 'success' },
-    { label: t('dashboard.dashboard.disabled_wallets'), value: String(props.stats.disabled_wallets), icon: UserX, accent: 'warning' },
-    { label: t('dashboard.dashboard.today_purchases'), value: String(props.stats.today_purchase_count), icon: ShoppingBag, accent: 'primary' },
-    { label: t('dashboard.dashboard.today_cashback'), value: `${cashbackFormatted.value} Kč`, icon: CircleDollarSign, accent: 'primary' },
-]);
+const tiles = computed<Tile[]>(() => {
+    const base: Tile[] = [
+        { label: t('dashboard.dashboard.active_wallets'), value: String(props.stats.active_wallets), icon: Users, accent: 'success' },
+        { label: t('dashboard.dashboard.disabled_wallets'), value: String(props.stats.disabled_wallets), icon: UserX, accent: 'warning' },
+    ];
+    if (isStamps.value) {
+        base.push(
+            { label: t('dashboard.dashboard.today_stamps_earned'), value: String(props.stats.today_stamps_earned), icon: ShoppingBag, accent: 'primary' },
+            { label: t('dashboard.dashboard.today_rewards_redeemed'), value: String(props.stats.today_rewards_redeemed), icon: CircleDollarSign, accent: 'primary' },
+        );
+    } else {
+        base.push(
+            { label: t('dashboard.dashboard.today_purchases'), value: String(props.stats.today_purchase_count), icon: ShoppingBag, accent: 'primary' },
+            { label: t('dashboard.dashboard.today_cashback'), value: `${cashbackFormatted.value} Kč`, icon: CircleDollarSign, accent: 'primary' },
+        );
+    }
+    return base;
+});
 
 function tileBg(accent: Tile['accent']): string {
     switch (accent) {
@@ -168,6 +194,8 @@ function tileBg(accent: Tile['accent']): string {
                 </div>
                 <TransactionList
                     :transactions="recent_transactions"
+                    :stamps-per-reward="program.stamps_per_reward"
+                    :reward-label="program.stamps_per_reward_label"
                     :empty-message="t('dashboard.transactions.index.empty')"
                 />
             </section>

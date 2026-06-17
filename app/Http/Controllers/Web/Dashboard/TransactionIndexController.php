@@ -7,9 +7,11 @@ namespace App\Http\Controllers\Web\Dashboard;
 use App\Enums\TransactionTypeEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
+use App\Services\Settings\SettingsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Thinkycz\LaravelCore\Support\Resolver;
 
 /**
  * Staff-wide transaction log.
@@ -24,6 +26,9 @@ class TransactionIndexController
 
     public function __invoke(Request $request): Response
     {
+        /** @var SettingsService $settings */
+        $settings = Resolver::resolve(SettingsService::class);
+
         $query = RewardTransaction::query()
             ->with(['wallet:id,first_name,wallet_number,public_token,type', 'user:id,name']);
 
@@ -71,6 +76,10 @@ class TransactionIndexController
                 'wallet_id' => $walletId,
             ],
             'type_options' => TransactionTypeEnum::values(),
+            'program' => [
+                'stamps_per_reward' => $settings->getStampsPerReward(),
+                'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
+            ],
         ]);
     }
 }

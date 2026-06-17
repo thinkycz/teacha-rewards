@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ArrowRight, AlertTriangle } from '@lucide/vue';
 import { useBoundLocale } from '@/composables/useBoundLocale';
+import { useTransactionFormat } from '@/composables/useTransactionFormat';
 import Brand from '@/components/ui/Brand.vue';
 import BarcodeBlock from '@/components/reward/BarcodeBlock.vue';
 import StampCard from '@/components/reward/StampCard.vue';
@@ -11,6 +12,7 @@ import { formatDateTime } from '@/lib/date';
 
 useBoundLocale();
 const { t } = useI18n();
+const { formatAmount, stampsEqRewards, typeLabel } = useTransactionFormat();
 
 interface WalletSummary {
     public_token: string;
@@ -28,6 +30,8 @@ interface Transaction {
     amount: string;
     created_at: string | null;
     purchase_amount: string | null;
+    balance_after: string;
+    wallet_type: 'cashback' | 'stamps';
 }
 
 interface ProgramConfig {
@@ -62,20 +66,6 @@ function rowSubtitle(tx: Transaction): string {
         parts.push(date);
     }
     return parts.join(' · ');
-}
-
-function formatSigned(value: string): string {
-    const num = Number(value);
-    const abs = Math.abs(num);
-    if (isStamps.value) {
-        const intStr = new Intl.NumberFormat('cs-CZ').format(abs);
-        return (num >= 0 ? '+' : '−') + intStr;
-    }
-    const formatted = new Intl.NumberFormat('cs-CZ', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    }).format(abs);
-    return (num >= 0 ? '+' : '−') + formatted;
 }
 </script>
 
@@ -123,7 +113,7 @@ function formatSigned(value: string): string {
                         </div>
                         <div class="shrink-0 text-right">
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
-                                {{ t('wallet.show.balance') }}
+                                {{ isStamps ? t('dashboard.wallets.show.balance_stamps') : t('wallet.show.balance') }}
                             </p>
                             <p
                                 v-if="isStamps"
@@ -198,7 +188,13 @@ function formatSigned(value: string): string {
                     >
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-semibold text-on-surface">
-                                {{ t('wallet.transactions.types.' + tx.type, tx.type) }}
+                                {{ typeLabel(tx.type) }}
+                            </p>
+                            <p
+                                v-if="stampsEqRewards(tx, program.stamps_per_reward_label)"
+                                class="mt-0.5 truncate text-[11px] text-on-surface-variant"
+                            >
+                                {{ stampsEqRewards(tx, program.stamps_per_reward_label) }}
                             </p>
                             <p
                                 v-if="rowSubtitle(tx)"
@@ -210,8 +206,9 @@ function formatSigned(value: string): string {
                         <p
                             class="shrink-0 text-sm font-bold tabular-nums"
                             :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
-                            v-html="formatSigned(tx.amount) + (isStamps ? ' ' + t('common.stamps') : '&nbsp;Kč')"
-                        />
+                        >
+                            {{ formatAmount(tx, wallet.type, program.stamps_per_reward) }}
+                        </p>
                     </li>
                 </ul>
             </section>

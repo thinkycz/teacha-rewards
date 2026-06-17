@@ -374,7 +374,7 @@
         "transactions": {
             "empty": "No transactions yet.",
             "purchase": "Purchase: {amount} Kč",
-            "balance_after": "Balance: {amount} Kč",
+            "balance_after": "Balance: {amount}",
             "types": {
                 "purchase_cashback": "Cashback",
                 "redeem": "Redemption",
@@ -419,5 +419,22 @@
     "dashboard.wallets.index.type_cashback": "Cashback",
     "dashboard.wallets.index.type_stamps": "Stamps",
     "dashboard.wallets.show.type_cashback": "Cashback",
-    "dashboard.wallets.show.type_stamps": "Stamps"
+    "dashboard.wallets.show.type_stamps": "Stamps",
+    "common.stamp_one": "stamp",
+    "common.stamp_few": "stamps",
+    "common.stamp_many": "stamps",
+    "common.reward_one": "free reward",
+    "common.reward_few": "free rewards",
+    "common.reward_many": "free rewards",
+    "common.stamps_eq_rewards_one": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_few": "= {count} {noun} · {label}",
+    "common.stamps_eq_rewards_many": "= {count} {noun} · {label}",
+    "common.stamp_count": "stamp count",
+    "dashboard.forms.adjust_amount_stamps": "Stamps",
+    "dashboard.forms.adjust_amount_help_stamps": "For 'set', the new stamp count; for 'add' or 'subtract', the change to apply.",
+    "dashboard.transactions.index.balance_after_stamps": "Stamps after",
+    "dashboard.wallets.show.balance_stamps": "Stamps",
+    "dashboard.wallets.index.balance_stamps": "Stamps",
+    "dashboard.dashboard.today_stamps_earned": "Stamps earned today",
+    "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today"
 }

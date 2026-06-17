@@ -47,15 +47,18 @@ class WalletShowController
             ->limit(5)
             ->get();
 
-        $items = $recent->map(static function ($tx): array {
+        $walletType = $wallet->getType()->value;
+        $items = $recent->map(static function ($tx) use ($walletType): array {
             /** @var \App\Models\RewardTransaction $tx */
             $createdAt = $tx->getAttribute('created_at');
             return [
                 'id' => $tx->getKey(),
                 'type' => $tx->getType()->value,
                 'amount' => $tx->getAmount(),
+                'purchase_amount' => $tx->getPurchaseAmount(),
                 'balance_after' => $tx->getBalanceAfter(),
                 'note' => $tx->getNote(),
+                'wallet_type' => $walletType,
                 'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
                 'staff_name' => $tx->user?->getName(),
             ];

@@ -12,6 +12,7 @@ interface Transaction {
     purchase_amount?: string | null;
     balance_after?: string | null;
     note?: string | null;
+    wallet_type?: 'cashback' | 'stamps' | null;
     created_at: string | null;
     staff_name: string | null;
 }
@@ -20,13 +21,22 @@ withDefaults(
     defineProps<{
         transactions: Transaction[];
         showBalanceAfter?: boolean;
+        /**
+         * Force a single mode for the whole list. Default is undefined
+         * so each row's own `wallet_type` is used (correct for mixed
+         * recent-activity lists like the staff dashboard).
+         */
         stampsMode?: boolean;
         emptyMessage?: string;
+        stampsPerReward?: number;
+        rewardLabel?: string;
     }>(),
     {
         showBalanceAfter: false,
-        stampsMode: false,
+        stampsMode: undefined,
         emptyMessage: '',
+        stampsPerReward: 10,
+        rewardLabel: '',
     },
 );
 </script>
@@ -47,6 +57,8 @@ withDefaults(
                 :transaction="tx"
                 :show-balance-after="showBalanceAfter"
                 :stamps-mode="stampsMode"
+                :stamps-per-reward="stampsPerReward"
+                :reward-label="rewardLabel"
             />
         </li>
     </ul>
