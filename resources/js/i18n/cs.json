@@ -437,5 +437,7 @@
     "dashboard.wallets.index.balance_stamps": "Razítek",
     "dashboard.dashboard.today_stamps_earned": "Dnešní razítka",
     "dashboard.dashboard.today_rewards_redeemed": "Dnešní uplatněné odměny",
-    "dashboard.store_qr.headline": "Otevřete si odměnovou peněženku jedním naskenováním"
+    "dashboard.store_qr.headline": "Otevřete si věrnostní kartičku jedním naskenováním",
+    "marketing.headline": "Odměna za každý drink.",
+    "marketing.subheadline": "Získejte odměny za každý drink. Otevřete si peněženku za třicet sekund."
 }

@@ -437,5 +437,7 @@
     "dashboard.wallets.index.balance_stamps": "Pečiatok",
     "dashboard.dashboard.today_stamps_earned": "Dnešné pečiatky",
     "dashboard.dashboard.today_rewards_redeemed": "Dnešné uplatnené odmeny",
-    "dashboard.store_qr.headline": "Otvorte si odmenu peňaženku jedným naskenovaním"
+    "dashboard.store_qr.headline": "Otvorte si vernostnú kartičku jedným naskenovaním",
+    "marketing.headline": "Odmena za každý drink.",
+    "marketing.subheadline": "Získajte odmeny za každý drink. Otvorte si peňaženku za tridsať sekúnd."
 }

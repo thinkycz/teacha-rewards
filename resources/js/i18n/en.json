@@ -437,5 +437,7 @@
     "dashboard.wallets.index.balance_stamps": "Stamps",
     "dashboard.dashboard.today_stamps_earned": "Stamps earned today",
     "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today",
-    "dashboard.store_qr.headline": "Open your rewards wallet in a single scan"
+    "dashboard.store_qr.headline": "Open your loyalty card in a single scan",
+    "marketing.headline": "Get rewarded for every drink.",
+    "marketing.subheadline": "Earn rewards on every drink. Open your wallet in under thirty seconds."
 }
