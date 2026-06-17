@@ -145,9 +145,17 @@ class RewardWallet extends BaseModel
      * Stays at zero in cashback mode so flipping the mode toggle is
      * non-destructive: existing cashback balances are preserved and a
      * new stamps program starts with empty cards.
+     *
+     * Falls back to 0 if the attribute isn't loaded (rows from before
+     * the `add_stamps_count_to_reward_wallets` migration ran, or fresh
+     * model instances in tests that bypass the factory).
      */
     public function getStampsCount(): int
     {
+        if (! array_key_exists('stamps_count', $this->attributes)) {
+            return 0;
+        }
+
         return $this->assertInt('stamps_count');
     }
 

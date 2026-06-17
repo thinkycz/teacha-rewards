@@ -44,6 +44,7 @@ class RewardWalletFactory extends Factory
             ),
 
             'rewards_balance' => '0.00',
+            'stamps_count' => 0,
             'lifetime_earned' => '0.00',
             'lifetime_redeemed' => '0.00',
 

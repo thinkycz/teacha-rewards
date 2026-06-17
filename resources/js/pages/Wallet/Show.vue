@@ -184,7 +184,7 @@ function formatSigned(value: string): string {
                     >
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-semibold text-on-surface">
-                                {{ t('transactions.types.' + tx.type, tx.type) }}
+                                {{ t('wallet.transactions.types.' + tx.type, tx.type) }}
                             </p>
                             <p
                                 v-if="rowSubtitle(tx)"
