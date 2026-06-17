@@ -131,7 +131,7 @@
                 "no_camera": "No camera found on this device."
             },
             "show": {
-                "title": "Wallet — :name",
+                "title": "Wallet — {name}",
                 "disabled_notice": "This wallet is disabled. Re-enable it from the full wallet view to take actions.",
                 "view_full": "Open full wallet view",
                 "actions_heading": "What do you want to do?",
@@ -158,7 +158,7 @@
                 "balance": "Balance"
             },
             "show": {
-                "title": "Wallet — :name",
+                "title": "Wallet — {name}",
                 "disabled_notice": "This wallet is disabled. Enable it to take actions.",
                 "view_public": "Open public wallet",
                 "actions_heading": "Actions",
@@ -321,7 +321,7 @@
             "privacy": "We never share your phone number. It is the only key to your wallet."
         },
         "show": {
-            "title": "Wallet — :name",
+            "title": "Wallet — {name}",
             "disabled_notice": "This wallet is currently disabled. Please see staff at the counter.",
             "qr_heading": "Your wallet QR",
             "qr_help": "Show this at the till to earn cashback or redeem your rewards.",
@@ -333,9 +333,9 @@
             "barcode_help": "For till scanners that don't read QR. Same token as the QR above."
         },
         "activity": {
-            "title": "Activity — :name",
+            "title": "Activity — {name}",
             "heading": "Activity",
-            "subheading": "Every change to :name's wallet balance.",
+            "subheading": "Every change to {name}'s wallet balance.",
             "back": "Back to wallet",
             "empty": "No activity yet."
         },
@@ -345,8 +345,8 @@
         },
         "transactions": {
             "empty": "No transactions yet.",
-            "purchase": "Purchase: :amount Kč",
-            "balance_after": "Balance: :amount Kč",
+            "purchase": "Purchase: {amount} Kč",
+            "balance_after": "Balance: {amount} Kč",
             "types": {
                 "purchase_cashback": "Cashback",
                 "redeem": "Redemption",

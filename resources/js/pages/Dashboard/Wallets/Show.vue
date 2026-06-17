@@ -17,11 +17,10 @@ import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
 import Select from '@/components/ui/Select.vue';
 import FieldError from '@/components/ui/FieldError.vue';
-import WalletCard from '@/components/reward/WalletCard.vue';
-import RewardsBalance from '@/components/reward/RewardsBalance.vue';
 import TransactionList from '@/components/reward/TransactionList.vue';
 import { useConfirmDialog } from '@/composables/useConfirmDialog';
 import { fieldError } from '@/composables/useFieldError';
+import { formatDateTime } from '@/lib/date';
 
 const { t } = useI18n();
 
@@ -58,6 +57,27 @@ const props = defineProps<{
 }>();
 
 const isActive = computed(() => props.wallet.status === 'active');
+
+const balanceNumber = computed(() => Number(props.wallet.rewards_balance));
+const balanceFormatted = computed(() =>
+    new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(balanceNumber.value),
+);
+
+const lifetimeEarnedFormatted = computed(() =>
+    new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(Number(props.wallet.lifetime_earned)),
+);
+const lifetimeRedeemedFormatted = computed(() =>
+    new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(Number(props.wallet.lifetime_redeemed)),
+);
 
 type Action = 'purchase' | 'redeem' | 'adjust' | null;
 const openAction = ref<Action>(null);
@@ -126,16 +146,6 @@ async function toggleStatus(): Promise<void> {
         router.post(`/wallets/${props.wallet.id}/enable`, {}, { preserveScroll: true });
     }
 }
-
-function formatDateTime(value: string | null): string {
-    if (value === null) {
-        return t('dashboard.wallets.show.never_used');
-    }
-    return new Intl.DateTimeFormat('cs-CZ', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(value));
-}
 </script>
 
 <template>
@@ -153,71 +163,77 @@ function formatDateTime(value: string | null): string {
                 </div>
             </section>
 
-            <WalletCard :wallet="wallet">
-                <RewardsBalance :amount="wallet.rewards_balance" />
-            </WalletCard>
+            <!-- Combined header card: brand + identity + balance + metadata. -->
+            <section class="surface-card overflow-hidden">
+                <header class="bg-primary p-5 text-on-primary">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                                Teacha Rewards
+                            </p>
+                            <h2 class="mt-0.5 truncate text-xl font-semibold">
+                                {{ wallet.first_name }}
+                            </h2>
+                            <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
+                                {{ wallet.wallet_number }}
+                            </p>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                                {{ t('dashboard.wallets.show.balance') }}
+                            </p>
+                            <p class="mt-0.5 text-2xl font-bold tracking-tight">
+                                {{ balanceFormatted }}&nbsp;Kč
+                            </p>
+                        </div>
+                    </div>
+                </header>
 
-            <!-- Customer metadata -->
-            <section class="surface-card grid grid-cols-2 gap-3 p-4 text-xs sm:grid-cols-3">
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.customer') }}
-                    </p>
-                    <p class="mt-1 text-sm text-on-surface">
-                        {{ wallet.first_name }}
-                    </p>
-                </div>
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.phone') }}
-                    </p>
-                    <p class="mt-1 font-mono text-sm text-on-surface">
-                        {{ wallet.phone }}
-                    </p>
-                </div>
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.wallet_number') }}
-                    </p>
-                    <p class="mt-1 font-mono text-sm text-on-surface">
-                        {{ wallet.wallet_number }}
-                    </p>
-                </div>
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.lifetime_earned') }}
-                    </p>
-                    <p class="mt-1 text-sm text-on-surface">
-                        {{ wallet.lifetime_earned }}&nbsp;Kč
-                    </p>
-                </div>
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.lifetime_redeemed') }}
-                    </p>
-                    <p class="mt-1 text-sm text-on-surface">
-                        {{ wallet.lifetime_redeemed }}&nbsp;Kč
-                    </p>
-                </div>
-                <div>
-                    <p class="label-eyebrow">
-                        {{ t('dashboard.wallets.show.last_used') }}
-                    </p>
-                    <p class="mt-1 text-sm text-on-surface">
-                        {{ formatDateTime(wallet.last_used_at) }}
-                    </p>
-                </div>
+                <dl class="grid grid-cols-2 gap-x-6 gap-y-4 p-5 text-xs sm:grid-cols-4">
+                    <div>
+                        <dt class="label-eyebrow">
+                            {{ t('dashboard.wallets.show.phone') }}
+                        </dt>
+                        <dd class="mt-1 font-mono text-sm text-on-surface">
+                            {{ wallet.phone }}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="label-eyebrow">
+                            {{ t('dashboard.wallets.show.lifetime_earned') }}
+                        </dt>
+                        <dd class="mt-1 text-sm text-on-surface">
+                            {{ lifetimeEarnedFormatted }}&nbsp;Kč
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="label-eyebrow">
+                            {{ t('dashboard.wallets.show.lifetime_redeemed') }}
+                        </dt>
+                        <dd class="mt-1 text-sm text-on-surface">
+                            {{ lifetimeRedeemedFormatted }}&nbsp;Kč
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="label-eyebrow">
+                            {{ t('dashboard.wallets.show.last_used') }}
+                        </dt>
+                        <dd class="mt-1 text-sm text-on-surface">
+                            {{ wallet.last_used_at ? formatDateTime(wallet.last_used_at) : t('dashboard.wallets.show.never_used') }}
+                        </dd>
+                    </div>
+                </dl>
+
+                <footer class="flex items-center justify-end border-t border-outline-glass px-5 py-3">
+                    <Link
+                        :href="`/w/${wallet.public_token}`"
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
+                    >
+                        {{ t('dashboard.wallets.show.view_public') }}
+                        <ExternalLink :size="12" />
+                    </Link>
+                </footer>
             </section>
-
-            <div class="flex justify-end">
-                <Link
-                    :href="`/w/${wallet.public_token}`"
-                    class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
-                >
-                    {{ t('dashboard.wallets.show.view_public') }}
-                    <ExternalLink :size="12" />
-                </Link>
-            </div>
 
             <section>
                 <h2 class="label-eyebrow mb-3">

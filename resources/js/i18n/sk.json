@@ -131,7 +131,7 @@
                 "no_camera": "Na tomto zariadení nebola nájdená kamera."
             },
             "show": {
-                "title": "Peňaženka — :name",
+                "title": "Peňaženka — {name}",
                 "disabled_notice": "Táto peňaženka je deaktivovaná. Pre akcie ju znova aktivujte v plnom zobrazení.",
                 "view_full": "Otvoriť plné zobrazenie peňaženky",
                 "actions_heading": "Čo chcete urobiť?",
@@ -158,7 +158,7 @@
                 "balance": "Zostatok"
             },
             "show": {
-                "title": "Peňaženka — :name",
+                "title": "Peňaženka — {name}",
                 "disabled_notice": "Táto peňaženka je deaktivovaná. Pre akcie ju aktivujte.",
                 "view_public": "Otvoriť verejnú peňaženku",
                 "actions_heading": "Akcie",
@@ -321,7 +321,7 @@
             "privacy": "Vaše telefónne číslo nikomu neposkytujeme. Je to jediný kľúč k vašej peňaženke."
         },
         "show": {
-            "title": "Peňaženka — :name",
+            "title": "Peňaženka — {name}",
             "disabled_notice": "Táto peňaženka je momentálne deaktivovaná. Obráťte sa na personál.",
             "qr_heading": "QR kód peňaženky",
             "qr_help": "Ukážte na pokladni pre získanie cashbacku alebo uplatnenie odmien.",
@@ -333,9 +333,9 @@
             "barcode_help": "Pre pultové čítačky, ktoré nečítajú QR. Kód nesie rovnaký token ako QR vyššie."
         },
         "activity": {
-            "title": "Aktivita — :name",
+            "title": "Aktivita — {name}",
             "heading": "Aktivita",
-            "subheading": "Každá zmena zostatku peňaženky :name.",
+            "subheading": "Každá zmena zostatku peňaženky {name}.",
             "back": "Späť na peňaženku",
             "empty": "Zatiaľ žiadna aktivita."
         },
@@ -345,8 +345,8 @@
         },
         "transactions": {
             "empty": "Zatiaľ žiadne transakcie.",
-            "purchase": "Nákup: :amount Kč",
-            "balance_after": "Zostatok: :amount Kč",
+            "purchase": "Nákup: {amount} Kč",
+            "balance_after": "Zostatok: {amount} Kč",
             "types": {
                 "purchase_cashback": "Cashback",
                 "redeem": "Uplatnenie",

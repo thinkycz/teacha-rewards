@@ -8,27 +8,34 @@ defineProps<{
         first_name: string;
         wallet_number: string;
     };
+    compact?: boolean;
 }>();
 </script>
 
 <template>
     <article
-        class="relative overflow-hidden rounded-3xl bg-primary p-6 text-on-primary shadow-lg"
+        class="relative overflow-hidden rounded-2xl bg-primary p-4 text-on-primary shadow-lg"
+        :class="compact ? 'rounded-xl p-3' : ''"
     >
-        <div class="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-white/10" />
-        <div class="absolute bottom-0 left-0 h-24 w-24 -translate-x-8 translate-y-8 rounded-full bg-white/5" />
-
-        <div class="relative">
-            <p class="text-xs font-medium uppercase tracking-widest text-on-primary/70">
-                Teacha Rewards
-            </p>
-            <p class="mt-1 text-2xl font-semibold">
-                {{ wallet.first_name }}
-            </p>
-            <p class="mt-6 font-mono text-lg tracking-widest">
-                {{ wallet.wallet_number }}
-            </p>
-            <div class="mt-4">
+        <div class="relative flex items-center justify-between gap-4">
+            <div class="min-w-0">
+                <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                    Teacha Rewards
+                </p>
+                <p
+                    class="mt-0.5 truncate font-semibold"
+                    :class="compact ? 'text-base' : 'text-xl'"
+                >
+                    {{ wallet.first_name }}
+                </p>
+                <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
+                    {{ wallet.wallet_number }}
+                </p>
+            </div>
+            <div
+                v-if="$slots.default"
+                class="shrink-0 text-right"
+            >
                 <slot />
             </div>
         </div>

@@ -41,6 +41,12 @@ const props = defineProps<{
 }>();
 
 const isActive = computed(() => props.wallet.status === 'active');
+
+const formatAmount = (value: string): string =>
+    new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(Number(value));
 </script>
 
 <template>
@@ -53,7 +59,7 @@ const isActive = computed(() => props.wallet.status === 'active');
             </Link>
         </header>
 
-        <main class="mx-auto max-w-md space-y-6 px-6 pb-20">
+        <main class="mx-auto max-w-md space-y-5 px-6 pb-20">
             <section
                 v-if="!isActive"
                 class="flex items-start gap-3 rounded-2xl border border-warning bg-warning-soft p-4 text-sm text-warning"
@@ -63,17 +69,23 @@ const isActive = computed(() => props.wallet.status === 'active');
             </section>
 
             <WalletCard :wallet="wallet">
-                <RewardsBalance :amount="wallet.rewards_balance" />
+                <RewardsBalance
+                    :amount="wallet.rewards_balance"
+                    size="lg"
+                />
             </WalletCard>
 
-            <section class="surface-card p-6">
+            <section class="surface-card p-5">
                 <h2 class="label-eyebrow">
                     {{ t('wallet.show.qr_heading') }}
                 </h2>
                 <p class="mt-1 label-help">
                     {{ t('wallet.show.qr_help') }}
                 </p>
-                <QRCodeBlock :url="wallet_url" class="mt-4" />
+                <QRCodeBlock
+                    :url="wallet_url"
+                    class="mt-4"
+                />
                 <p class="mt-4 break-all text-center font-mono text-[11px] text-on-surface-variant">
                     {{ wallet_url }}
                 </p>
@@ -93,28 +105,28 @@ const isActive = computed(() => props.wallet.status === 'active');
                 </p>
             </section>
 
-            <section class="grid grid-cols-2 gap-4">
+            <section class="grid grid-cols-2 gap-3">
                 <div class="surface-card p-4">
                     <p class="label-eyebrow">
                         {{ t('wallet.show.lifetime_earned') }}
                     </p>
-                    <p class="mt-1 text-xl font-bold text-on-surface">
-                        {{ wallet.lifetime_earned }}&nbsp;Kč
+                    <p class="mt-1 text-lg font-bold text-on-surface">
+                        {{ formatAmount(wallet.lifetime_earned) }}&nbsp;Kč
                     </p>
                 </div>
                 <div class="surface-card p-4">
                     <p class="label-eyebrow">
                         {{ t('wallet.show.lifetime_redeemed') }}
                     </p>
-                    <p class="mt-1 text-xl font-bold text-on-surface">
-                        {{ wallet.lifetime_redeemed }}&nbsp;Kč
+                    <p class="mt-1 text-lg font-bold text-on-surface">
+                        {{ formatAmount(wallet.lifetime_redeemed) }}&nbsp;Kč
                     </p>
                 </div>
             </section>
 
             <section
                 v-if="recent_transactions.length > 0"
-                class="surface-card p-6"
+                class="surface-card p-5"
             >
                 <header class="mb-4 flex items-center justify-between">
                     <h2 class="label-eyebrow">

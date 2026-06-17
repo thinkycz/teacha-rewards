@@ -80,3 +80,28 @@ export function formatDateRange(
         return `${f(startDate)} - ${f(endDate)}`;
     }
 }
+
+/**
+ * Format a date+time in the Czech `j.n.Y H:i` convention
+ * (e.g. `17.6.2026 00:24`). We format manually instead of using
+ * `Intl.DateTimeFormat` because the locale-aware variants emit
+ * `17. 6. 2026, 00:24` with extra spaces and a comma.
+ */
+export function formatDateTime(
+    value: string | null | undefined,
+    fallback = '',
+): string {
+    if (value === null || value === undefined || value === '') {
+        return fallback;
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return fallback;
+    }
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const Y = date.getFullYear();
+    const H = String(date.getHours()).padStart(2, '0');
+    const i = String(date.getMinutes()).padStart(2, '0');
+    return `${d}.${m}.${Y} ${H}:${i}`;
+}

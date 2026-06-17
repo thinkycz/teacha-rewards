@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { formatDateTime } from '@/lib/date';
 
 interface Transaction {
     id: number;
@@ -66,21 +67,7 @@ const subtitle = computed(() => {
     return parts.join(' · ');
 });
 
-const dateLabel = computed(() => {
-    if (!props.transaction.created_at) {
-        return '';
-    }
-    try {
-        return new Intl.DateTimeFormat(undefined, {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        }).format(new Date(props.transaction.created_at));
-    } catch {
-        return props.transaction.created_at;
-    }
-});
+const dateLabel = computed(() => formatDateTime(props.transaction.created_at));
 </script>
 
 <template>
@@ -98,7 +85,7 @@ const dateLabel = computed(() => {
                 </p>
                 <p
                     v-if="dateLabel"
-                    class="mt-0.5 text-xs text-on-surface-variant/70"
+                    class="mt-0.5 font-mono text-xs text-on-surface-variant/70"
                 >
                     {{ dateLabel }}
                 </p>

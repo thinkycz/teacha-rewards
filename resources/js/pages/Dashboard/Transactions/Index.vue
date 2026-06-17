@@ -7,6 +7,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Button from '@/components/ui/Button.vue';
+import { formatDateTime } from '@/lib/date';
 
 const { t } = useI18n();
 
@@ -96,15 +97,8 @@ function signedAmount(value: string): string {
     return sign + formatAmount(value);
 }
 
-function formatDateTime(value: string | null): string {
-    if (value === null) {
-        return '';
-    }
-    return new Intl.DateTimeFormat('cs-CZ', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    }).format(new Date(value));
-}
+
+
 
 const typeOptions = computed(() => [
     { value: '', label: t('dashboard.transactions.index.type_all') },
