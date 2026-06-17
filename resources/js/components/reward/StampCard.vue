@@ -10,14 +10,10 @@ const props = withDefaults(
         total: number;
         rewardLabel?: string;
         icon?: string;
-        /** Compact = small horizontal admin/header use. False = full
-         *  paper-card aesthetic for the customer page. */
-        compact?: boolean;
     }>(),
     {
         rewardLabel: '',
         icon: '\u{1F375}',
-        compact: false,
     },
 );
 
@@ -33,16 +29,9 @@ const slots = computed(() =>
 );
 
 // Layout: aim for roughly a 2-row grid so the card looks like a
-// real loyalty card. Compact mode flattens it for admin headers.
+// real loyalty card. Tuned for the business-card aspect ratio.
 const layout = computed(() => {
     const n = Math.max(1, props.total);
-    if (props.compact) {
-        if (n <= 5) return { cols: 'grid-cols-5', rows: 1 };
-        if (n <= 10) return { cols: 'grid-cols-5', rows: 2 };
-        if (n <= 15) return { cols: 'grid-cols-5', rows: 3 };
-        return { cols: 'grid-cols-5', rows: 4 };
-    }
-    // Customer-facing: 5 cols feels like a real 5-stamp row.
     if (n <= 5) return { cols: 'grid-cols-5', rows: 1 };
     if (n <= 8) return { cols: 'grid-cols-4', rows: 2 };
     if (n <= 10) return { cols: 'grid-cols-5', rows: 2 };
@@ -55,12 +44,14 @@ const layout = computed(() => {
 </script>
 
 <template>
-    <!-- Paper card. Customer-facing: business-card aspect ratio
-         (85 x 55mm). Admin-facing: compact, no aspect ratio so the
-         parent controls width. -->
+    <!-- Paper loyalty card. Real-paper aesthetic: cream surface with
+         a faint paper grain, business-card aspect ratio (85 x 55mm),
+         max-w 26rem. The same dimensions render on the public wallet
+         page and the admin wallet detail page; the admin grid wraps
+         it in the same `flex justify-center` it uses elsewhere so the
+         card sits centered in its column. -->
     <article
-        class="paper-card"
-        :class="compact ? 'paper-card-compact' : 'paper-card-full'"
+        class="paper-card paper-card-full"
         role="group"
         :aria-label="
             t('wallet.stamps.card_label', {
@@ -82,7 +73,6 @@ const layout = computed(() => {
                 class="brand-reward"
             >{{ rewardLabel }}</span>
             <span
-                v-if="!compact"
                 aria-hidden="true"
                 class="brand-icon"
             >{{ icon }}</span>
@@ -102,11 +92,8 @@ const layout = computed(() => {
                         ? t('wallet.stamps.filled', { icon })
                         : t('wallet.stamps.empty', { icon })
                 "
-                class="paper-slot"
-                :class="[
-                    compact ? 'paper-slot-compact' : 'paper-slot-full',
-                    slot.filled ? 'paper-slot-filled' : 'paper-slot-empty',
-                ]"
+                class="paper-slot paper-slot-full"
+                :class="slot.filled ? 'paper-slot-filled' : 'paper-slot-empty'"
             >
                 <span
                     v-if="slot.filled"
@@ -116,10 +103,7 @@ const layout = computed(() => {
             </div>
         </div>
 
-        <footer
-            v-if="!compact"
-            class="paper-card-counter"
-        >
+        <footer class="paper-card-counter">
             <span
                 v-if="isFull"
                 class="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-on-primary shadow-sm"
@@ -180,15 +164,6 @@ const layout = computed(() => {
     flex-direction: column;
 }
 
-/* Admin compact: shorter, wider feeling. Fits inline next to a
-   metadata grid. */
-.paper-card-compact {
-    display: inline-flex;
-    flex-direction: column;
-    padding: 0.5rem;
-    max-width: 16rem;
-}
-
 .paper-card-brand {
     background: #0f172a;
     color: #f8fafc;
@@ -201,10 +176,6 @@ const layout = computed(() => {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     flex: 0 0 auto;
-}
-
-.paper-card-compact .paper-card-brand {
-    display: none;
 }
 
 .brand-name {
@@ -239,12 +210,6 @@ const layout = computed(() => {
     z-index: 1;
 }
 
-.paper-card-compact .paper-card-slots {
-    padding: 0.375rem;
-    gap: 0.25rem;
-}
-
-/* Customer slot: bigger circles, more breathing room. */
 .paper-slot-full {
     width: 100%;
     aspect-ratio: 1;
@@ -253,15 +218,6 @@ const layout = computed(() => {
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease;
-}
-
-.paper-slot-compact {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .paper-slot-empty {
@@ -284,20 +240,12 @@ const layout = computed(() => {
     transform: rotate(0deg) scale(1.04);
 }
 
-.paper-card-compact .paper-slot-filled {
-    transform: none;
-}
-
 .slot-emoji {
-    font-size: 1.25rem;
-    line-height: 1;
     /* Emoji glyph rendering is browser-dependent; nudge the size up
        a hair on the larger customer tile so the matcha bowl fills
        the disc rather than floating in the middle. */
-}
-
-.paper-card-full .slot-emoji {
     font-size: 1.65rem;
+    line-height: 1;
 }
 
 .paper-card-counter {

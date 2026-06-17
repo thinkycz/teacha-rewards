@@ -306,9 +306,9 @@ async function toggleStatus(): Promise<void> {
                 </footer>
             </section>
 
-            <!-- Paper loyalty card. Compact admin version: real-paper
-                 aesthetic without the brand strip so the admin grid
-                 stays dense. Only visible in stamps mode. -->
+            <!-- Paper loyalty card. Full mode (no `compact`) so the
+                 admin sees the same dimensions the customer sees on
+                 the public page. Only visible in stamps mode. -->
             <section
                 v-if="isStamps"
                 class="flex justify-center"
@@ -318,7 +318,6 @@ async function toggleStatus(): Promise<void> {
                     :total="program.stamps_per_reward"
                     :reward-label="program.stamps_per_reward_label"
                     :icon="program.stamp_icon"
-                    compact
                 />
             </section>
 

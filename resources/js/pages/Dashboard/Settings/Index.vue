@@ -284,18 +284,25 @@ const presets: { icon: string; key: string }[] = [
                             <FieldError v-bind="fieldError(form.errors, 'stamp_icon', 'settings')" />
                         </div>
 
-                        <!-- Live preview of the chosen icon on a card -->
+                        <!-- Live preview of the chosen icon on a card.
+                             Sized + centered to match the public wallet
+                             page (max-w-md main + flex justify-center
+                             around the StampCard) so the admin sees the
+                             card at the same dimensions the customer
+                             will. -->
                         <div
                             v-if="form.stamp_icon"
-                            class="mt-2 rounded-2xl border border-outline-glass bg-surface-container-lowest p-5"
+                            class="mx-auto mt-2 max-w-md rounded-2xl border border-outline-glass bg-surface-container-lowest p-5"
                         >
                             <p class="label-eyebrow mb-3">{{ t('settings.stamp_icon_presets_label') }}</p>
-                            <StampCard
-                                :stamps="4"
-                                :total="Number(form.stamps_per_reward) || 10"
-                                :reward-label="form.stamps_per_reward_label"
-                                :icon="form.stamp_icon"
-                            />
+                            <div class="flex justify-center">
+                                <StampCard
+                                    :stamps="4"
+                                    :total="Number(form.stamps_per_reward) || 10"
+                                    :reward-label="form.stamps_per_reward_label"
+                                    :icon="form.stamp_icon"
+                                />
+                            </div>
                         </div>
                     </fieldset>
                 </div>
