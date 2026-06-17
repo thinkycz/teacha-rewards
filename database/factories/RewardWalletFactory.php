@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\WalletStatusEnum;
+use App\Enums\WalletTypeEnum;
 use App\Models\RewardWallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ class RewardWalletFactory extends Factory
             'uuid' => (string) Str::uuid(),
             'public_token' => Str::random(32),
             'wallet_number' => $this->makeWalletNumber(),
+            'type' => WalletTypeEnum::CASHBACK->value,
 
             'first_name' => $this->faker->firstName(),
 
@@ -60,6 +62,26 @@ class RewardWalletFactory extends Factory
     {
         return $this->state([
             'status' => WalletStatusEnum::DISABLED->value,
+        ]);
+    }
+
+    /**
+     * Create a cashback wallet (default, but explicit for tests).
+     */
+    public function cashback(): static
+    {
+        return $this->state([
+            'type' => WalletTypeEnum::CASHBACK->value,
+        ]);
+    }
+
+    /**
+     * Create a stamps wallet.
+     */
+    public function stamps(): static
+    {
+        return $this->state([
+            'type' => WalletTypeEnum::STAMPS->value,
         ]);
     }
 

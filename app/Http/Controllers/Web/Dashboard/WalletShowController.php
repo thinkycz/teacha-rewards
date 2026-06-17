@@ -17,10 +17,11 @@ use Thinkycz\LaravelCore\Support\Resolver;
  *
  * The cashier-facing full wallet view: customer info, recent
  * transactions, plus the four action buttons (log purchase / redeem /
- * manual adjust / toggle status in cashback mode; add stamps / redeem
- * free reward / manual adjust / toggle status in stamps mode). The
- * mode + stamps config is shared with the customer-facing surface so
- * the same rendering rules apply on both sides.
+ * manual adjust / toggle status for cashback wallets; add stamps /
+ * redeem free reward / manual adjust / toggle status for stamps
+ * wallets). The action set follows `wallet.type`, not the global
+ * `program_mode`, so a cashback wallet always shows cashback actions
+ * even if the shop default has since been flipped to stamps.
  */
 class WalletShowController
 {
@@ -42,6 +43,7 @@ class WalletShowController
                 'id' => $wallet->getKey(),
                 'public_token' => $wallet->getPublicToken(),
                 'wallet_number' => $wallet->getWalletNumber(),
+                'type' => $wallet->getType()->value,
                 'first_name' => $wallet->getFirstName(),
                 'phone' => $wallet->getPhone(),
                 'phone_normalized' => $wallet->getPhoneNormalized(),
@@ -68,7 +70,6 @@ class WalletShowController
                 ];
             })->all(),
             'program' => [
-                'mode' => $settings->getProgramMode(),
                 'stamps_per_reward' => $settings->getStampsPerReward(),
                 'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
                 'stamp_icon' => $settings->getStampIcon(),

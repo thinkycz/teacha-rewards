@@ -82,11 +82,13 @@ const presets: { icon: string; key: string }[] = [
                 class="surface-card space-y-6 p-5"
                 @submit.prevent="submit"
             >
-                <!-- Program mode toggle -->
+                <!-- Program mode toggle: now the default type for new
+                     wallets. Existing wallets keep their type, so
+                     flipping this never changes an existing wallet. -->
                 <fieldset class="space-y-3">
                     <legend class="block">
                         <span class="font-sans text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                            {{ t('settings.program_mode_label') }}
+                            {{ t('settings.default_for_new_wallets_label') }}
                         </span>
                     </legend>
                     <div class="grid gap-3 sm:grid-cols-2">
@@ -132,7 +134,7 @@ const presets: { icon: string; key: string }[] = [
                         </label>
                     </div>
                     <FieldError v-bind="fieldError(form.errors, 'program_mode', 'settings')" />
-                    <p class="label-help">{{ t('settings.program_mode_help') }}</p>
+                    <p class="label-help">{{ t('settings.default_for_new_wallets_help') }}</p>
                 </fieldset>
 
                 <!-- Cashback-mode fields -->

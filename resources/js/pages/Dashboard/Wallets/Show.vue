@@ -32,6 +32,7 @@ interface WalletSummary {
     id: number;
     public_token: string;
     wallet_number: string;
+    type: 'cashback' | 'stamps';
     first_name: string;
     phone: string;
     phone_normalized: string;
@@ -57,7 +58,6 @@ interface WalletTransaction {
 }
 
 interface ProgramConfig {
-    mode: 'cashback' | 'stamps';
     stamps_per_reward: number;
     stamps_per_reward_label: string;
     stamp_icon: string;
@@ -70,7 +70,7 @@ const props = defineProps<{
 }>();
 
 const isActive = computed(() => props.wallet.status === 'active');
-const isStamps = computed(() => props.program.mode === 'stamps');
+const isStamps = computed(() => props.wallet.type === 'stamps');
 
 const balanceNumber = computed(() => Number(props.wallet.rewards_balance));
 const balanceFormatted = computed(() =>
@@ -228,8 +228,13 @@ async function toggleStatus(): Promise<void> {
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
                                 Teacha Rewards
                             </p>
-                            <h2 class="mt-0.5 truncate text-xl font-semibold">
-                                {{ wallet.first_name }}
+                            <h2 class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold">
+                                <span class="truncate">{{ wallet.first_name }}</span>
+                                <span
+                                    class="shrink-0 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-on-primary"
+                                >
+                                    {{ t('dashboard.wallets.show.type_' + wallet.type) }}
+                                </span>
                             </h2>
                             <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
                                 {{ wallet.wallet_number }}

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\WalletStatusEnum;
+use App\Enums\WalletTypeEnum;
 use Database\Factories\RewardWalletFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -100,6 +101,19 @@ class RewardWallet extends BaseModel
     public function getWalletNumber(): string
     {
         return $this->assertString('wallet_number');
+    }
+
+    /**
+     * Wallet type getter.
+     *
+     * `cashback` or `stamps`, set once at creation from the current
+     * `program_mode` setting. Immutable afterwards — the controller
+     * gates (LogPurchase, Redeem, StampEarn, StampRedeem) refuse
+     * cross-type writes, and the UI renders per-type.
+     */
+    public function getType(): WalletTypeEnum
+    {
+        return WalletTypeEnum::from($this->assertString('type'));
     }
 
     /**
@@ -207,6 +221,12 @@ class RewardWallet extends BaseModel
      * `"12.50"`) instead of the PDO driver's int representation of
      * `0.00` → `0`. Without this cast, `assertString('rewards_balance')`
      * panics on every read of a default-valued row.
+     *
+     * Enum-valued columns are intentionally NOT in this array — the
+     * typed getter (`getStatus`, `getType`) calls `EnumType::from(...)`
+     * on the raw string. This matches the existing `WalletStatusEnum`
+     * pattern and keeps the attribute read path under
+     * `assertString` per the AGENTS.md rule.
      *
      * @return array<string, string>
      */

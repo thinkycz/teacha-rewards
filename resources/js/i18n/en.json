@@ -413,5 +413,11 @@
             "guide_chrome": "In Chrome on desktop",
             "guide_chrome_body": "Click the install icon in the address bar or use the browser menu."
         }
-    }
+    },
+    "settings.default_for_new_wallets_label": "Default for new wallets",
+    "settings.default_for_new_wallets_help": "Choose the program every new wallet is created with. Existing wallets keep their own type forever, so flipping this never changes a current balance.",
+    "dashboard.wallets.index.type_cashback": "Cashback",
+    "dashboard.wallets.index.type_stamps": "Stamps",
+    "dashboard.wallets.show.type_cashback": "Cashback",
+    "dashboard.wallets.show.type_stamps": "Stamps"
 }

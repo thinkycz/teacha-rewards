@@ -38,8 +38,7 @@
     "reward.redeemed": "Odmeny uplatnené.",
     "reward.adjusted": "Zostatok upravený.",
     "reward.invalid_phone": "Toto telefónne číslo nevyzerá správne.",
-    "reward.action_requires_cashback_mode": "Túto akciu je možné vykonať iba v režime cashback.",
-    "reward.action_requires_stamps_mode": "Túto akciu je možné vykonať iba v režime pečiatok.",
     "reward.stamps_added": "Pečiatky pridané.",
-    "reward.stamps_redeemed": "Odmenu uplatnená."
+    "reward.stamps_redeemed": "Odmenu uplatnená.",
+    "reward.action_unavailable_for_wallet_type": "Táto akcia nie je pre daný typ peňaženky dostupná."
 }

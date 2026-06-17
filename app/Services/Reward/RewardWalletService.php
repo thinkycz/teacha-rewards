@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Reward;
 
 use App\Enums\WalletStatusEnum;
+use App\Enums\WalletTypeEnum;
 use App\Models\RewardWallet;
 use App\Services\Settings\SettingsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -95,6 +96,11 @@ class RewardWalletService
     /**
      * Create a new wallet for a (normalized) phone + display name.
      *
+     * The wallet's `type` is captured here, once, from the current
+     * `program_mode` setting — and never changes again. Later flips
+     * of the global program_mode affect only wallets created from
+     * that point on.
+     *
      * Public — callers that need to upsert by phone should use
      * `findOrCreateByPhone`. `$displayPhone` is the user-entered form
      * (e.g. with spaces or formatting); `$normalized` is the E.164
@@ -106,6 +112,7 @@ class RewardWalletService
             'uuid' => (string) Str::uuid(),
             'public_token' => $this->makePublicToken(),
             'wallet_number' => $this->makeWalletNumber(),
+            'type' => $this->resolveInitialType()->value,
             'first_name' => $firstName,
             'phone' => \trim($displayPhone),
             'phone_normalized' => $normalized,
@@ -114,6 +121,21 @@ class RewardWalletService
             'lifetime_redeemed' => '0.00',
             'status' => WalletStatusEnum::ACTIVE->value,
         ]);
+    }
+
+    /**
+     * Resolve the type a brand-new wallet should be created with.
+     *
+     * The global `program_mode` setting is the only signal we have
+     * at create time. If the setting holds a value we don't
+     * recognize (a legacy DB row, a manual SQL edit) we fall back
+     * to cashback rather than refuse to create the wallet.
+     */
+    protected function resolveInitialType(): WalletTypeEnum
+    {
+        $raw = $this->settings->getProgramMode();
+
+        return WalletTypeEnum::tryFrom($raw) ?? WalletTypeEnum::CASHBACK;
     }
 
     /**

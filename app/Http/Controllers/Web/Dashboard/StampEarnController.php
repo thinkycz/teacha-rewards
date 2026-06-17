@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web\Dashboard;
 
+use App\Enums\WalletTypeEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
 use App\Models\User;
 use App\Services\Reward\RewardTransactionService;
-use App\Services\Settings\SettingsService;
 use App\Validation\Web\Staff\StampEarnValidity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,11 +23,10 @@ use Thinkycz\LaravelCore\Support\Resolver;
  * tile defaults to 1 and uses +/- buttons for batch adds (so the
  * single submit covers N drinks in one click).
  *
- * Mode gate: this endpoint is only valid in `program_mode = stamps`.
- * In cashback mode the cashier should be clicking "Log purchase"
- * instead. Mixing the two would silently let a stamps card grow
- * under a cashback program, so the controller refuses and flashes
- * an error.
+ * Type gate: this endpoint is only valid for stamps wallets. A
+ * cashback wallet was created under a different program and must be
+ * credited via `LogPurchaseController`; mixing the two would
+ * silently let a stamps card grow under a cashback program.
  */
 class StampEarnController
 {
@@ -35,11 +34,8 @@ class StampEarnController
 
     public function __invoke(Request $request, RewardWallet $wallet): RedirectResponse
     {
-        /** @var SettingsService $settings */
-        $settings = Resolver::resolve(SettingsService::class);
-
-        if ($settings->getProgramMode() !== 'stamps') {
-            Inertia::flash('error', \__('reward.action_requires_stamps_mode'));
+        if ($wallet->getType() !== WalletTypeEnum::STAMPS) {
+            Inertia::flash('error', \__('reward.action_unavailable_for_wallet_type'));
 
             return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
         }

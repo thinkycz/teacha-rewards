@@ -413,5 +413,11 @@
             "guide_chrome": "V Chromu na počítači",
             "guide_chrome_body": "Klepněte na ikonu instalace v adresním řádku nebo použijte nabídku prohlížeče."
         }
-    }
+    },
+    "settings.default_for_new_wallets_label": "Výchozí pro nové peněženky",
+    "settings.default_for_new_wallets_help": "Zvolte program, ve kterém se budou zakládat nové peněženky. Stávající peněženky si ponechávají svůj typ navždy, takže změna tohoto nastavení nikdy neovlivní jejich aktuální zůstatek.",
+    "dashboard.wallets.index.type_cashback": "Cashback",
+    "dashboard.wallets.index.type_stamps": "Razítka",
+    "dashboard.wallets.show.type_cashback": "Cashback",
+    "dashboard.wallets.show.type_stamps": "Razítka"
 }

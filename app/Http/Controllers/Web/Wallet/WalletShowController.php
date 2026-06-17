@@ -22,9 +22,9 @@ use Thinkycz\LaravelCore\Support\Thrower;
  * `ModelNotFoundException` on a miss — Inertia's exception handler
  * turns that into a 404.
  *
- * The mode + stamps config is shared with the staff surface so the
- * customer-facing page shows either the cashback balance or the
- * stamps slot grid depending on the current program mode.
+ * The page renders per `wallet.type` (set at creation, immutable): a
+ * cashback wallet shows the balance, a stamps wallet shows the paper
+ * stamp card. The global `program_mode` setting is irrelevant here.
  */
 class WalletShowController
 {
@@ -65,6 +65,7 @@ class WalletShowController
             'wallet' => [
                 'public_token' => $wallet->getPublicToken(),
                 'wallet_number' => $wallet->getWalletNumber(),
+                'type' => $wallet->getType()->value,
                 'first_name' => $wallet->getFirstName(),
                 'rewards_balance' => $wallet->getRewardsBalance(),
                 'stamps_count' => $wallet->getStampsCount(),
@@ -74,7 +75,6 @@ class WalletShowController
             ],
             'recent_transactions' => $items,
             'program' => [
-                'mode' => $settings->getProgramMode(),
                 'stamps_per_reward' => $settings->getStampsPerReward(),
                 'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
                 'stamp_icon' => $settings->getStampIcon(),

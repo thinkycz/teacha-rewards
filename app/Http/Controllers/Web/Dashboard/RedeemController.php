@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web\Dashboard;
 
+use App\Enums\WalletTypeEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
 use App\Models\User;
 use App\Services\Reward\RewardTransactionService;
-use App\Services\Settings\SettingsService;
 use App\Validation\Web\Staff\RedeemValidity;
 use Brick\Math\BigDecimal;
 use Illuminate\Http\RedirectResponse;
@@ -22,11 +22,10 @@ use Thinkycz\LaravelCore\Support\Resolver;
  * The "cannot exceed balance" rule is enforced inside the service so
  * we get a friendly flash message instead of a 422.
  *
- * Mode gate: this endpoint is only valid in `program_mode = cashback`.
- * In stamps mode the cashier should be clicking "Redeem reward"
- * (the stamps redeem flow) instead. Mixing the two would silently
- * subtract cashback-style amounts from a stamps card, so the
- * controller refuses and flashes an error.
+ * Type gate: this endpoint is only valid for cashback wallets. A
+ * stamps wallet was created under a different program and must be
+ * redeemed via `StampRedeemController`; mixing the two would
+ * silently subtract cashback-style amounts from a stamps card.
  */
 class RedeemController
 {
@@ -34,11 +33,8 @@ class RedeemController
 
     public function __invoke(Request $request, RewardWallet $wallet): RedirectResponse
     {
-        /** @var SettingsService $settings */
-        $settings = Resolver::resolve(SettingsService::class);
-
-        if ($settings->getProgramMode() !== 'cashback') {
-            Inertia::flash('error', \__('reward.action_requires_cashback_mode'));
+        if ($wallet->getType() !== WalletTypeEnum::CASHBACK) {
+            Inertia::flash('error', \__('reward.action_unavailable_for_wallet_type'));
 
             return \redirect()->route('dashboard.wallets.show', ['wallet' => $wallet->getKey()]);
         }

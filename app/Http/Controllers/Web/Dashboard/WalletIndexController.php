@@ -21,8 +21,11 @@ use Thinkycz\LaravelCore\Support\Resolver;
  * all). Sort by recent activity, lifetime earned, lifetime redeemed,
  * or balance (cashback-mode) / stamps count (stamps-mode).
  *
- * `program.mode` is shared so the list page can render the right
- * column (balance or stamp count) per the current mode.
+ * Each wallet has its own `type` (set at creation); the list page
+ * passes `type` per row so the Vue page can render a type badge and
+ * the appropriate value column. The `program` prop now carries only
+ * the stamps-mode display settings — mode itself is per-wallet, not
+ * a runtime global.
  */
 class WalletIndexController
 {
@@ -47,13 +50,11 @@ class WalletIndexController
             $query->where('status', WalletStatusEnum::DISABLED->value);
         }
 
-        $mode = $settings->getProgramMode();
-
         $sort = $request->str('sort')->toString();
         match ($sort) {
             'earned' => $query->orderByDesc('lifetime_earned'),
             'redeemed' => $query->orderByDesc('lifetime_redeemed'),
-            'balance' => $query->orderByDesc($mode === 'stamps' ? 'stamps_count' : 'rewards_balance'),
+            'balance' => $query->orderByDesc('stamps_count')->orderByDesc('rewards_balance'),
             default => $query->orderByDesc('last_used_at')->orderByDesc('id'),
         };
 
@@ -64,6 +65,7 @@ class WalletIndexController
                 'id' => $w->getKey(),
                 'public_token' => $w->getPublicToken(),
                 'wallet_number' => $w->getWalletNumber(),
+                'type' => $w->getType()->value,
                 'first_name' => $w->getFirstName(),
                 'phone' => $w->getPhone(),
                 'rewards_balance' => $w->getRewardsBalance(),
@@ -79,7 +81,6 @@ class WalletIndexController
                 'sort' => $sort,
             ],
             'program' => [
-                'mode' => $mode,
                 'stamps_per_reward' => $settings->getStampsPerReward(),
                 'stamps_per_reward_label' => $settings->getStampsRewardLabel(),
                 'stamp_icon' => $settings->getStampIcon(),

@@ -15,6 +15,7 @@ interface Wallet {
     id: number;
     public_token: string;
     wallet_number: string;
+    type: 'cashback' | 'stamps';
     first_name: string;
     phone: string;
     rewards_balance: string;
@@ -26,9 +27,9 @@ interface Wallet {
 }
 
 interface ProgramConfig {
-    mode: 'cashback' | 'stamps';
     stamps_per_reward: number;
     stamps_per_reward_label: string;
+    stamp_icon: string;
 }
 
 interface Filters {
@@ -42,8 +43,6 @@ const props = defineProps<{
     filters: Filters;
     program: ProgramConfig;
 }>();
-
-const isStamps = computed(() => props.program.mode === 'stamps');
 
 const search = ref(props.filters.q);
 const status = ref<Filters['status']>(props.filters.status);
@@ -183,6 +182,14 @@ function formatAmount(value: string): string {
                                     {{ wallet.first_name }}
                                 </p>
                                 <span
+                                    :class="wallet.type === 'stamps'
+                                        ? 'bg-primary-soft text-primary'
+                                        : 'bg-surface-container-high text-on-surface-variant'"
+                                    class="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+                                >
+                                    {{ t('dashboard.wallets.index.type_' + wallet.type) }}
+                                </span>
+                                <span
                                     v-if="wallet.status === 'disabled'"
                                     class="rounded-full bg-warning-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-warning"
                                 >
@@ -195,7 +202,7 @@ function formatAmount(value: string): string {
                         </div>
                         <div class="text-right">
                             <p
-                                v-if="isStamps"
+                                v-if="wallet.type === 'stamps'"
                                 class="text-sm font-bold text-on-surface tabular-nums"
                             >
                                 {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
