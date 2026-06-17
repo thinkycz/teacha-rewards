@@ -323,14 +323,9 @@
         "show": {
             "title": "Peněženka — {name}",
             "disabled_notice": "Tato peněženka je momentálně deaktivována. Obraťte se na personál.",
-            "qr_heading": "QR kód peněženky",
-            "qr_help": "Ukažte na pokladně pro získání cashbacku nebo uplatnění odměn.",
-            "lifetime_earned": "Celkově vyděláno",
-            "lifetime_redeemed": "Celkově uplatněno",
             "recent_heading": "Nedávná aktivita",
             "view_all_activity": "Zobrazit celou aktivitu",
-            "barcode_heading": "Čárový kód",
-            "barcode_help": "Pro pultové čtečky, které neumí QR. Kód nese stejný token jako QR výše."
+            "balance": "Zůstatek"
         },
         "activity": {
             "title": "Aktivita — {name}",

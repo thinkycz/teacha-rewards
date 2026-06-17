@@ -323,14 +323,9 @@
         "show": {
             "title": "Wallet — {name}",
             "disabled_notice": "This wallet is currently disabled. Please see staff at the counter.",
-            "qr_heading": "Your wallet QR",
-            "qr_help": "Show this at the till to earn cashback or redeem your rewards.",
-            "lifetime_earned": "Lifetime earned",
-            "lifetime_redeemed": "Lifetime redeemed",
             "recent_heading": "Recent activity",
             "view_all_activity": "View full activity",
-            "barcode_heading": "Barcode",
-            "barcode_help": "For till scanners that don't read QR. Same token as the QR above."
+            "balance": "Balance"
         },
         "activity": {
             "title": "Activity — {name}",
