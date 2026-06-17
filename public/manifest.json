@@ -1,7 +1,7 @@
 {
     "name": "Teacha Rewards",
     "short_name": "Teacha",
-    "description": "Odměna za každý matcha. Otvírejte si cashbackovou peněženku, sledujte zůstatek a uplatňujte odměny na pokladně.",
+    "description": "Odměna za každý matcha. Otvírejte si odměnovou peněženku, sledujte zůstatek a uplatňujte odměny na pokladně.",
     "lang": "cs",
     "dir": "ltr",
     "start_url": "/",

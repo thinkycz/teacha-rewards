@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { usePage } from '@inertiajs/vue3';
 import { X, Share, Download } from '@lucide/vue';
 import { usePwaInstall } from '@/composables/usePwaInstall';
 
@@ -11,6 +12,11 @@ const STORAGE_KEY = 'teacha.install-banner.dismissed-at';
 const VISIBLE_AFTER_DAYS = 7;
 
 const isVisible = ref<boolean>(false);
+
+// The install banner is customer-facing: staff use desktop PCs and
+// never install the PWA, so suppress it on any Dashboard/* page.
+const page = usePage();
+const isAdminPage = computed(() => page.component.startsWith('Dashboard/'));
 
 function shouldShow(): boolean {
     if (typeof localStorage === 'undefined') {
@@ -25,7 +31,7 @@ function shouldShow(): boolean {
 }
 
 onMounted(() => {
-    if (isInstalled.value) {
+    if (isInstalled.value || isAdminPage.value) {
         return;
     }
     if (canShowChromePrompt.value || isIosSafari.value) {

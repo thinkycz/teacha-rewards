@@ -114,10 +114,6 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
                         {{ shortUrl }}
                     </p>
                 </div>
-
-                <footer class="qr-sheet-footer">
-                    {{ t('dashboard.store_qr.footer') }}
-                </footer>
             </div>
         </article>
 
@@ -218,14 +214,6 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
     color: #4338ca;
 }
 
-.qr-sheet-footer {
-    margin-top: 2.5rem;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.5rem;
-    font-size: 0.75rem;
-    color: #94a3b8;
-}
-
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -299,13 +287,6 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
         font-size: 11pt;
         margin-top: 6mm;
         padding: 3mm 6mm;
-    }
-
-    .qr-sheet-footer {
-        margin-top: 0;
-        border-top: 1px solid #cbd5e1;
-        padding-top: 6mm;
-        font-size: 10pt;
     }
 }
 </style>

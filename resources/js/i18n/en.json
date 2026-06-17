@@ -436,5 +436,6 @@
     "dashboard.wallets.show.balance_stamps": "Stamps",
     "dashboard.wallets.index.balance_stamps": "Stamps",
     "dashboard.dashboard.today_stamps_earned": "Stamps earned today",
-    "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today"
+    "dashboard.dashboard.today_rewards_redeemed": "Rewards redeemed today",
+    "dashboard.store_qr.headline": "Open your rewards wallet in a single scan"
 }
