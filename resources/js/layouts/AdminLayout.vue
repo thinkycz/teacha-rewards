@@ -109,11 +109,11 @@ const userLabel = computed(() => {
     </a>
 
     <div
-        class="flex h-screen flex-col overflow-hidden bg-surface-bg font-sans antialiased md:flex-row"
+        class="flex h-screen flex-col overflow-hidden bg-surface-bg font-sans antialiased md:flex-row print:h-auto print:block print:overflow-visible"
     >
-        <!-- Desktop Persistent Sidebar -->
+        <!-- Desktop Persistent Sidebar (hidden when printing) -->
         <aside
-            class="sticky top-0 z-20 hidden h-screen w-64 flex-col border-r border-outline-glass bg-surface-container px-4 py-6 text-left md:flex"
+            class="no-print sticky top-0 z-20 hidden h-screen w-64 flex-col border-r border-outline-glass bg-surface-container px-4 py-6 text-left md:flex"
         >
             <div class="mb-8 px-2">
                 <Brand href="/dashboard" />
@@ -174,9 +174,9 @@ const userLabel = computed(() => {
             </div>
         </aside>
 
-        <!-- Mobile Top Navigation Header -->
+        <!-- Mobile Top Navigation Header (hidden when printing) -->
         <header
-            class="glass-panel sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-outline-glass px-4 shadow-sm md:hidden"
+            class="no-print glass-panel sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-outline-glass px-4 shadow-sm md:hidden"
         >
             <div class="flex items-center gap-2">
                 <Brand href="/dashboard" />
@@ -273,7 +273,7 @@ const userLabel = computed(() => {
 
         <main
             id="main-content"
-            class="flex-1 overflow-y-auto bg-surface-bg px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10"
+            class="flex-1 overflow-y-auto bg-surface-bg px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 print:overflow-visible print:bg-white print:px-0 print:py-0"
         >
             <FlashAlerts />
             <slot />

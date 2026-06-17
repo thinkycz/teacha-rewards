@@ -102,8 +102,12 @@ function rowSubtitle(tx: Transaction): string {
                             <h1 class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold">
                                 <span class="truncate">{{ wallet.first_name }}</span>
                                 <span
-                                    class="shrink-0 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-on-primary"
+                                    :class="wallet.type === 'stamps'
+                                        ? 'bg-teal-500/90 text-white'
+                                        : 'bg-amber-500/90 text-white'"
+                                    class="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                                 >
+                                    <span aria-hidden="true">{{ wallet.type === 'stamps' ? '\u{1F3F7}\u{FE0F}' : '\u{1F4B0}' }}</span>
                                     {{ t('dashboard.wallets.show.type_' + wallet.type) }}
                                 </span>
                             </h1>

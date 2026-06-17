@@ -10,12 +10,12 @@ const errorMessage = computed<string | null>(() => flashError.value);
 </script>
 
 <template>
-    <div v-if="successMessage" class="mb-4">
+    <div v-if="successMessage" class="no-print mb-4">
         <Alert variant="success">
             {{ successMessage }}
         </Alert>
     </div>
-    <div v-if="errorMessage" class="mb-4">
+    <div v-if="errorMessage" class="no-print mb-4">
         <Alert variant="error">
             {{ errorMessage }}
         </Alert>

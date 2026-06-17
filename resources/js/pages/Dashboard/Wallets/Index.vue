@@ -181,12 +181,17 @@ function formatAmount(value: string): string {
                                 <p class="truncate text-sm font-semibold text-on-surface">
                                     {{ wallet.first_name }}
                                 </p>
+                                <!-- Type badge: distinct color + icon per type so
+                                     the cashier can scan a mixed list at a glance.
+                                     Cashback = amber/gold (money metaphor),
+                                     Stamps = teal (collection metaphor). -->
                                 <span
                                     :class="wallet.type === 'stamps'
-                                        ? 'bg-primary-soft text-primary'
-                                        : 'bg-surface-container-high text-on-surface-variant'"
-                                    class="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+                                        ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200'
+                                        : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'"
+                                    class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                                 >
+                                    <span aria-hidden="true">{{ wallet.type === 'stamps' ? '\u{1F3F7}\u{FE0F}' : '\u{1F4B0}' }}</span>
                                     {{ t('dashboard.wallets.index.type_' + wallet.type) }}
                                 </span>
                                 <span
