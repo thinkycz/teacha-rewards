@@ -23,7 +23,7 @@ const { t } = useI18n();
 <template>
     <Link :href="href" class="flex items-center gap-2.5 font-medium select-none">
         <img
-            :src="'/favicon.svg'"
+            :src="'/favicon.svg?v=2'"
             :alt="app.name"
             class="h-9 w-9 shrink-0"
             aria-hidden="true"

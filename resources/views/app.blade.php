@@ -6,8 +6,9 @@
         <meta name="theme-color" content="#344c28" />
         <meta name="color-scheme" content="light" />
 
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+        <link rel="icon" type="image/png" href="/icons/icon-32.png?v=2" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png?v=2" />
         <link rel="manifest" href="/manifest.json" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
