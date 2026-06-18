@@ -30,28 +30,59 @@ const slots = computed(() =>
     })),
 );
 
-// Layout: aim for roughly a 2-row grid so the card looks like a
-// real loyalty card. Tuned for the business-card aspect ratio.
+// Layout + slot sizing.
+//
+// For a loyalty card, the user-facing constraint is that the
+// "X more stamps to Y" footer must always be visible. With a fixed
+// aspect ratio that breaks down past ~10 stamps (the slots grid
+// eats the available height and the footer overflows). So:
+//
+//   1. The card grows vertically with the number of rows
+//      (`min-height` keeps it from collapsing for very small
+//      counts).
+//   2. Each tier shrinks the slot side, the slots padding, and
+//      the emoji font-size so the card doesn't grow taller than
+//      it has to. The numbers were tuned by hand to look good
+//      across 1–36 stamps while keeping the stamp card "card-
+//      sized" and the footer always rendered below the grid.
 const layout = computed(() => {
     const n = Math.max(1, props.total);
-    if (n <= 5) return { cols: 'grid-cols-5', rows: 1 };
-    if (n <= 8) return { cols: 'grid-cols-4', rows: 2 };
-    if (n <= 10) return { cols: 'grid-cols-5', rows: 2 };
-    if (n <= 12) return { cols: 'grid-cols-4', rows: 3 };
-    if (n <= 15) return { cols: 'grid-cols-5', rows: 3 };
-    if (n <= 16) return { cols: 'grid-cols-4', rows: 4 };
-    if (n <= 20) return { cols: 'grid-cols-5', rows: 4 };
-    return { cols: 'grid-cols-6', rows: 4 };
+    if (n <= 5) {
+        return { cols: 5, rows: 1, slotSize: '3.5rem', emoji: 1.65, pad: 0.875 };
+    }
+    if (n <= 8) {
+        return { cols: 4, rows: 2, slotSize: '3rem', emoji: 1.4, pad: 0.7 };
+    }
+    if (n <= 10) {
+        return { cols: 5, rows: 2, slotSize: '2.75rem', emoji: 1.25, pad: 0.6 };
+    }
+    if (n <= 12) {
+        return { cols: 4, rows: 3, slotSize: '2.5rem', emoji: 1.1, pad: 0.5 };
+    }
+    if (n <= 15) {
+        return { cols: 5, rows: 3, slotSize: '2.2rem', emoji: 1.0, pad: 0.45 };
+    }
+    if (n <= 20) {
+        return { cols: 5, rows: 4, slotSize: '1.9rem', emoji: 0.85, pad: 0.4 };
+    }
+    if (n <= 25) {
+        return { cols: 5, rows: 5, slotSize: '1.65rem', emoji: 0.75, pad: 0.35 };
+    }
+    if (n <= 30) {
+        return { cols: 6, rows: 5, slotSize: '1.5rem', emoji: 0.7, pad: 0.3 };
+    }
+    return { cols: 6, rows: 6, slotSize: '1.4rem', emoji: 0.65, pad: 0.3 };
 });
 </script>
 
 <template>
-    <!-- Paper loyalty card. Real-paper aesthetic: cream surface with
-         a faint paper grain, business-card aspect ratio (85 x 55mm),
-         max-w 26rem. The same dimensions render on the public wallet
-         page and the admin wallet detail page; the admin grid wraps
-         it in the same `flex justify-center` it uses elsewhere so the
-         card sits centered in its column. -->
+    <!-- Paper loyalty card. Cream surface with a faint paper grain,
+         max-w 26rem. The card grows vertically past its baseline
+         aspect ratio for higher stamp counts so the "X more
+         stamps to Y" footer stays visible. The same dimensions
+         render on the public wallet page and the admin wallet
+         detail page; the admin grid wraps it in `flex justify-center`
+         so the card sits centered in its column. -->
     <article
         class="paper-card paper-card-full"
         role="group"
@@ -76,9 +107,11 @@ const layout = computed(() => {
 
         <div
             class="paper-card-slots"
-            :class="layout.cols"
+            :class="`grid-cols-${layout.cols}`"
             :style="{
                 gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
+                '--slot-pad': `${layout.pad}rem`,
+                '--slot-emoji': `${layout.emoji}rem`,
             }"
         >
             <div
@@ -164,13 +197,16 @@ const layout = computed(() => {
         );
 }
 
-/* Customer card: business-card aspect ratio (85mm x 55mm = 1.545:1),
-   centered with a max width so the page doesn't end up with a single
-   card stretched edge-to-edge on a wide viewport. */
+/* Customer card: business-card-style aesthetic (close to 85mm x
+   55mm for the common 5- or 10-stamp case), but the card grows
+   vertically past that point so the footer is always visible.
+   `min-height` keeps the card from collapsing for very small
+   stamp counts; the per-tier `slotSize` in the script keeps the
+   card from ballooning for high counts. */
 .paper-card-full {
     width: 100%;
     max-width: 26rem; /* 416px - close to a real card scaled up */
-    aspect-ratio: 85 / 55;
+    min-height: 14rem;
     display: flex;
     flex-direction: column;
 }
@@ -212,8 +248,8 @@ const layout = computed(() => {
 
 .paper-card-slots {
     display: grid;
-    gap: 0.5rem;
-    padding: 0.875rem;
+    gap: 0.4rem;
+    padding: var(--slot-pad, 0.875rem);
     flex: 1 1 auto;
     align-items: center;
     align-content: center;
@@ -222,8 +258,9 @@ const layout = computed(() => {
 }
 
 .paper-slot-full {
-    width: 100%;
+    width: var(--slot-size, 100%);
     aspect-ratio: 1;
+    place-self: center;
     border-radius: 9999px;
     display: flex;
     align-items: center;
@@ -252,10 +289,11 @@ const layout = computed(() => {
 }
 
 .slot-emoji {
-    /* Emoji glyph rendering is browser-dependent; nudge the size up
-       a hair on the larger customer tile so the matcha bowl fills
-       the disc rather than floating in the middle. */
-    font-size: 1.65rem;
+    /* Emoji glyph rendering is browser-dependent; the per-tier
+       `--slot-emoji` from the layout computed keeps the glyph
+       proportional to the disc size (1.65rem for the 1-5 stamp
+       card, ~0.65rem for the 30+ stamp case). */
+    font-size: var(--slot-emoji, 1.65rem);
     line-height: 1;
 }
 
