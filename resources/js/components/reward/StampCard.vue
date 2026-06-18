@@ -107,9 +107,10 @@ const layout = computed(() => {
 
         <div
             class="paper-card-slots"
-            :class="`grid-cols-${layout.cols}`"
             :style="{
+                gridTemplateColumns: `repeat(${layout.cols}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
+                '--slot-size': layout.slotSize,
                 '--slot-pad': `${layout.pad}rem`,
                 '--slot-emoji': `${layout.emoji}rem`,
             }"
