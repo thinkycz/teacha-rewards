@@ -8,7 +8,7 @@ use App\Models\RewardWallet;
 use Carbon\Carbon;
 
 \test('GET /dashboard returns 200 for a staff user', function (): void {
-    $user = \App\Models\User::factory()->staff()->create();
+    $user = App\Models\User::factory()->staff()->create();
 
     $response = $this->actingAs($user)->get('/dashboard');
 
@@ -16,7 +16,7 @@ use Carbon\Carbon;
 });
 
 \test('GET /dashboard returns 200 for an admin user', function (): void {
-    $user = \App\Models\User::factory()->admin()->create();
+    $user = App\Models\User::factory()->admin()->create();
 
     $response = $this->actingAs($user)->get('/dashboard');
 
@@ -31,7 +31,7 @@ use Carbon\Carbon;
 });
 
 \test('the dashboard controller counts active + disabled wallets and today totals correctly', function (): void {
-    $user = \App\Models\User::factory()->staff()->create();
+    $user = App\Models\User::factory()->staff()->create();
     RewardWallet::factory()->count(3)->create();
     RewardWallet::factory()->disabled()->count(2)->create();
 
@@ -77,10 +77,10 @@ use Carbon\Carbon;
 });
 
 \test('the dashboard controller caps recent transactions at 10', function (): void {
-    $user = \App\Models\User::factory()->staff()->create();
+    $user = App\Models\User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();
 
-    for ($i = 0; $i < 12; $i++) {
+    for ($i = 0; $i < 12; ++$i) {
         RewardTransaction::factory()->create([
             'reward_wallet_id' => $wallet->getKey(),
             'user_id' => $user->getKey(),

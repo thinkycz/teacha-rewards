@@ -12,7 +12,9 @@ const { t } = useI18n();
     <Head :title="t('pwa.offline.title')" />
 
     <div class="min-h-screen bg-cream-50 text-charcoal-900">
-        <header class="mx-auto flex max-w-md items-center justify-between px-6 py-6">
+        <header
+            class="mx-auto flex max-w-md items-center justify-between px-6 py-6"
+        >
             <Link :href="'/'">
                 <Brand class="text-2xl" />
             </Link>

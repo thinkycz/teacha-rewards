@@ -35,6 +35,7 @@ class RewardTransaction extends BaseModel
      * @use HasFactory<RewardTransactionFactory>
      */
     use HasFactory;
+
     /**
      * Base select query.
      *

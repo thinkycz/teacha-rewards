@@ -15,7 +15,7 @@ declare(strict_types=1);
 });
 
 \test('GET /offline returns 200 for guests and authenticated users alike', function (): void {
-    $user = \App\Models\User::factory()->staff()->create();
+    $user = App\Models\User::factory()->staff()->create();
 
     $guest = $this->get('/offline');
     $guest->assertOk();
@@ -25,7 +25,7 @@ declare(strict_types=1);
 });
 
 \test('GET /install returns 200 for guests and authenticated users alike', function (): void {
-    $user = \App\Models\User::factory()->staff()->create();
+    $user = App\Models\User::factory()->staff()->create();
 
     $guest = $this->get('/install');
     $guest->assertOk();

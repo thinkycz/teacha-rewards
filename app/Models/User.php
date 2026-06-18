@@ -22,6 +22,7 @@ class User extends BaseUser implements MustVerifyEmail
      * @use HasFactory<UserFactory>
      */
     use HasFactory;
+
     /**
      * Explicit mass-assignment allowlist.
      *

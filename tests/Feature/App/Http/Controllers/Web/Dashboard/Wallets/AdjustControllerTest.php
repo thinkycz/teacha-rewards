@@ -162,7 +162,6 @@ use App\Models\User;
     \expect($wallet->getStampsCount())->toBe(2);
 });
 
-
 \test('POST /wallets/{wallet}/adjust type=set overwrites the balance', function (): void {
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create([

@@ -75,7 +75,9 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
              sheet fills the A4 page (210 x 297mm) with proper margins,
              and the QR sits centered with generous whitespace so it
              scans reliably from a printed page. -->
-        <article class="qr-sheet surface-card mt-6 p-8 print:mt-0 print:border-0 print:shadow-none print:p-0">
+        <article
+            class="qr-sheet surface-card mt-6 p-8 print:mt-0 print:border-0 print:shadow-none print:p-0"
+        >
             <div class="qr-sheet-inner">
                 <header class="qr-sheet-header">
                     <p class="qr-sheet-store">
@@ -90,20 +92,18 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
                 </header>
 
                 <div class="qr-sheet-body">
-                    <div
-                        v-if="qrDataUrl"
-                        class="qr-sheet-frame"
-                    >
+                    <div v-if="qrDataUrl" class="qr-sheet-frame">
                         <img
                             :src="qrDataUrl"
-                            :alt="t('dashboard.store_qr.qr_alt', { url: wallet_url })"
+                            :alt="
+                                t('dashboard.store_qr.qr_alt', {
+                                    url: wallet_url,
+                                })
+                            "
                             class="qr-sheet-img"
-                        >
+                        />
                     </div>
-                    <div
-                        v-else
-                        class="qr-sheet-placeholder"
-                    />
+                    <div v-else class="qr-sheet-placeholder" />
 
                     <p class="qr-sheet-scan-prompt">
                         {{ t('dashboard.store_qr.scan_prompt') }}
@@ -215,8 +215,13 @@ const isAdmin = computed(() => auth.value.user?.role === 'admin');
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /*

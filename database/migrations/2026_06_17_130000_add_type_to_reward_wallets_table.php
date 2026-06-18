@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Thinkycz\LaravelCore\Support\Resolver;
 
-/**
+/*
  * Add the per-wallet `type` column.
  *
  * Each wallet is created under exactly one program (cashback or

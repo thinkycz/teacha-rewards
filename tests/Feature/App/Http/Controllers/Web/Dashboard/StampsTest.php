@@ -77,14 +77,14 @@ use App\Models\User;
     Setting::query()->updateOrCreate(['key' => 'stamps_per_reward'], ['value' => '12']);
     Setting::query()->updateOrCreate(['key' => 'stamps_per_reward_label'], ['value' => 'Free matcha']);
 
-    $service = app(\App\Services\Settings\SettingsService::class);
+    $service = \app(App\Services\Settings\SettingsService::class);
     \expect($service->getStampsPerReward())->toBe(12);
     \expect($service->getStampsRewardLabel())->toBe('Free matcha');
 });
 
 \test('SettingsService::getProgramMode defaults to cashback and reads stamps', function (): void {
     Setting::query()->where('key', 'program_mode')->delete();
-    $service = app(\App\Services\Settings\SettingsService::class);
+    $service = \app(App\Services\Settings\SettingsService::class);
     \expect($service->getProgramMode())->toBe('cashback');
 
     Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
@@ -202,7 +202,7 @@ use App\Models\User;
 \test('new wallet created in stamps mode carries type=stamps, even after program_mode flips to cashback', function (): void {
     Setting::query()->updateOrCreate(['key' => 'program_mode'], ['value' => 'stamps']);
 
-    $service = app(\App\Services\Reward\RewardWalletService::class);
+    $service = \app(App\Services\Reward\RewardWalletService::class);
     $wallet = $service->findOrCreateByPhone('+420 601 111 222', 'Anička');
 
     \expect($wallet->getType()->value)->toBe('stamps');

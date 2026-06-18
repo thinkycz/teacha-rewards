@@ -102,7 +102,7 @@ class AgentRunService
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if (! $run instanceof AgentRun) {
+        if (!$run instanceof AgentRun) {
             return null;
         }
 

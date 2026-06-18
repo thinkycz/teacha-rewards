@@ -15,6 +15,8 @@ withDefaults(
         invalid?: boolean;
         describedBy?: string;
         required?: boolean;
+        maxlength?: number;
+        pattern?: string;
     }>(),
     {
         id: undefined,
@@ -22,6 +24,8 @@ withDefaults(
         invalid: false,
         describedBy: undefined,
         required: true,
+        maxlength: undefined,
+        pattern: undefined,
     },
 );
 </script>
@@ -37,5 +41,7 @@ withDefaults(
         :invalid="invalid"
         :described-by="describedBy"
         :required="required"
+        :maxlength="maxlength"
+        :pattern="pattern"
     />
 </template>

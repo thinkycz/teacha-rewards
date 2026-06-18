@@ -19,7 +19,9 @@ defineProps<{
     >
         <div class="relative flex items-center justify-between gap-4">
             <div class="min-w-0">
-                <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                <p
+                    class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70"
+                >
                     Teacha Rewards
                 </p>
                 <p
@@ -28,14 +30,13 @@ defineProps<{
                 >
                     {{ wallet.first_name }}
                 </p>
-                <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
+                <p
+                    class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80"
+                >
                     {{ wallet.wallet_number }}
                 </p>
             </div>
-            <div
-                v-if="$slots.default"
-                class="shrink-0 text-right"
-            >
+            <div v-if="$slots.default" class="shrink-0 text-right">
                 <slot />
             </div>
         </div>

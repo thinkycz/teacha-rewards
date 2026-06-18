@@ -58,11 +58,11 @@ use Brick\Math\BigDecimal;
 
 \test('logPurchase rejects a zero purchase', function (): void {
     $this->service->logPurchase($this->wallet, BigDecimal::of('0'), $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('logPurchase rejects a negative purchase', function (): void {
     $this->service->logPurchase($this->wallet, BigDecimal::of('-1'), $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('logPurchase updates last_used_at', function (): void {
     \expect($this->wallet->getLastUsedAt())->toBeNull();
@@ -88,15 +88,15 @@ use Brick\Math\BigDecimal;
     $this->service->logPurchase($this->wallet, BigDecimal::of('100'), $this->staff);
 
     $this->service->redeem($this->wallet, BigDecimal::of('11'), $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('redeem rejects zero', function (): void {
     $this->service->redeem($this->wallet, BigDecimal::of('0'), $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('redeem rejects a negative amount', function (): void {
     $this->service->redeem($this->wallet, BigDecimal::of('-1'), $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('redeem exactly the full balance is allowed', function (): void {
     $this->service->logPurchase($this->wallet, BigDecimal::of('100'), $this->staff);
@@ -115,11 +115,11 @@ use Brick\Math\BigDecimal;
 
 \test('manualAdd rejects an empty note', function (): void {
     $this->service->manualAdd($this->wallet, BigDecimal::of('5'), '   ', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('manualAdd rejects zero and negative amounts', function (): void {
     $this->service->manualAdd($this->wallet, BigDecimal::of('0'), 'note', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('manualSubtract debits the wallet and requires a note', function (): void {
     $this->service->manualAdd($this->wallet, BigDecimal::of('20'), 'Top-up', $this->staff);
@@ -133,11 +133,11 @@ use Brick\Math\BigDecimal;
 
 \test('manualSubtract rejects going below zero', function (): void {
     $this->service->manualSubtract($this->wallet, BigDecimal::of('1'), 'oops', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('manualSubtract rejects an empty note', function (): void {
     $this->service->manualSubtract($this->wallet, BigDecimal::of('1'), '', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('manualSet replaces the balance exactly and requires a note', function (): void {
     $this->service->manualAdd($this->wallet, BigDecimal::of('50'), 'Top-up', $this->staff);
@@ -159,11 +159,11 @@ use Brick\Math\BigDecimal;
 
 \test('manualSet to a negative value is rejected', function (): void {
     $this->service->manualSet($this->wallet, BigDecimal::of('-1'), 'note', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('manualSet rejects an empty note', function (): void {
     $this->service->manualSet($this->wallet, BigDecimal::of('0'), '', $this->staff);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(Illuminate\Validation\ValidationException::class);
 
 \test('every balance change creates exactly one transaction row', function (): void {
     $countBefore = RewardTransaction::query()->count();
@@ -183,7 +183,7 @@ use Brick\Math\BigDecimal;
     try {
         $this->service->redeem($this->wallet, BigDecimal::of('100'), $this->staff);
         \expect(true)->toBeFalse('Redeem should have thrown.');
-    } catch (\Illuminate\Validation\ValidationException) {
+    } catch (Illuminate\Validation\ValidationException) {
         \expect($this->wallet->fresh()->getRewardsBalance())->toBe('0.50');
     }
 });

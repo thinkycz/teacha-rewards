@@ -15,10 +15,10 @@ use App\Http\Controllers\Web\Dashboard\DisableController;
 use App\Http\Controllers\Web\Dashboard\EnableController;
 use App\Http\Controllers\Web\Dashboard\LogPurchaseController;
 use App\Http\Controllers\Web\Dashboard\RedeemController;
-use App\Http\Controllers\Web\Dashboard\StampEarnController;
-use App\Http\Controllers\Web\Dashboard\StampRedeemController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsEditController;
 use App\Http\Controllers\Web\Dashboard\Settings\SettingsUpdateController;
+use App\Http\Controllers\Web\Dashboard\StampEarnController;
+use App\Http\Controllers\Web\Dashboard\StampRedeemController;
 use App\Http\Controllers\Web\Dashboard\StoreQrPrintController;
 use App\Http\Controllers\Web\Dashboard\TransactionIndexController;
 use App\Http\Controllers\Web\Dashboard\WalletIndexController;
@@ -98,7 +98,7 @@ Resolver::resolveRouteRegistrar()
 // the `staff` role guard (admin or staff), with `admin` re-applied
 // to /settings for the program + store settings form.
 Resolver::resolveRouteRegistrar()
-    ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'staff'])
+    ->middleware(['web', App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'staff'])
     ->name('dashboard.')
     ->group(static function (Router $router): void {
         $router->get('dashboard', DashboardController::class)->name('index');
@@ -117,7 +117,7 @@ Resolver::resolveRouteRegistrar()
 
 // Admin-only sub-tree: program + store settings.
 Resolver::resolveRouteRegistrar()
-    ->middleware(['web', \App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'admin'])
+    ->middleware(['web', App\Http\Middleware\HandleInertiaRequests::class, EnsureInertiaUserIsAuthenticated::class, 'admin'])
     ->name('dashboard.settings.')
     ->group(static function (Router $router): void {
         $router->get('settings', SettingsEditController::class)->name('edit');

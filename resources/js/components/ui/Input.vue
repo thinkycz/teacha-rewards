@@ -15,6 +15,8 @@ withDefaults(
         defaultValue?: string;
         invalid?: boolean;
         describedBy?: string;
+        maxlength?: number | string;
+        pattern?: string;
     }>(),
     {
         id: undefined,
@@ -27,6 +29,8 @@ withDefaults(
         defaultValue: undefined,
         invalid: false,
         describedBy: undefined,
+        maxlength: undefined,
+        pattern: undefined,
     },
 );
 </script>
@@ -40,6 +44,8 @@ withDefaults(
         :autocomplete="$props.autocomplete"
         :placeholder="$props.placeholder"
         :required="$props.required"
+        :maxlength="$props.maxlength"
+        :pattern="$props.pattern"
         :aria-invalid="$props.invalid ? 'true' : undefined"
         :aria-describedby="$props.describedBy"
         :class="

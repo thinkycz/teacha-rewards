@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Services\Reward\RewardWalletService;
 use App\Validation\Web\Wallet\StoreWalletValidity;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -59,14 +60,19 @@ class WalletStoreController
         /** @var RewardWalletService $service */
         $service = Resolver::resolve(RewardWalletService::class);
 
-        // `findOrCreateByPhone` normalizes the phone (E.164) and
-        // applies the first_name-only-if-empty rule. We catch the
-        // `NumberParseException` so the throttle token isn't consumed
-        // for an obviously invalid phone the validity rules missed.
+        // `findOrCreateByPhone` normalizes the phone (E.164), locks
+        // the row, and applies the first_name-only-if-empty rule.
+        // `NumberParseException` fires for a phone the validity
+        // rules missed; `QueryException` is the final safety net if
+        // the unique index on `phone_normalized` ever does fire
+        // (the service wraps the lookup in `DB::transaction` +
+        // `lockForUpdate` to make this extremely unlikely).
         try {
             $wallet = $service->findOrCreateByPhone($phone, $firstName);
         } catch (NumberParseException) {
             Thrower::default()->message('phone', \__('reward.invalid_phone'))->throw();
+        } catch (QueryException) {
+            Thrower::default()->message('phone', \__('reward.phone_in_use'))->throw();
         }
 
         $wasExisting = \trim($wallet->getFirstName()) !== '' && $wallet->getFirstName() !== \trim($firstName);
@@ -81,4 +87,3 @@ class WalletStoreController
         return \redirect()->route('wallet.show', ['token' => $wallet->getPublicToken()]);
     }
 }
-

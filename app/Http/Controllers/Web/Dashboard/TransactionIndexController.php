@@ -8,6 +8,7 @@ use App\Enums\TransactionTypeEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
 use App\Services\Settings\SettingsService;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -47,11 +48,13 @@ class TransactionIndexController
             RewardTransaction::scopeSearch($query, $search);
         }
 
-        $transactions = $query->orderByDesc('created_at')->limit(200)->get();
-
-        return Inertia::render('Dashboard/Transactions/Index', [
-            'transactions' => $transactions->map(static function (RewardTransaction $tx): array {
+        $transactions = $query
+            ->orderByDesc('created_at')
+            ->paginate(25)
+            ->withQueryString()
+            ->through(static function (RewardTransaction $tx): array {
                 $createdAt = $tx->getAttribute('created_at');
+
                 return [
                     'id' => $tx->getKey(),
                     'type' => $tx->getType()->value,
@@ -67,9 +70,12 @@ class TransactionIndexController
                     'wallet_number' => $tx->wallet?->getWalletNumber(),
                     'wallet_public_token' => $tx->wallet?->getPublicToken(),
                     'staff_name' => $tx->user?->getName(),
-                    'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
+                    'created_at' => $createdAt instanceof DateTimeInterface ? $createdAt->format(DateTimeInterface::ATOM) : null,
                 ];
-            })->all(),
+            });
+
+        return Inertia::render('Dashboard/Transactions/Index', [
+            'transactions' => $transactions,
             'filters' => [
                 'q' => $search,
                 'type' => $type,

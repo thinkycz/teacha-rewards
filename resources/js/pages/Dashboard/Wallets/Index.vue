@@ -7,6 +7,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Button from '@/components/ui/Button.vue';
+import Pagination from '@/components/ui/Pagination.vue';
 
 useI18n();
 const { t } = useI18n();
@@ -26,6 +27,27 @@ interface Wallet {
     last_used_at: string | null;
 }
 
+/**
+ * Laravel's `LengthAwarePaginator::toArray()` shape — Inertia
+ * serialises the paginator as a flat object, not the
+ * `{data, links, meta}` envelope, so we mirror it here.
+ */
+interface WalletPaginator {
+    current_page: number;
+    data: Wallet[];
+    first_page_url: string | null;
+    from: number | null;
+    last_page: number;
+    last_page_url: string | null;
+    links: Array<{ url: string | null; label: string; page: number | null; active: boolean }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number | null;
+    total: number;
+}
+
 interface ProgramConfig {
     stamps_per_reward: number;
     stamps_per_reward_label: string;
@@ -39,7 +61,7 @@ interface Filters {
 }
 
 const props = defineProps<{
-    wallets: Wallet[];
+    wallets: WalletPaginator;
     filters: Filters;
     program: ProgramConfig;
 }>();
@@ -49,6 +71,11 @@ const status = ref<Filters['status']>(props.filters.status);
 const sort = ref<Filters['sort']>(props.filters.sort);
 
 function applyFilters(): void {
+    // Filters always reset to page 1 (we deliberately omit `page`
+    // here so Laravel lands on page 1 of the new filter set). The
+    // page links that Laravel pre-builds already include the
+    // current `?q=…&status=…&sort=…` via `withQueryString()`, so
+    // clicking a page link preserves the filters.
     const params: Record<string, string> = {};
     if (search.value.trim() !== '') {
         params['q'] = search.value.trim();
@@ -75,7 +102,10 @@ function clearFilters(): void {
 }
 
 const hasActiveFilters = computed(
-    () => search.value.trim() !== '' || status.value !== 'all' || sort.value !== '',
+    () =>
+        search.value.trim() !== '' ||
+        status.value !== 'all' ||
+        sort.value !== '',
 );
 
 function formatAmount(value: string): string {
@@ -111,7 +141,9 @@ function formatAmount(value: string): string {
                             v-model="search"
                             type="search"
                             name="q"
-                            :placeholder="t('dashboard.wallets.index.search_placeholder')"
+                            :placeholder="
+                                t('dashboard.wallets.index.search_placeholder')
+                            "
                             class="pl-9"
                         />
                     </div>
@@ -119,32 +151,59 @@ function formatAmount(value: string): string {
                         v-model="status"
                         name="status"
                         :options="[
-                            { value: 'all', label: t('dashboard.wallets.index.status_all') },
-                            { value: 'active', label: t('dashboard.wallets.index.status_active') },
-                            { value: 'disabled', label: t('dashboard.wallets.index.status_disabled') },
+                            {
+                                value: 'all',
+                                label: t('dashboard.wallets.index.status_all'),
+                            },
+                            {
+                                value: 'active',
+                                label: t(
+                                    'dashboard.wallets.index.status_active',
+                                ),
+                            },
+                            {
+                                value: 'disabled',
+                                label: t(
+                                    'dashboard.wallets.index.status_disabled',
+                                ),
+                            },
                         ]"
                     />
                     <Select
                         v-model="sort"
                         name="sort"
                         :options="[
-                            { value: '', label: t('dashboard.wallets.index.sort_recent') },
-                            { value: 'earned', label: t('dashboard.wallets.index.sort_earned') },
-                            { value: 'redeemed', label: t('dashboard.wallets.index.sort_redeemed') },
-                            { value: 'balance', label: t('dashboard.wallets.index.sort_balance') },
+                            {
+                                value: '',
+                                label: t('dashboard.wallets.index.sort_recent'),
+                            },
+                            {
+                                value: 'earned',
+                                label: t('dashboard.wallets.index.sort_earned'),
+                            },
+                            {
+                                value: 'redeemed',
+                                label: t(
+                                    'dashboard.wallets.index.sort_redeemed',
+                                ),
+                            },
+                            {
+                                value: 'balance',
+                                label: t(
+                                    'dashboard.wallets.index.sort_balance',
+                                ),
+                            },
                         ]"
                     />
-                    <Button
-                        type="submit"
-                        class="justify-center"
-                    >
-                        {{ t('dashboard.wallets.index.search_placeholder').split(' ')[0] }}
+                    <Button type="submit" class="justify-center">
+                        {{
+                            t(
+                                'dashboard.wallets.index.search_placeholder',
+                            ).split(' ')[0]
+                        }}
                     </Button>
                 </form>
-                <div
-                    v-if="hasActiveFilters"
-                    class="mt-3 flex justify-end"
-                >
+                <div v-if="hasActiveFilters" class="mt-3 flex justify-end">
                     <button
                         type="button"
                         class="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant transition hover:text-on-surface"
@@ -156,17 +215,16 @@ function formatAmount(value: string): string {
                 </div>
             </section>
 
-            <section v-if="wallets.length === 0">
-                <div class="surface-card p-6 text-center text-sm text-on-surface-variant">
+            <section v-if="wallets.data.length === 0">
+                <div
+                    class="surface-card p-6 text-center text-sm text-on-surface-variant"
+                >
                     {{ t('dashboard.wallets.index.empty') }}
                 </div>
             </section>
 
             <ul v-else class="space-y-2">
-                <li
-                    v-for="wallet in wallets"
-                    :key="wallet.id"
-                >
+                <li v-for="wallet in wallets.data" :key="wallet.id">
                     <Link
                         :href="`/wallets/${wallet.id}`"
                         class="group flex items-center gap-3 surface-card p-4 transition hover:border-primary"
@@ -178,7 +236,9 @@ function formatAmount(value: string): string {
                         </div>
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-2">
-                                <p class="truncate text-sm font-semibold text-on-surface">
+                                <p
+                                    class="truncate text-sm font-semibold text-on-surface"
+                                >
                                     {{ wallet.first_name }}
                                 </p>
                                 <!-- Type badge: distinct color + icon per type so
@@ -186,13 +246,24 @@ function formatAmount(value: string): string {
                                      Cashback = amber/gold (money metaphor),
                                      Stamps = teal (collection metaphor). -->
                                 <span
-                                    :class="wallet.type === 'stamps'
-                                        ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200'
-                                        : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'"
+                                    :class="
+                                        wallet.type === 'stamps'
+                                            ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200'
+                                            : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+                                    "
                                     class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                                 >
-                                    <span aria-hidden="true">{{ wallet.type === 'stamps' ? '\u{1F3F7}\u{FE0F}' : '\u{1F4B0}' }}</span>
-                                    {{ t('dashboard.wallets.index.type_' + wallet.type) }}
+                                    <span aria-hidden="true">{{
+                                        wallet.type === 'stamps'
+                                            ? '\u{1F3F7}\u{FE0F}'
+                                            : '\u{1F4B0}'
+                                    }}</span>
+                                    {{
+                                        t(
+                                            'dashboard.wallets.index.type_' +
+                                                wallet.type,
+                                        )
+                                    }}
                                 </span>
                                 <span
                                     v-if="wallet.status === 'disabled'"
@@ -201,7 +272,9 @@ function formatAmount(value: string): string {
                                     {{ t('dashboard.status.disabled') }}
                                 </span>
                             </div>
-                            <p class="truncate font-mono text-xs text-on-surface-variant">
+                            <p
+                                class="truncate font-mono text-xs text-on-surface-variant"
+                            >
                                 {{ wallet.wallet_number }} · {{ wallet.phone }}
                             </p>
                         </div>
@@ -210,15 +283,25 @@ function formatAmount(value: string): string {
                                 v-if="wallet.type === 'stamps'"
                                 class="text-sm font-bold text-on-surface tabular-nums"
                             >
-                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
+                                {{ wallet.stamps_count }} /
+                                {{ program.stamps_per_reward }}
                             </p>
                             <p
                                 v-else
                                 class="text-sm font-bold text-on-surface tabular-nums"
-                                v-html="formatAmount(wallet.rewards_balance) + '&nbsp;Kč'"
+                                v-html="
+                                    formatAmount(wallet.rewards_balance) +
+                                    '&nbsp;Kč'
+                                "
                             />
                             <p class="label-eyebrow">
-                                {{ wallet.type === 'stamps' ? t('dashboard.wallets.index.balance_stamps') : t('dashboard.wallets.index.balance') }}
+                                {{
+                                    wallet.type === 'stamps'
+                                        ? t(
+                                              'dashboard.wallets.index.balance_stamps',
+                                          )
+                                        : t('dashboard.wallets.index.balance')
+                                }}
                             </p>
                         </div>
                         <ChevronRight
@@ -228,6 +311,11 @@ function formatAmount(value: string): string {
                     </Link>
                 </li>
             </ul>
+
+            <Pagination
+                v-if="wallets.data.length > 0"
+                :paginator="wallets"
+            />
         </div>
     </AdminLayout>
 </template>

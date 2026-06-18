@@ -11,16 +11,14 @@
         "no": "No",
         "not_set": "Not set",
         "open": "Open",
+        "pagination": {
+            "label": "Pagination",
+            "previous": "Previous",
+            "next": "Next",
+            "showing": "Showing {from}–{to} of {total}"
+        },
         "today": "Today",
-        "weekdays": [
-            "Mon",
-            "Tue",
-            "Wed",
-            "Thu",
-            "Fri",
-            "Sat",
-            "Sun"
-        ],
+        "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         "yes": "Yes",
         "stamps": "stamps"
     },
@@ -329,10 +327,10 @@
     "marketing": {
         "tagline": "Teacha Rewards",
         "headline": "Get rewarded for every drink.",
-        "subheadline": "Earn rewards on every drink. Open your wallet in under thirty seconds.",
+        "subheadline": "Create a loyalty card in thirty seconds and earn a reward for every drink",
         "how_it_works": "How it works",
-        "step_1": "Open your wallet with your phone number and first name.",
-        "step_2": "Show the QR code at the till to earn cashback on every purchase.",
+        "step_1": "Create a loyalty card with your phone number and first name.",
+        "step_2": "Show the QR code at the till to earn a stamp on every purchase.",
         "step_3": "Redeem your rewards balance as a discount whenever you like.",
         "cta": "Create or open my rewards wallet",
         "privacy": "No password, no email. Your wallet is identified only by your phone number.",

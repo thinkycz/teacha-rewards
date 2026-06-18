@@ -59,7 +59,9 @@ const balanceFormatted = computed(() =>
 function rowSubtitle(tx: Transaction): string {
     const parts: string[] = [];
     if (tx.purchase_amount) {
-        parts.push(t('wallet.transactions.purchase', { amount: tx.purchase_amount }));
+        parts.push(
+            t('wallet.transactions.purchase', { amount: tx.purchase_amount }),
+        );
     }
     const date = formatDateTime(tx.created_at);
     if (date !== '') {
@@ -73,7 +75,9 @@ function rowSubtitle(tx: Transaction): string {
     <Head :title="t('wallet.show.title', { name: wallet.first_name })" />
 
     <div class="min-h-screen bg-surface-bg text-on-surface">
-        <header class="mx-auto flex max-w-md items-center justify-between px-6 py-6">
+        <header
+            class="mx-auto flex max-w-md items-center justify-between px-6 py-6"
+        >
             <Link :href="'/'">
                 <Brand class="text-2xl" />
             </Link>
@@ -96,34 +100,62 @@ function rowSubtitle(tx: Transaction): string {
                 <header class="bg-primary p-5 text-on-primary">
                     <div class="flex items-start justify-between gap-4">
                         <div class="min-w-0">
-                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                            <p
+                                class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70"
+                            >
                                 Teacha Rewards
                             </p>
-                            <h1 class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold">
-                                <span class="truncate">{{ wallet.first_name }}</span>
+                            <h1
+                                class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold"
+                            >
+                                <span class="truncate">{{
+                                    wallet.first_name
+                                }}</span>
                                 <span
-                                    :class="wallet.type === 'stamps'
-                                        ? 'bg-teal-500/90 text-white'
-                                        : 'bg-amber-500/90 text-white'"
+                                    :class="
+                                        wallet.type === 'stamps'
+                                            ? 'bg-teal-500/90 text-white'
+                                            : 'bg-amber-500/90 text-white'
+                                    "
                                     class="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                                 >
-                                    <span aria-hidden="true">{{ wallet.type === 'stamps' ? '\u{1F3F7}\u{FE0F}' : '\u{1F4B0}' }}</span>
-                                    {{ t('dashboard.wallets.show.type_' + wallet.type) }}
+                                    <span aria-hidden="true">{{
+                                        wallet.type === 'stamps'
+                                            ? '\u{1F3F7}\u{FE0F}'
+                                            : '\u{1F4B0}'
+                                    }}</span>
+                                    {{
+                                        t(
+                                            'dashboard.wallets.show.type_' +
+                                                wallet.type,
+                                        )
+                                    }}
                                 </span>
                             </h1>
-                            <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
+                            <p
+                                class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80"
+                            >
                                 {{ wallet.wallet_number }}
                             </p>
                         </div>
                         <div class="shrink-0 text-right">
-                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
-                                {{ isStamps ? t('dashboard.wallets.show.balance_stamps') : t('wallet.show.balance') }}
+                            <p
+                                class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70"
+                            >
+                                {{
+                                    isStamps
+                                        ? t(
+                                              'dashboard.wallets.show.balance_stamps',
+                                          )
+                                        : t('wallet.show.balance')
+                                }}
                             </p>
                             <p
                                 v-if="isStamps"
                                 class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
                             >
-                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
+                                {{ wallet.stamps_count }} /
+                                {{ program.stamps_per_reward }}
                             </p>
                             <p
                                 v-else
@@ -139,10 +171,7 @@ function rowSubtitle(tx: Transaction): string {
             <!-- Paper loyalty card. Real-paper aesthetic: cream
                  surface, business-card aspect ratio, sits as its own
                  hero element. Only visible in stamps mode. -->
-            <section
-                v-if="isStamps"
-                class="flex justify-center"
-            >
+            <section v-if="isStamps" class="flex justify-center">
                 <StampCard
                     :stamps="wallet.stamps_count"
                     :total="program.stamps_per_reward"
@@ -160,7 +189,9 @@ function rowSubtitle(tx: Transaction): string {
                         :height="80"
                         :font-size="14"
                     />
-                    <p class="mt-3 text-center font-mono text-[11px] text-on-surface-variant">
+                    <p
+                        class="mt-3 text-center font-mono text-[11px] text-on-surface-variant"
+                    >
                         {{ wallet.wallet_number }}
                     </p>
                 </div>
@@ -171,7 +202,9 @@ function rowSubtitle(tx: Transaction): string {
                 v-if="recent_transactions.length > 0"
                 class="surface-card overflow-hidden"
             >
-                <header class="flex items-center justify-between border-b border-outline-glass px-5 py-3">
+                <header
+                    class="flex items-center justify-between border-b border-outline-glass px-5 py-3"
+                >
                     <h2 class="label-eyebrow">
                         {{ t('wallet.show.recent_heading') }}
                     </h2>
@@ -191,14 +224,26 @@ function rowSubtitle(tx: Transaction): string {
                         :class="{ 'border-t border-outline-glass': idx > 0 }"
                     >
                         <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-semibold text-on-surface">
+                            <p
+                                class="truncate text-sm font-semibold text-on-surface"
+                            >
                                 {{ typeLabel(tx.type) }}
                             </p>
                             <p
-                                v-if="stampsEqRewards(tx, program.stamps_per_reward_label)"
+                                v-if="
+                                    stampsEqRewards(
+                                        tx,
+                                        program.stamps_per_reward_label,
+                                    )
+                                "
                                 class="mt-0.5 truncate text-[11px] text-on-surface-variant"
                             >
-                                {{ stampsEqRewards(tx, program.stamps_per_reward_label) }}
+                                {{
+                                    stampsEqRewards(
+                                        tx,
+                                        program.stamps_per_reward_label,
+                                    )
+                                }}
                             </p>
                             <p
                                 v-if="rowSubtitle(tx)"
@@ -209,9 +254,19 @@ function rowSubtitle(tx: Transaction): string {
                         </div>
                         <p
                             class="shrink-0 text-sm font-bold tabular-nums"
-                            :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
+                            :class="
+                                Number(tx.amount) >= 0
+                                    ? 'text-success'
+                                    : 'text-error-red'
+                            "
                         >
-                            {{ formatAmount(tx, wallet.type, program.stamps_per_reward) }}
+                            {{
+                                formatAmount(
+                                    tx,
+                                    wallet.type,
+                                    program.stamps_per_reward,
+                                )
+                            }}
                         </p>
                     </li>
                 </ul>

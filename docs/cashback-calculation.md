@@ -17,20 +17,19 @@ cashback = purchaseAmount * cashbackRate / 100
   the store's currency. Always a positive `BigDecimal`. Stored as
   `purchase_amount` on the transaction row.
 - `cashbackRate` — the current program rate, expressed as a percentage
-  (10 = 10%). Sourced from the `cashback_rate` setting. Default is
-  10.
+  (10 = 10%). Sourced from the `cashback_rate` setting. Default is 10.
 - The result is rounded to **2 decimal places** using
   `Brick\Math\RoundingMode::HalfUp`. 1.005 → 1.01; 1.004 → 1.00.
 
 ## Examples
 
-| Purchase (Kč) | Rate | Cashback (Kč) | Why                                   |
-| ------------- | ---- | ------------- | ------------------------------------- |
-| 50.00         | 10%  | 5.00          | 50 × 10 / 100                         |
-| 33.33         | 10%  | 3.33          | 33.33 × 10 / 100 = 3.333 → 3.33       |
-| 33.36         | 10%  | 3.34          | 33.36 × 10 / 100 = 3.336 → 3.34       |
-| 200.00        | 25%  | 50.00         | with a custom rate from settings      |
-| 0.01          | 10%  | 0.00          | 0.01 × 10 / 100 = 0.001 → 0.00        |
+| Purchase (Kč) | Rate | Cashback (Kč) | Why                              |
+| ------------- | ---- | ------------- | -------------------------------- |
+| 50.00         | 10%  | 5.00          | 50 × 10 / 100                    |
+| 33.33         | 10%  | 3.33          | 33.33 × 10 / 100 = 3.333 → 3.33  |
+| 33.36         | 10%  | 3.34          | 33.36 × 10 / 100 = 3.336 → 3.34  |
+| 200.00        | 25%  | 50.00         | with a custom rate from settings |
+| 0.01          | 10%  | 0.00          | 0.01 × 10 / 100 = 0.001 → 0.00   |
 
 > Note: a 0.01 Kč purchase at a 10% rate credits 0 Kč of rewards.
 > The minimum purchase to credit any rewards is 1.00 Kč at 10%
@@ -41,13 +40,13 @@ cashback = purchaseAmount * cashbackRate / 100
 Each `purchase_cashback` transaction row carries the inputs as well
 as the result, so the ledger is fully self-describing:
 
-| Column          | Meaning                                                |
-| --------------- | ------------------------------------------------------ |
-| `purchase_amount` | The amount the customer paid                         |
-| `cashback_rate`   | The rate at the moment of purchase (snapshot)        |
-| `amount`          | The cashback value, signed (+ for credits, − for debits) |
-| `balance_before`  | The wallet balance before the credit                 |
-| `balance_after`   | The wallet balance after the credit                  |
+| Column            | Meaning                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| `purchase_amount` | The amount the customer paid                                                                          |
+| `cashback_rate`   | The rate at the moment of purchase (snapshot)                                                         |
+| `amount`          | The cashback value, signed (+ for credits, − for debits)                                              |
+| `balance_before`  | The wallet balance before the credit                                                                  |
+| `balance_after`   | The wallet balance after the credit                                                                   |
 | `cashback_rate`   | Captures the rate at the time so historical redemptions / rate changes don't rewrite old transactions |
 
 Changing the `cashback_rate` setting only affects **future** purchases.

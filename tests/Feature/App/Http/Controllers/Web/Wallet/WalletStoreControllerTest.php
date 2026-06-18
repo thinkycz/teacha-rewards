@@ -50,3 +50,48 @@ use App\Services\Reward\RewardWalletService;
     $response->assertStatus(422);
     $response->assertJsonPath('props.errors.first_name.0', 'The first name field is required.');
 });
+
+\test('POST /wallet stores the phone in the standardized international form (no prefix)', function (): void {
+    $this->post('/wallet', [
+        'phone' => '730969399',
+        'first_name' => 'Anička',
+    ]);
+
+    $wallet = RewardWallet::query()->where('first_name', 'Anička')->first();
+    \expect($wallet)->not->toBeNull();
+    \expect($wallet->getPhone())->toBe('+420 730 969 399');
+    \expect($wallet->getPhoneNormalized())->toBe('+420730969399');
+});
+
+\test('POST /wallet stores the phone in the standardized international form (with prefix, no spaces)', function (): void {
+    $this->post('/wallet', [
+        'phone' => '+420730969399',
+        'first_name' => 'Anička',
+    ]);
+
+    $wallet = RewardWallet::query()->where('first_name', 'Anička')->first();
+    \expect($wallet)->not->toBeNull();
+    \expect($wallet->getPhone())->toBe('+420 730 969 399');
+    \expect($wallet->getPhoneNormalized())->toBe('+420730969399');
+});
+
+\test('POST /wallet with a Slovak number creates a wallet under the +421 country code', function (): void {
+    $this->post('/wallet', [
+        'phone' => '+421 911 123 456',
+        'first_name' => 'Slovák',
+    ]);
+
+    $wallet = RewardWallet::query()->where('first_name', 'Slovák')->first();
+    \expect($wallet)->not->toBeNull();
+    \expect($wallet->getPhone())->toBe('+421 911 123 456');
+    \expect($wallet->getPhoneNormalized())->toBe('+421911123456');
+});
+
+\test('POST /wallet with varied input formats for the same number reuses the same wallet', function (): void {
+    $this->post('/wallet', ['phone' => '730 969 399', 'first_name' => 'Anička']);
+    $this->post('/wallet', ['phone' => '+420730969399', 'first_name' => 'Anička']);
+    $this->post('/wallet', ['phone' => '00420 730 969 399', 'first_name' => 'Anička']);
+
+    \expect(RewardWallet::query()->count())->toBe(1);
+    \expect(RewardWallet::query()->first()->getPhone())->toBe('+420 730 969 399');
+});

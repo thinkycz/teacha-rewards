@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button.vue';
 import FieldError from '@/components/ui/FieldError.vue';
 import Input from '@/components/ui/Input.vue';
 import Label from '@/components/ui/Label.vue';
+import PhoneInput from '@/components/reward/PhoneInput.vue';
 import { fieldError } from '@/composables/useFieldError';
 
 useI18n();
@@ -22,16 +23,14 @@ const { t } = useI18n();
             <Label for="phone" required>
                 {{ t('wallet.create.phone_label') }}
             </Label>
-            <Input
+            <PhoneInput
                 id="phone"
-                name="phone"
-                type="tel"
-                inputmode="tel"
-                autocomplete="tel"
-                :placeholder="t('wallet.create.phone_placeholder')"
                 :invalid="fieldError(errors, 'phone', 'wallet').invalid"
-                :described-by="fieldError(errors, 'phone', 'wallet').describedBy"
-                required
+                :described-by="
+                    fieldError(errors, 'phone', 'wallet').describedBy
+                "
+                :maxlength="32"
+                pattern="[+\d\s()-]+"
             />
             <FieldError v-bind="fieldError(errors, 'phone', 'wallet')" />
         </div>
@@ -47,7 +46,9 @@ const { t } = useI18n();
                 autocomplete="given-name"
                 :placeholder="t('wallet.create.first_name_placeholder')"
                 :invalid="fieldError(errors, 'first_name', 'wallet').invalid"
-                :described-by="fieldError(errors, 'first_name', 'wallet').describedBy"
+                :described-by="
+                    fieldError(errors, 'first_name', 'wallet').describedBy
+                "
                 required
             />
             <FieldError v-bind="fieldError(errors, 'first_name', 'wallet')" />

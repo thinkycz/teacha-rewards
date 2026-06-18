@@ -37,15 +37,21 @@ const { t } = useI18n();
                 </div>
                 <ol class="mt-4 space-y-2 text-sm text-charcoal-700">
                     <li class="flex gap-2">
-                        <span class="font-mono text-xs text-charcoal-500">1.</span>
+                        <span class="font-mono text-xs text-charcoal-500"
+                            >1.</span
+                        >
                         <span>{{ t('pwa.install.ios_step_1') }}</span>
                     </li>
                     <li class="flex gap-2">
-                        <span class="font-mono text-xs text-charcoal-500">2.</span>
+                        <span class="font-mono text-xs text-charcoal-500"
+                            >2.</span
+                        >
                         <span>{{ t('pwa.install.ios_step_2') }}</span>
                     </li>
                     <li class="flex gap-2">
-                        <span class="font-mono text-xs text-charcoal-500">3.</span>
+                        <span class="font-mono text-xs text-charcoal-500"
+                            >3.</span
+                        >
                         <span>{{ t('pwa.install.ios_step_3') }}</span>
                     </li>
                 </ol>

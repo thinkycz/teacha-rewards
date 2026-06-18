@@ -49,7 +49,7 @@ class AgentRunStreamController
                     ->get();
 
                 foreach ($events as $event) {
-                    if (! $event instanceof AgentRunEvent) {
+                    if (!$event instanceof AgentRunEvent) {
                         continue;
                     }
 

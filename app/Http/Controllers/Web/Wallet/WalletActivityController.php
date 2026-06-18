@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web\Wallet;
 
-use App\Models\RewardWallet;
 use App\Services\Reward\RewardWalletService;
 use App\Services\Settings\SettingsService;
+use DateTimeInterface;
 use Inertia\Inertia;
 use Inertia\Response;
 use Thinkycz\LaravelCore\Support\Resolver;
-use Thinkycz\LaravelCore\Support\Thrower;
 
 /**
  * Full activity history for one wallet.
@@ -44,6 +43,7 @@ class WalletActivityController
         $items = $transactions->map(static function ($tx) use ($walletType): array {
             /** @var \App\Models\RewardTransaction $tx */
             $createdAt = $tx->getAttribute('created_at');
+
             return [
                 'id' => $tx->getKey(),
                 'type' => $tx->getType()->value,
@@ -52,7 +52,7 @@ class WalletActivityController
                 'balance_after' => $tx->getBalanceAfter(),
                 'note' => $tx->getNote(),
                 'wallet_type' => $walletType,
-                'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
+                'created_at' => $createdAt instanceof DateTimeInterface ? $createdAt->format(DateTimeInterface::ATOM) : null,
                 'staff_name' => $tx->user?->getName(),
             ];
         })->all();

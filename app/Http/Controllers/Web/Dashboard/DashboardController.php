@@ -9,7 +9,7 @@ use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Services\Settings\SettingsService;
-use Illuminate\Support\Facades\DB;
+use DateTimeInterface;
 use Inertia\Inertia;
 use Inertia\Response;
 use Thinkycz\LaravelCore\Support\Resolver;
@@ -88,7 +88,8 @@ class DashboardController
                 $createdAt = $tx->getAttribute('created_at');
                 $wallet = $tx->wallet;
                 $user = $tx->user;
-                $createdAtStr = $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null;
+                $createdAtStr = $createdAt instanceof DateTimeInterface ? $createdAt->format(DateTimeInterface::ATOM) : null;
+
                 return [
                     'id' => $tx->getKey(),
                     'type' => $tx->getType()->value,

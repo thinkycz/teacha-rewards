@@ -23,7 +23,7 @@ declare(strict_types=1);
     $response = $this->get('/');
 
     $cookies = $response->headers->getCookies();
-    $names = \array_map(static fn ($cookie): string => $cookie->getName(), $cookies);
+    $names = \array_map(static fn($cookie): string => $cookie->getName(), $cookies);
 
     \expect(\in_array('XSRF-TOKEN', $names, true))->toBeTrue(
         'XSRF-TOKEN cookie must be set on the first GET so the Inertia client can echo it back on the next POST',

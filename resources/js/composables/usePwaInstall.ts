@@ -71,12 +71,18 @@ export function usePwaInstall(): PwaInstallState {
     onMounted(() => {
         isInstalled.value = detectInstalled();
         isIosSafari.value = detectIosSafari();
-        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener(
+            'beforeinstallprompt',
+            handleBeforeInstallPrompt,
+        );
         window.addEventListener('appinstalled', handleAppInstalled);
     });
 
     onBeforeUnmount(() => {
-        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.removeEventListener(
+            'beforeinstallprompt',
+            handleBeforeInstallPrompt,
+        );
         window.removeEventListener('appinstalled', handleAppInstalled);
     });
 

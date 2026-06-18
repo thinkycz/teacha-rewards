@@ -166,7 +166,7 @@ class RewardWallet extends BaseModel
      */
     public function getStampsCount(): int
     {
-        if (! array_key_exists('stamps_count', $this->attributes)) {
+        if (!\array_key_exists('stamps_count', $this->attributes)) {
             return 0;
         }
 

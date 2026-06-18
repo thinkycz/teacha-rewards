@@ -8,19 +8,19 @@ maps to a release-readiness criterion from the original plan.
 `APP_ENV=testing php artisan test` runs every pest test in the repo.
 The reward-domain slice is **125 passing** (227 assertions):
 
-| Test class                                       | Count |
-| ------------------------------------------------ | ----- |
-| `tests/Unit/Services/Settings`                   |   18  |
-| `tests/Unit/Services/Reward`                     |   31  |
-| `tests/Unit/I18nParityTest`                      |    2  |
-| `tests/Feature/App/Http/Controllers/Web/Marketing` |  2  |
-| `tests/Feature/App/Http/Controllers/Web/Wallet`  |   11  |
-| `tests/Feature/App/Http/Controllers/Web/Pwa`     |    5  |
-| `tests/Feature/App/Http/Controllers/Web/Staff`   |   47  |
-| `tests/Feature/App/Http/Middleware/StaffMiddlewareTest` |  5 |
-| `tests/Feature/Database/TeachaRewardsSeederTest` |    2  |
-| `tests/Feature/App/Http/Controllers/Web/Staff/StoreQrPrintControllerTest` |  3 |
-| **Total**                                        | **125** |
+| Test class                                                                | Count   |
+| ------------------------------------------------------------------------- | ------- |
+| `tests/Unit/Services/Settings`                                            | 18      |
+| `tests/Unit/Services/Reward`                                              | 31      |
+| `tests/Unit/I18nParityTest`                                               | 2       |
+| `tests/Feature/App/Http/Controllers/Web/Marketing`                        | 2       |
+| `tests/Feature/App/Http/Controllers/Web/Wallet`                           | 11      |
+| `tests/Feature/App/Http/Controllers/Web/Pwa`                              | 5       |
+| `tests/Feature/App/Http/Controllers/Web/Staff`                            | 47      |
+| `tests/Feature/App/Http/Middleware/StaffMiddlewareTest`                   | 5       |
+| `tests/Feature/Database/TeachaRewardsSeederTest`                          | 2       |
+| `tests/Feature/App/Http/Controllers/Web/Staff/StoreQrPrintControllerTest` | 3       |
+| **Total**                                                                 | **125** |
 
 Tests that exist in the repo but are outside the rewards domain
 (legacy auth, agent flow, etc.) include some pre-existing failures
@@ -69,18 +69,18 @@ ls: phpstan-baseline.neon: No such file or directory
 
 ### All public routes are auth-gated or token-gated
 
-| Route                         | Auth                  | Notes                       |
-| ----------------------------- | --------------------- | --------------------------- |
-| `GET /`                       | public                | marketing page              |
-| `GET/POST /wallet`            | public                | find-or-create flow         |
-| `GET /w/{token}`              | public (token-gated)  | public_token is 192-bit URL-safe random |
-| `GET /w/{token}/activity`     | public (token-gated)  | same                        |
-| `GET /offline`                | public                | PWA offline fallback        |
-| `GET /install`                | public                | PWA install guide           |
-| `GET/POST /dashboard/*`        | staff + admin         | `staff` middleware          |
-| `GET/POST /dashboard/settings/*` | admin               | `admin` middleware          |
-| `GET /dashboard/store-qr`      | staff + admin         | print-friendly QR sheet     |
-| `GET/POST /login` + auth      | guest                 | core auth                   |
+| Route                            | Auth                 | Notes                                   |
+| -------------------------------- | -------------------- | --------------------------------------- |
+| `GET /`                          | public               | marketing page                          |
+| `GET/POST /wallet`               | public               | find-or-create flow                     |
+| `GET /w/{token}`                 | public (token-gated) | public_token is 192-bit URL-safe random |
+| `GET /w/{token}/activity`        | public (token-gated) | same                                    |
+| `GET /offline`                   | public               | PWA offline fallback                    |
+| `GET /install`                   | public               | PWA install guide                       |
+| `GET/POST /dashboard/*`          | staff + admin        | `staff` middleware                      |
+| `GET/POST /dashboard/settings/*` | admin                | `admin` middleware                      |
+| `GET /dashboard/store-qr`        | staff + admin        | print-friendly QR sheet                 |
+| `GET/POST /login` + auth         | guest                | core auth                               |
 
 Customer wallet URLs rely on the unguessable `public_token`
 (`Str::random(32)` = 192 bits of entropy), so they're effectively

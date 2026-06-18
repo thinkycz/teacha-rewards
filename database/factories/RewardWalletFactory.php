@@ -34,12 +34,14 @@ class RewardWalletFactory extends Factory
 
             'first_name' => $this->faker->firstName(),
 
-            'phone' => sprintf('+420 %s %s %s',
+            'phone' => \sprintf(
+                '+420 %s %s %s',
                 $this->faker->numerify('###'),
                 $this->faker->numerify('###'),
                 $this->faker->numerify('###'),
             ),
-            'phone_normalized' => sprintf('+420%s%s%s',
+            'phone_normalized' => \sprintf(
+                '+420%s%s%s',
                 $this->faker->unique()->numerify('###'),
                 $this->faker->numerify('###'),
                 $this->faker->numerify('###'),

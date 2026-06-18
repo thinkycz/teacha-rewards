@@ -70,7 +70,9 @@ export function useTransactionFormat() {
      * `true` when the row belongs to a stamps wallet and the
      * transaction stores stamp counts (not Kč).
      */
-    function isStampsRow(walletType: 'cashback' | 'stamps' | null | undefined): boolean {
+    function isStampsRow(
+        walletType: 'cashback' | 'stamps' | null | undefined,
+    ): boolean {
         return walletType === 'stamps';
     }
 
@@ -99,8 +101,14 @@ export function useTransactionFormat() {
         // actually spent is |amount| * stamps_per_reward (e.g. 10).
         // We keep the original (negative) sign so the row reads as a
         // debit: "−10 razítek", not "+10 razítek".
-        const count = tx.type === 'stamp_redeem' ? value * stampsPerReward : value;
-        return sign(count) + Math.abs(count).toString() + ' ' + pluralizeStamps(count);
+        const count =
+            tx.type === 'stamp_redeem' ? value * stampsPerReward : value;
+        return (
+            sign(count) +
+            Math.abs(count).toString() +
+            ' ' +
+            pluralizeStamps(count)
+        );
     }
 
     /**
@@ -140,7 +148,11 @@ export function useTransactionFormat() {
      * `tc()` choice API and a PluralizationRule), so we use three
      * dedicated keys (one / few / many) and pick the right one here.
      */
-    function labelForStampsEq(rewards: number, noun: string, rewardLabel: string): string {
+    function labelForStampsEq(
+        rewards: number,
+        noun: string,
+        rewardLabel: string,
+    ): string {
         const abs = Math.abs(rewards);
         let key: string;
         if (abs === 1) {

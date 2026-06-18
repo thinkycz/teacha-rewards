@@ -46,7 +46,9 @@ self.addEventListener('activate', (event) => {
         (async () => {
             const keys = await caches.keys();
             await Promise.all(
-                keys.filter((key) => key !== CACHE_VERSION).map((key) => caches.delete(key)),
+                keys
+                    .filter((key) => key !== CACHE_VERSION)
+                    .map((key) => caches.delete(key)),
             );
             await self.clients.claim();
         })(),
@@ -76,10 +78,14 @@ self.addEventListener('fetch', (event) => {
                     return fresh;
                 } catch (err) {
                     const cached = await caches.match(request);
-                    return cached ?? caches.match(OFFLINE_URL) ?? new Response('Offline', {
-                        status: 503,
-                        statusText: 'Offline',
-                    });
+                    return (
+                        cached ??
+                        caches.match(OFFLINE_URL) ??
+                        new Response('Offline', {
+                            status: 503,
+                            statusText: 'Offline',
+                        })
+                    );
                 }
             })(),
         );
@@ -88,11 +94,11 @@ self.addEventListener('fetch', (event) => {
 
     // 2) Static assets: stale-while-revalidate.
     if (
-        request.destination === 'style'
-        || request.destination === 'script'
-        || request.destination === 'image'
-        || request.destination === 'font'
-        || request.destination === 'manifest'
+        request.destination === 'style' ||
+        request.destination === 'script' ||
+        request.destination === 'image' ||
+        request.destination === 'font' ||
+        request.destination === 'manifest'
     ) {
         event.respondWith(
             (async () => {

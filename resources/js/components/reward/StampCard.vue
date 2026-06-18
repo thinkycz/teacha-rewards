@@ -17,7 +17,9 @@ const props = withDefaults(
     },
 );
 
-const filledCount = computed(() => Math.max(0, Math.min(props.stamps, props.total)));
+const filledCount = computed(() =>
+    Math.max(0, Math.min(props.stamps, props.total)),
+);
 const remaining = computed(() => Math.max(0, props.total - props.stamps));
 const isFull = computed(() => filledCount.value >= props.total);
 
@@ -63,25 +65,21 @@ const layout = computed(() => {
     >
         <header class="paper-card-brand">
             <span class="brand-name">Teacha Rewards</span>
-            <span
-                v-if="rewardLabel"
-                aria-hidden="true"
-                class="brand-sep"
-            >·</span>
-            <span
-                v-if="rewardLabel"
-                class="brand-reward"
-            >{{ rewardLabel }}</span>
-            <span
-                aria-hidden="true"
-                class="brand-icon"
-            >{{ icon }}</span>
+            <span v-if="rewardLabel" aria-hidden="true" class="brand-sep"
+                >·</span
+            >
+            <span v-if="rewardLabel" class="brand-reward">{{
+                rewardLabel
+            }}</span>
+            <span aria-hidden="true" class="brand-icon">{{ icon }}</span>
         </header>
 
         <div
             class="paper-card-slots"
             :class="layout.cols"
-            :style="{ gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))` }"
+            :style="{
+                gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
+            }"
         >
             <div
                 v-for="slot in slots"
@@ -99,7 +97,8 @@ const layout = computed(() => {
                     v-if="slot.filled"
                     aria-hidden="true"
                     class="slot-emoji"
-                >{{ icon }}</span>
+                    >{{ icon }}</span
+                >
             </div>
         </div>
 
@@ -109,7 +108,11 @@ const layout = computed(() => {
                 class="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-on-primary shadow-sm"
             >
                 <span aria-hidden="true">{{ icon }}</span>
-                {{ t('dashboard.wallets.show.card_full', { label: rewardLabel }) }}
+                {{
+                    t('dashboard.wallets.show.card_full', {
+                        label: rewardLabel,
+                    })
+                }}
             </span>
             <span
                 v-else
@@ -149,8 +152,16 @@ const layout = computed(() => {
     pointer-events: none;
     opacity: 0.5;
     background-image:
-        radial-gradient(circle at 25% 30%, rgba(15, 23, 42, 0.02) 0, transparent 60%),
-        radial-gradient(circle at 75% 70%, rgba(15, 23, 42, 0.025) 0, transparent 65%);
+        radial-gradient(
+            circle at 25% 30%,
+            rgba(15, 23, 42, 0.02) 0,
+            transparent 60%
+        ),
+        radial-gradient(
+            circle at 75% 70%,
+            rgba(15, 23, 42, 0.025) 0,
+            transparent 65%
+        );
 }
 
 /* Customer card: business-card aspect ratio (85mm x 55mm = 1.545:1),

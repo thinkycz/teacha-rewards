@@ -126,7 +126,10 @@ function bumpEarn(delta: number): void {
 }
 
 function bumpRedeem(delta: number): void {
-    const next = Math.max(1, Math.min(maxRedeemable.value, Number(stampRedeemForm.rewards) + delta));
+    const next = Math.max(
+        1,
+        Math.min(maxRedeemable.value, Number(stampRedeemForm.rewards) + delta),
+    );
     stampRedeemForm.rewards = String(next);
 }
 
@@ -184,30 +187,48 @@ const confirmDialog = useConfirmDialog();
 
 async function toggleStatus(): Promise<void> {
     if (isActive.value) {
-        const ok = await confirmDialog.confirm(t('dashboard.wallets.show.disable_confirm'), {
-            variant: 'danger',
-            confirmLabel: t('dashboard.wallets.show.disable'),
-        });
+        const ok = await confirmDialog.confirm(
+            t('dashboard.wallets.show.disable_confirm'),
+            {
+                variant: 'danger',
+                confirmLabel: t('dashboard.wallets.show.disable'),
+            },
+        );
         if (!ok) {
             return;
         }
-        router.post(`/wallets/${props.wallet.id}/disable`, {}, { preserveScroll: true });
+        router.post(
+            `/wallets/${props.wallet.id}/disable`,
+            {},
+            { preserveScroll: true },
+        );
     } else {
-        const ok = await confirmDialog.confirm(t('dashboard.wallets.show.enable_confirm'), {
-            confirmLabel: t('dashboard.wallets.show.enable'),
-        });
+        const ok = await confirmDialog.confirm(
+            t('dashboard.wallets.show.enable_confirm'),
+            {
+                confirmLabel: t('dashboard.wallets.show.enable'),
+            },
+        );
         if (!ok) {
             return;
         }
-        router.post(`/wallets/${props.wallet.id}/enable`, {}, { preserveScroll: true });
+        router.post(
+            `/wallets/${props.wallet.id}/enable`,
+            {},
+            { preserveScroll: true },
+        );
     }
 }
 </script>
 
 <template>
-    <Head :title="t('dashboard.wallets.show.title', { name: wallet.first_name })" />
+    <Head
+        :title="t('dashboard.wallets.show.title', { name: wallet.first_name })"
+    />
 
-    <AdminLayout :title="t('dashboard.wallets.show.title', { name: wallet.first_name })">
+    <AdminLayout
+        :title="t('dashboard.wallets.show.title', { name: wallet.first_name })"
+    >
         <div class="space-y-6">
             <section
                 v-if="!isActive"
@@ -226,34 +247,62 @@ async function toggleStatus(): Promise<void> {
                 <header class="bg-primary p-5 text-on-primary">
                     <div class="flex items-start justify-between gap-4">
                         <div class="min-w-0">
-                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
+                            <p
+                                class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70"
+                            >
                                 Teacha Rewards
                             </p>
-                            <h2 class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold">
-                                <span class="truncate">{{ wallet.first_name }}</span>
+                            <h2
+                                class="mt-0.5 flex items-center gap-2 truncate text-xl font-semibold"
+                            >
+                                <span class="truncate">{{
+                                    wallet.first_name
+                                }}</span>
                                 <span
-                                    :class="wallet.type === 'stamps'
-                                        ? 'bg-teal-500/90 text-white'
-                                        : 'bg-amber-500/90 text-white'"
+                                    :class="
+                                        wallet.type === 'stamps'
+                                            ? 'bg-teal-500/90 text-white'
+                                            : 'bg-amber-500/90 text-white'
+                                    "
                                     class="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                                 >
-                                    <span aria-hidden="true">{{ wallet.type === 'stamps' ? '\u{1F3F7}\u{FE0F}' : '\u{1F4B0}' }}</span>
-                                    {{ t('dashboard.wallets.show.type_' + wallet.type) }}
+                                    <span aria-hidden="true">{{
+                                        wallet.type === 'stamps'
+                                            ? '\u{1F3F7}\u{FE0F}'
+                                            : '\u{1F4B0}'
+                                    }}</span>
+                                    {{
+                                        t(
+                                            'dashboard.wallets.show.type_' +
+                                                wallet.type,
+                                        )
+                                    }}
                                 </span>
                             </h2>
-                            <p class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80">
+                            <p
+                                class="mt-0.5 font-mono text-xs tracking-widest text-on-primary/80"
+                            >
                                 {{ wallet.wallet_number }}
                             </p>
                         </div>
                         <div class="shrink-0 text-right">
-                            <p class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70">
-                                {{ isStamps ? t('dashboard.wallets.show.balance_stamps') : t('dashboard.wallets.show.balance') }}
+                            <p
+                                class="text-[10px] font-semibold uppercase tracking-widest text-on-primary/70"
+                            >
+                                {{
+                                    isStamps
+                                        ? t(
+                                              'dashboard.wallets.show.balance_stamps',
+                                          )
+                                        : t('dashboard.wallets.show.balance')
+                                }}
                             </p>
                             <p
                                 v-if="isStamps"
                                 class="mt-0.5 text-2xl font-bold tracking-tight tabular-nums"
                             >
-                                {{ wallet.stamps_count }} / {{ program.stamps_per_reward }}
+                                {{ wallet.stamps_count }} /
+                                {{ program.stamps_per_reward }}
                             </p>
                             <p
                                 v-else
@@ -265,7 +314,9 @@ async function toggleStatus(): Promise<void> {
                     </div>
                 </header>
 
-                <dl class="grid grid-cols-2 gap-x-6 gap-y-4 p-5 text-xs sm:grid-cols-4">
+                <dl
+                    class="grid grid-cols-2 gap-x-6 gap-y-4 p-5 text-xs sm:grid-cols-4"
+                >
                     <div>
                         <dt class="label-eyebrow">
                             {{ t('dashboard.wallets.show.phone') }}
@@ -295,12 +346,18 @@ async function toggleStatus(): Promise<void> {
                             {{ t('dashboard.wallets.show.last_used') }}
                         </dt>
                         <dd class="mt-1 text-sm text-on-surface">
-                            {{ wallet.last_used_at ? formatDateTime(wallet.last_used_at) : t('dashboard.wallets.show.never_used') }}
+                            {{
+                                wallet.last_used_at
+                                    ? formatDateTime(wallet.last_used_at)
+                                    : t('dashboard.wallets.show.never_used')
+                            }}
                         </dd>
                     </div>
                 </dl>
 
-                <footer class="flex items-center justify-end border-t border-outline-glass px-5 py-3">
+                <footer
+                    class="flex items-center justify-end border-t border-outline-glass px-5 py-3"
+                >
                     <Link
                         :href="`/w/${wallet.public_token}`"
                         class="inline-flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-container"
@@ -314,10 +371,7 @@ async function toggleStatus(): Promise<void> {
             <!-- Paper loyalty card. Full mode (no `compact`) so the
                  admin sees the same dimensions the customer sees on
                  the public page. Only visible in stamps mode. -->
-            <section
-                v-if="isStamps"
-                class="flex justify-center"
-            >
+            <section v-if="isStamps" class="flex justify-center">
                 <StampCard
                     :stamps="wallet.stamps_count"
                     :total="program.stamps_per_reward"
@@ -340,7 +394,10 @@ async function toggleStatus(): Promise<void> {
                         type="button"
                         :disabled="!isActive"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'purchase' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'purchase',
+                        }"
                         @click="openPanel('purchase')"
                     >
                         <ShoppingBag :size="16" />
@@ -350,7 +407,10 @@ async function toggleStatus(): Promise<void> {
                         type="button"
                         :disabled="!isActive"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'redeem' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'redeem',
+                        }"
                         @click="openPanel('redeem')"
                     >
                         <ArrowDownToLine :size="16" />
@@ -360,7 +420,10 @@ async function toggleStatus(): Promise<void> {
                         type="button"
                         :disabled="!isActive"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'adjust' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'adjust',
+                        }"
                         @click="openPanel('adjust')"
                     >
                         <Sliders :size="16" />
@@ -375,20 +438,24 @@ async function toggleStatus(): Promise<void> {
                             :is="isActive ? PowerOff : Power"
                             :size="16"
                         />
-                        {{ isActive ? t('dashboard.wallets.show.disable') : t('dashboard.wallets.show.enable') }}
+                        {{
+                            isActive
+                                ? t('dashboard.wallets.show.disable')
+                                : t('dashboard.wallets.show.enable')
+                        }}
                     </button>
                 </div>
 
                 <!-- Stamps mode actions -->
-                <div
-                    v-else
-                    class="grid grid-cols-2 gap-3 sm:grid-cols-4"
-                >
+                <div v-else class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     <button
                         type="button"
                         :disabled="!isActive"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'earn' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'earn',
+                        }"
                         @click="openPanel('earn')"
                     >
                         <Plus :size="16" />
@@ -398,7 +465,10 @@ async function toggleStatus(): Promise<void> {
                         type="button"
                         :disabled="!isActive || maxRedeemable < 1"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'redeemStamps' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'redeemStamps',
+                        }"
                         @click="openPanel('redeemStamps')"
                     >
                         <Gift :size="16" />
@@ -414,7 +484,10 @@ async function toggleStatus(): Promise<void> {
                         type="button"
                         :disabled="!isActive"
                         class="flex items-center justify-center gap-2 surface-card px-3 py-3 text-xs font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        :class="{ 'border-primary bg-primary-soft': openAction === 'adjust' }"
+                        :class="{
+                            'border-primary bg-primary-soft':
+                                openAction === 'adjust',
+                        }"
                         @click="openPanel('adjust')"
                     >
                         <Sliders :size="16" />
@@ -429,7 +502,11 @@ async function toggleStatus(): Promise<void> {
                             :is="isActive ? PowerOff : Power"
                             :size="16"
                         />
-                        {{ isActive ? t('dashboard.wallets.show.disable') : t('dashboard.wallets.show.enable') }}
+                        {{
+                            isActive
+                                ? t('dashboard.wallets.show.disable')
+                                : t('dashboard.wallets.show.enable')
+                        }}
                     </button>
                 </div>
             </section>
@@ -439,10 +516,7 @@ async function toggleStatus(): Promise<void> {
                 v-if="!isStamps && openAction === 'purchase'"
                 class="surface-card border-primary p-5"
             >
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitPurchase"
-                >
+                <form class="space-y-4" @submit.prevent="submitPurchase">
                     <div class="space-y-2">
                         <Label for="purchase_amount" required>
                             {{ t('dashboard.forms.purchase_amount') }}
@@ -455,19 +529,36 @@ async function toggleStatus(): Promise<void> {
                             step="0.01"
                             min="0.01"
                             :placeholder="t('dashboard.forms.purchase_amount')"
-                            :invalid="fieldError(purchaseForm.errors, 'purchase_amount', 'purchase').invalid"
-                            :described-by="fieldError(purchaseForm.errors, 'purchase_amount', 'purchase').describedBy"
+                            :invalid="
+                                fieldError(
+                                    purchaseForm.errors,
+                                    'purchase_amount',
+                                    'purchase',
+                                ).invalid
+                            "
+                            :described-by="
+                                fieldError(
+                                    purchaseForm.errors,
+                                    'purchase_amount',
+                                    'purchase',
+                                ).describedBy
+                            "
                             required
                         />
                         <p class="label-help">
                             {{ t('dashboard.forms.purchase_amount_help') }}
                         </p>
-                        <FieldError v-bind="fieldError(purchaseForm.errors, 'purchase_amount', 'purchase')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(
+                                    purchaseForm.errors,
+                                    'purchase_amount',
+                                    'purchase',
+                                )
+                            "
+                        />
                     </div>
-                    <Button
-                        type="submit"
-                        :disabled="purchaseForm.processing"
-                    >
+                    <Button type="submit" :disabled="purchaseForm.processing">
                         {{ t('dashboard.forms.submit_purchase') }}
                     </Button>
                 </form>
@@ -478,10 +569,7 @@ async function toggleStatus(): Promise<void> {
                 v-if="!isStamps && openAction === 'redeem'"
                 class="surface-card border-primary p-5"
             >
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitRedeem"
-                >
+                <form class="space-y-4" @submit.prevent="submitRedeem">
                     <div class="space-y-2">
                         <Label for="redeem_amount" required>
                             {{ t('dashboard.forms.redeem_amount') }}
@@ -495,19 +583,36 @@ async function toggleStatus(): Promise<void> {
                             min="0.01"
                             :max="wallet.rewards_balance"
                             :placeholder="t('dashboard.forms.redeem_amount')"
-                            :invalid="fieldError(redeemForm.errors, 'amount', 'redeem').invalid"
-                            :described-by="fieldError(redeemForm.errors, 'amount', 'redeem').describedBy"
+                            :invalid="
+                                fieldError(
+                                    redeemForm.errors,
+                                    'amount',
+                                    'redeem',
+                                ).invalid
+                            "
+                            :described-by="
+                                fieldError(
+                                    redeemForm.errors,
+                                    'amount',
+                                    'redeem',
+                                ).describedBy
+                            "
                             required
                         />
                         <p class="label-help">
                             {{ t('dashboard.forms.redeem_amount_help') }}
                         </p>
-                        <FieldError v-bind="fieldError(redeemForm.errors, 'amount', 'redeem')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(
+                                    redeemForm.errors,
+                                    'amount',
+                                    'redeem',
+                                )
+                            "
+                        />
                     </div>
-                    <Button
-                        type="submit"
-                        :disabled="redeemForm.processing"
-                    >
+                    <Button type="submit" :disabled="redeemForm.processing">
                         {{ t('dashboard.forms.submit_redeem') }}
                     </Button>
                 </form>
@@ -518,10 +623,7 @@ async function toggleStatus(): Promise<void> {
                 v-if="isStamps && openAction === 'earn'"
                 class="surface-card border-primary p-5"
             >
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitEarn"
-                >
+                <form class="space-y-4" @submit.prevent="submitEarn">
                     <div class="space-y-2">
                         <Label for="earn_count" required>
                             {{ t('dashboard.wallets.show.stamp_count') }}
@@ -544,8 +646,14 @@ async function toggleStatus(): Promise<void> {
                                 min="1"
                                 max="100"
                                 class="text-center"
-                                :invalid="fieldError(earnForm.errors, 'count', 'earn').invalid"
-                                :described-by="fieldError(earnForm.errors, 'count', 'earn').describedBy"
+                                :invalid="
+                                    fieldError(earnForm.errors, 'count', 'earn')
+                                        .invalid
+                                "
+                                :described-by="
+                                    fieldError(earnForm.errors, 'count', 'earn')
+                                        .describedBy
+                                "
                                 required
                             />
                             <button
@@ -560,12 +668,13 @@ async function toggleStatus(): Promise<void> {
                         <p class="label-help">
                             {{ t('dashboard.wallets.show.stamp_count_help') }}
                         </p>
-                        <FieldError v-bind="fieldError(earnForm.errors, 'count', 'earn')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(earnForm.errors, 'count', 'earn')
+                            "
+                        />
                     </div>
-                    <Button
-                        type="submit"
-                        :disabled="earnForm.processing"
-                    >
+                    <Button type="submit" :disabled="earnForm.processing">
                         {{ t('dashboard.wallets.show.submit_add_stamps') }}
                     </Button>
                 </form>
@@ -576,10 +685,7 @@ async function toggleStatus(): Promise<void> {
                 v-if="isStamps && openAction === 'redeemStamps'"
                 class="surface-card border-primary p-5"
             >
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitStampRedeem"
-                >
+                <form class="space-y-4" @submit.prevent="submitStampRedeem">
                     <div class="space-y-2">
                         <Label for="redeem_rewards" required>
                             {{ t('dashboard.wallets.show.rewards_count') }}
@@ -602,14 +708,29 @@ async function toggleStatus(): Promise<void> {
                                 min="1"
                                 :max="maxRedeemable"
                                 class="text-center"
-                                :invalid="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem').invalid"
-                                :described-by="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem').describedBy"
+                                :invalid="
+                                    fieldError(
+                                        stampRedeemForm.errors,
+                                        'rewards',
+                                        'stamps_redeem',
+                                    ).invalid
+                                "
+                                :described-by="
+                                    fieldError(
+                                        stampRedeemForm.errors,
+                                        'rewards',
+                                        'stamps_redeem',
+                                    ).describedBy
+                                "
                                 required
                             />
                             <button
                                 type="button"
                                 class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-outline-glass bg-surface-container-lowest text-on-surface transition hover:border-primary disabled:opacity-40"
-                                :disabled="Number(stampRedeemForm.rewards) >= maxRedeemable"
+                                :disabled="
+                                    Number(stampRedeemForm.rewards) >=
+                                    maxRedeemable
+                                "
                                 @click="bumpRedeem(1)"
                             >
                                 <Plus :size="14" />
@@ -622,14 +743,28 @@ async function toggleStatus(): Promise<void> {
                                 })
                             }}
                         </p>
-                        <FieldError v-bind="fieldError(stampRedeemForm.errors, 'rewards', 'stamps_redeem')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(
+                                    stampRedeemForm.errors,
+                                    'rewards',
+                                    'stamps_redeem',
+                                )
+                            "
+                        />
                         <button
                             v-if="maxRedeemable > 0"
                             type="button"
                             class="text-xs font-semibold text-primary transition hover:text-primary-container"
-                            @click="stampRedeemForm.rewards = String(maxRedeemable)"
+                            @click="
+                                stampRedeemForm.rewards = String(maxRedeemable)
+                            "
                         >
-                            {{ t('dashboard.wallets.show.redeem_max', { count: maxRedeemable }) }}
+                            {{
+                                t('dashboard.wallets.show.redeem_max', {
+                                    count: maxRedeemable,
+                                })
+                            }}
                         </button>
                     </div>
                     <Button
@@ -646,10 +781,7 @@ async function toggleStatus(): Promise<void> {
                 v-if="openAction === 'adjust'"
                 class="surface-card border-primary p-5"
             >
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitAdjust"
-                >
+                <form class="space-y-4" @submit.prevent="submitAdjust">
                     <div class="space-y-2">
                         <Label for="adjust_type" required>
                             {{ t('dashboard.forms.adjust_type') }}
@@ -658,20 +790,45 @@ async function toggleStatus(): Promise<void> {
                             id="adjust_type"
                             v-model="adjustForm.type"
                             :options="[
-                                { value: 'add', label: t('dashboard.forms.adjust_type_add') },
-                                { value: 'subtract', label: t('dashboard.forms.adjust_type_subtract') },
-                                { value: 'set', label: t('dashboard.forms.adjust_type_set') },
+                                {
+                                    value: 'add',
+                                    label: t('dashboard.forms.adjust_type_add'),
+                                },
+                                {
+                                    value: 'subtract',
+                                    label: t(
+                                        'dashboard.forms.adjust_type_subtract',
+                                    ),
+                                },
+                                {
+                                    value: 'set',
+                                    label: t('dashboard.forms.adjust_type_set'),
+                                },
                             ]"
-                            :invalid="fieldError(adjustForm.errors, 'type', 'adjust').invalid"
-                            :described-by="fieldError(adjustForm.errors, 'type', 'adjust').describedBy"
+                            :invalid="
+                                fieldError(adjustForm.errors, 'type', 'adjust')
+                                    .invalid
+                            "
+                            :described-by="
+                                fieldError(adjustForm.errors, 'type', 'adjust')
+                                    .describedBy
+                            "
                             required
                         />
-                        <FieldError v-bind="fieldError(adjustForm.errors, 'type', 'adjust')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(adjustForm.errors, 'type', 'adjust')
+                            "
+                        />
                     </div>
 
                     <div class="space-y-2">
                         <Label for="adjust_amount" required>
-                            {{ isStamps ? t('dashboard.forms.adjust_amount_stamps') : t('dashboard.forms.adjust_amount') }}
+                            {{
+                                isStamps
+                                    ? t('dashboard.forms.adjust_amount_stamps')
+                                    : t('dashboard.forms.adjust_amount')
+                            }}
                         </Label>
                         <Input
                             id="adjust_amount"
@@ -680,15 +837,45 @@ async function toggleStatus(): Promise<void> {
                             :inputmode="isStamps ? 'numeric' : 'decimal'"
                             :step="isStamps ? '1' : '0.01'"
                             :min="isStamps ? '1' : '0.01'"
-                            :placeholder="isStamps ? t('dashboard.forms.adjust_amount_stamps') : t('dashboard.forms.adjust_amount')"
-                            :invalid="fieldError(adjustForm.errors, 'amount', 'adjust').invalid"
-                            :described-by="fieldError(adjustForm.errors, 'amount', 'adjust').describedBy"
+                            :placeholder="
+                                isStamps
+                                    ? t('dashboard.forms.adjust_amount_stamps')
+                                    : t('dashboard.forms.adjust_amount')
+                            "
+                            :invalid="
+                                fieldError(
+                                    adjustForm.errors,
+                                    'amount',
+                                    'adjust',
+                                ).invalid
+                            "
+                            :described-by="
+                                fieldError(
+                                    adjustForm.errors,
+                                    'amount',
+                                    'adjust',
+                                ).describedBy
+                            "
                             required
                         />
                         <p class="label-help">
-                            {{ isStamps ? t('dashboard.forms.adjust_amount_help_stamps') : t('dashboard.forms.adjust_amount_help') }}
+                            {{
+                                isStamps
+                                    ? t(
+                                          'dashboard.forms.adjust_amount_help_stamps',
+                                      )
+                                    : t('dashboard.forms.adjust_amount_help')
+                            }}
                         </p>
-                        <FieldError v-bind="fieldError(adjustForm.errors, 'amount', 'adjust')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(
+                                    adjustForm.errors,
+                                    'amount',
+                                    'adjust',
+                                )
+                            "
+                        />
                     </div>
 
                     <div class="space-y-2">
@@ -700,20 +887,27 @@ async function toggleStatus(): Promise<void> {
                             v-model="adjustForm.note"
                             type="text"
                             :placeholder="t('dashboard.forms.adjust_note')"
-                            :invalid="fieldError(adjustForm.errors, 'note', 'adjust').invalid"
-                            :described-by="fieldError(adjustForm.errors, 'note', 'adjust').describedBy"
+                            :invalid="
+                                fieldError(adjustForm.errors, 'note', 'adjust')
+                                    .invalid
+                            "
+                            :described-by="
+                                fieldError(adjustForm.errors, 'note', 'adjust')
+                                    .describedBy
+                            "
                             required
                         />
                         <p class="label-help">
                             {{ t('dashboard.forms.adjust_note_help') }}
                         </p>
-                        <FieldError v-bind="fieldError(adjustForm.errors, 'note', 'adjust')" />
+                        <FieldError
+                            v-bind="
+                                fieldError(adjustForm.errors, 'note', 'adjust')
+                            "
+                        />
                     </div>
 
-                    <Button
-                        type="submit"
-                        :disabled="adjustForm.processing"
-                    >
+                    <Button type="submit" :disabled="adjustForm.processing">
                         {{ t('dashboard.forms.submit_adjust') }}
                     </Button>
                 </form>

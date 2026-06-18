@@ -12,22 +12,22 @@ authentication** — the wallet URL is the identifier and is read-only.
 
 ## 2. Resolved decisions (locked from `grill-with-docs`)
 
-| Area | Decision |
-|---|---|
-| Admin surface | Inertia pages under the existing `database_token` guard. **No Filament.** |
-| Staff URL namespace | `/staff/*` (not `/admin/*`) |
-| PWA | Hand-rolled `public/sw.js` + `public/manifest.json` |
-| Phone normalization | `propaganistas/laravel-phone`, E.164 stored in `phone_normalized` |
-| Money math | `brick/math` BigDecimal, `decimal(10,2)` columns |
-| Database | MySQL 8 (per `AGENTS.md`) |
-| Customer auth | None. `public_token` (32-char URL-safe, 192 bits) in URL is the identifier. |
-| Staff auth | Existing `database_token` guard, email + password |
-| `users` schema change | Add `name` and `role` (`admin` / `staff`) columns to the existing table |
-| Architecture tests | All existing `tests/Architecture/*` must continue to pass |
-| i18n | `cs` + `en`; default `cs` |
-| Scanner camera | `html5-qrcode`, manual input always available as fallback |
-| Rate limit `POST /wallet` | 10/min per IP, 3/min per phone |
-| Existing surfaces | `agent_*` and `Dashboard.vue` are **untouched** |
+| Area                      | Decision                                                                    |
+| ------------------------- | --------------------------------------------------------------------------- |
+| Admin surface             | Inertia pages under the existing `database_token` guard. **No Filament.**   |
+| Staff URL namespace       | `/staff/*` (not `/admin/*`)                                                 |
+| PWA                       | Hand-rolled `public/sw.js` + `public/manifest.json`                         |
+| Phone normalization       | `propaganistas/laravel-phone`, E.164 stored in `phone_normalized`           |
+| Money math                | `brick/math` BigDecimal, `decimal(10,2)` columns                            |
+| Database                  | MySQL 8 (per `AGENTS.md`)                                                   |
+| Customer auth             | None. `public_token` (32-char URL-safe, 192 bits) in URL is the identifier. |
+| Staff auth                | Existing `database_token` guard, email + password                           |
+| `users` schema change     | Add `name` and `role` (`admin` / `staff`) columns to the existing table     |
+| Architecture tests        | All existing `tests/Architecture/*` must continue to pass                   |
+| i18n                      | `cs` + `en`; default `cs`                                                   |
+| Scanner camera            | `html5-qrcode`, manual input always available as fallback                   |
+| Rate limit `POST /wallet` | 10/min per IP, 3/min per phone                                              |
+| Existing surfaces         | `agent_*` and `Dashboard.vue` are **untouched**                             |
 
 ## 3. Domain model
 
@@ -35,9 +35,9 @@ authentication** — the wallet URL is the identifier and is read-only.
 
 Add columns:
 
-| Column | Type | Notes |
-|---|---|---|
-| `name` | `string` | Display name for staff |
+| Column | Type                    | Notes                                 |
+| ------ | ----------------------- | ------------------------------------- |
+| `name` | `string`                | Display name for staff                |
 | `role` | `enum('admin','staff')` | String-backed PHP enum `UserRoleEnum` |
 
 Existing columns (`email`, `password`, `locale`, `remember_token`,
@@ -45,53 +45,53 @@ Existing columns (`email`, `password`, `locale`, `remember_token`,
 
 ### 3.2 `reward_wallets` (new)
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `bigIncrements` | Internal PK — **never** exposed publicly |
-| `uuid` | `uuid` unique | Stable external id used internally |
-| `public_token` | `string(48)` unique | 32-char URL-safe (192-bit) random. **The** public identifier. |
-| `wallet_number` | `string(16)` unique | Short human-readable number for the card, e.g. `T-AB12-34CD` |
-| `first_name` | `string(64)` | Personalization only |
-| `phone` | `string(32)` | User-entered, display |
-| `phone_normalized` | `string(32)` unique, E.164 | Used for lookups |
-| `rewards_balance` | `decimal(10,2)` default 0 | Never < 0 |
-| `lifetime_earned` | `decimal(10,2)` default 0 | |
-| `lifetime_redeemed` | `decimal(10,2)` default 0 | |
-| `status` | `enum('active','disabled')` default `active` | |
-| `last_used_at` | `timestamp` nullable | Updated on every wallet-affecting staff action |
-| `timestamps` | | |
+| Column              | Type                                         | Notes                                                         |
+| ------------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| `id`                | `bigIncrements`                              | Internal PK — **never** exposed publicly                      |
+| `uuid`              | `uuid` unique                                | Stable external id used internally                            |
+| `public_token`      | `string(48)` unique                          | 32-char URL-safe (192-bit) random. **The** public identifier. |
+| `wallet_number`     | `string(16)` unique                          | Short human-readable number for the card, e.g. `T-AB12-34CD`  |
+| `first_name`        | `string(64)`                                 | Personalization only                                          |
+| `phone`             | `string(32)`                                 | User-entered, display                                         |
+| `phone_normalized`  | `string(32)` unique, E.164                   | Used for lookups                                              |
+| `rewards_balance`   | `decimal(10,2)` default 0                    | Never < 0                                                     |
+| `lifetime_earned`   | `decimal(10,2)` default 0                    |                                                               |
+| `lifetime_redeemed` | `decimal(10,2)` default 0                    |                                                               |
+| `status`            | `enum('active','disabled')` default `active` |                                                               |
+| `last_used_at`      | `timestamp` nullable                         | Updated on every wallet-affecting staff action                |
+| `timestamps`        |                                              |                                                               |
 
 Indexes: `phone_normalized` (unique), `public_token` (unique), `wallet_number`
 (unique), `status`, `last_used_at`.
 
 ### 3.3 `reward_transactions` (new, append-only)
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `bigIncrements` | |
-| `uuid` | `uuid` unique | |
-| `reward_wallet_id` | `foreignId` | constrained, cascade on delete |
-| `user_id` | `foreignId` nullable | constrained, null on delete (preserve history) |
-| `type` | `enum('purchase_cashback','redeem','manual_add','manual_subtract','manual_set')` | |
-| `purchase_amount` | `decimal(10,2)` nullable | Only set on `purchase_cashback` |
-| `cashback_rate` | `decimal(5,2)` nullable | Only set on `purchase_cashback` |
-| `amount` | `decimal(10,2)` | Signed: positive on add, negative on subtract/redeem |
-| `balance_before` | `decimal(10,2)` | |
-| `balance_after` | `decimal(10,2)` | |
-| `note` | `string` nullable | Required for `manual_*` types |
-| `metadata` | `json` nullable | |
-| `timestamps` | | |
+| Column             | Type                                                                             | Notes                                                |
+| ------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `id`               | `bigIncrements`                                                                  |                                                      |
+| `uuid`             | `uuid` unique                                                                    |                                                      |
+| `reward_wallet_id` | `foreignId`                                                                      | constrained, cascade on delete                       |
+| `user_id`          | `foreignId` nullable                                                             | constrained, null on delete (preserve history)       |
+| `type`             | `enum('purchase_cashback','redeem','manual_add','manual_subtract','manual_set')` |                                                      |
+| `purchase_amount`  | `decimal(10,2)` nullable                                                         | Only set on `purchase_cashback`                      |
+| `cashback_rate`    | `decimal(5,2)` nullable                                                          | Only set on `purchase_cashback`                      |
+| `amount`           | `decimal(10,2)`                                                                  | Signed: positive on add, negative on subtract/redeem |
+| `balance_before`   | `decimal(10,2)`                                                                  |                                                      |
+| `balance_after`    | `decimal(10,2)`                                                                  |                                                      |
+| `note`             | `string` nullable                                                                | Required for `manual_*` types                        |
+| `metadata`         | `json` nullable                                                                  |                                                      |
+| `timestamps`       |                                                                                  |                                                      |
 
 Indexes: `reward_wallet_id`, `user_id`, `type`, `created_at`.
 
 ### 3.4 `settings` (new, simple key/value)
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `bigIncrements` | |
-| `key` | `string(64)` unique | |
-| `value` | `text` | |
-| `timestamps` | | |
+| Column       | Type                | Notes |
+| ------------ | ------------------- | ----- |
+| `id`         | `bigIncrements`     |       |
+| `key`        | `string(64)` unique |       |
+| `value`      | `text`              |       |
+| `timestamps` |                     |       |
 
 Default rows seeded:
 
@@ -147,14 +147,14 @@ unauthenticated; staff routes sit behind the existing
 
 ### 6.1 Public (no auth)
 
-| Method | URI | Controller |
-|---|---|---|
-| GET | `/` | `Web\Marketing\MarketingIndexController` |
-| GET | `/wallet` | `Web\Wallet\WalletCreateController` |
-| POST | `/wallet` | `Web\Wallet\WalletStoreController` |
-| GET | `/w/{public_token}` | `Web\Wallet\WalletShowController` |
-| GET | `/w/{public_token}/activity` | `Web\Wallet\WalletActivityController` |
-| GET | `/offline` | `Web\Pwa\OfflineController` |
+| Method | URI                          | Controller                               |
+| ------ | ---------------------------- | ---------------------------------------- |
+| GET    | `/`                          | `Web\Marketing\MarketingIndexController` |
+| GET    | `/wallet`                    | `Web\Wallet\WalletCreateController`      |
+| POST   | `/wallet`                    | `Web\Wallet\WalletStoreController`       |
+| GET    | `/w/{public_token}`          | `Web\Wallet\WalletShowController`        |
+| GET    | `/w/{public_token}/activity` | `Web\Wallet\WalletActivityController`    |
+| GET    | `/offline`                   | `Web\Pwa\OfflineController`              |
 
 ### 6.2 Staff (auth + role middleware)
 
@@ -165,22 +165,22 @@ behind the existing `EnsureInertiaUserIsAuthenticated` middleware. A new
 further pass through a new `EnsureAdminRole` middleware that allows only
 `admin` users.
 
-| Method | URI | Controller |
-|---|---|---|
-| GET | `/staff` | `Web\Staff\DashboardController` |
-| GET | `/staff/scan` | `Web\Staff\Scan\ScanIndexController` |
-| GET | `/staff/scan/{token}` | `Web\Staff\Scan\ScanShowController` |
-| POST | `/staff/wallets/{wallet}/purchase` | `Web\Staff\Wallets\LogPurchaseController` |
-| POST | `/staff/wallets/{wallet}/redeem` | `Web\Staff\Wallets\RedeemController` |
-| POST | `/staff/wallets/{wallet}/adjust` | `Web\Staff\Wallets\AdjustController` |
-| POST | `/staff/wallets/{wallet}/disable` | `Web\Staff\Wallets\DisableController` |
-| POST | `/staff/wallets/{wallet}/enable` | `Web\Staff\Wallets\EnableController` |
-| GET | `/staff/wallets` | `Web\Staff\Wallets\WalletIndexController` |
-| GET | `/staff/wallets/{wallet}` | `Web\Staff\Wallets\WalletShowController` |
-| GET | `/staff/transactions` | `Web\Staff\Transactions\TransactionIndexController` |
-| GET | `/staff/settings` | `Web\Staff\Settings\SettingsEditController` (admin only) |
-| POST | `/staff/settings` | `Web\Staff\Settings\SettingsUpdateController` (admin only) |
-| POST | `/staff/logout` | `Web\Auth\LogoutController` (reused) |
+| Method | URI                                | Controller                                                 |
+| ------ | ---------------------------------- | ---------------------------------------------------------- |
+| GET    | `/staff`                           | `Web\Staff\DashboardController`                            |
+| GET    | `/staff/scan`                      | `Web\Staff\Scan\ScanIndexController`                       |
+| GET    | `/staff/scan/{token}`              | `Web\Staff\Scan\ScanShowController`                        |
+| POST   | `/staff/wallets/{wallet}/purchase` | `Web\Staff\Wallets\LogPurchaseController`                  |
+| POST   | `/staff/wallets/{wallet}/redeem`   | `Web\Staff\Wallets\RedeemController`                       |
+| POST   | `/staff/wallets/{wallet}/adjust`   | `Web\Staff\Wallets\AdjustController`                       |
+| POST   | `/staff/wallets/{wallet}/disable`  | `Web\Staff\Wallets\DisableController`                      |
+| POST   | `/staff/wallets/{wallet}/enable`   | `Web\Staff\Wallets\EnableController`                       |
+| GET    | `/staff/wallets`                   | `Web\Staff\Wallets\WalletIndexController`                  |
+| GET    | `/staff/wallets/{wallet}`          | `Web\Staff\Wallets\WalletShowController`                   |
+| GET    | `/staff/transactions`              | `Web\Staff\Transactions\TransactionIndexController`        |
+| GET    | `/staff/settings`                  | `Web\Staff\Settings\SettingsEditController` (admin only)   |
+| POST   | `/staff/settings`                  | `Web\Staff\Settings\SettingsUpdateController` (admin only) |
+| POST   | `/staff/logout`                    | `Web\Auth\LogoutController` (reused)                       |
 
 ## 7. Validation (validity classes under `app/Validation/Web/...`)
 

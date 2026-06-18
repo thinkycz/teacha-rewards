@@ -24,8 +24,6 @@ class SettingsService
     /**
      * Read a setting by key, returning the default if the row is
      * missing.
-     *
-     * @return mixed
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -88,7 +86,7 @@ class SettingsService
     {
         $raw = $this->get('cashback_rate', '10');
 
-        if (! \is_scalar($raw)) {
+        if (!\is_scalar($raw)) {
             return BigDecimal::of('10.00');
         }
 
@@ -132,7 +130,7 @@ class SettingsService
     {
         $raw = $this->get('stamps_per_reward', '10');
 
-        if (! \is_scalar($raw)) {
+        if (!\is_scalar($raw)) {
             return 10;
         }
 
@@ -150,7 +148,7 @@ class SettingsService
     {
         $raw = $this->get('stamps_per_reward_label', 'Free drink');
 
-        if (! \is_string($raw) || \trim($raw) === '') {
+        if (!\is_string($raw) || \trim($raw) === '') {
             return 'Free drink';
         }
 
@@ -165,7 +163,7 @@ class SettingsService
     {
         $raw = $this->get('stamp_icon', '🍵');
 
-        if (! \is_string($raw)) {
+        if (!\is_string($raw)) {
             return '🍵';
         }
 

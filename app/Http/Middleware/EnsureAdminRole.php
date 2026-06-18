@@ -22,13 +22,13 @@ class EnsureAdminRole
     /**
      * Handle the incoming request.
      *
-     * @param  Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(Request): (SymfonyResponse) $next
      */
     public function handle(Request $request, Closure $next): SymfonyResponse
     {
         $user = $request->user();
 
-        if (! $user instanceof User) {
+        if (!$user instanceof User) {
             Thrower::default()->message('auth', \__('auth.unauthenticated'))->throw();
         }
 

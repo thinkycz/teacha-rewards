@@ -44,13 +44,21 @@ function render(): void {
         });
         error.value = null;
     } catch (err) {
-        error.value = err instanceof Error ? err.message : 'Barcode render failed';
+        error.value =
+            err instanceof Error ? err.message : 'Barcode render failed';
     }
 }
 
 onMounted(render);
 watch(
-    () => [props.value, props.format, props.height, props.displayValue, props.fontSize, props.margin],
+    () => [
+        props.value,
+        props.format,
+        props.height,
+        props.displayValue,
+        props.fontSize,
+        props.margin,
+    ],
     render,
 );
 </script>
@@ -63,10 +71,7 @@ watch(
             role="img"
             :aria-label="value"
         />
-        <p
-            v-if="error"
-            class="mt-2 text-center text-xs text-error-red"
-        >
+        <p v-if="error" class="mt-2 text-center text-xs text-error-red">
             {{ error }}
         </p>
     </div>

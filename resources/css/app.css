@@ -60,8 +60,10 @@
     /* Fonts — single Inter family for body and headings. Mono
        stays as ui-monospace for the brand mark / wallet number. */
     --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-heading: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    --font-heading:
+        'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono:
+        ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 @layer base {

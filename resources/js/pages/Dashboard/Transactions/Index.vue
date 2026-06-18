@@ -7,6 +7,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Button from '@/components/ui/Button.vue';
+import Pagination from '@/components/ui/Pagination.vue';
 import { useTransactionFormat } from '@/composables/useTransactionFormat';
 import { formatDateTime } from '@/lib/date';
 
@@ -36,6 +37,27 @@ interface Transaction {
     created_at: string | null;
 }
 
+/**
+ * Laravel's `LengthAwarePaginator::toArray()` shape — Inertia
+ * serialises the paginator as a flat object, not the
+ * `{data, links, meta}` envelope, so we mirror it here.
+ */
+interface TransactionPaginator {
+    current_page: number;
+    data: Transaction[];
+    first_page_url: string | null;
+    from: number | null;
+    last_page: number;
+    last_page_url: string | null;
+    links: Array<{ url: string | null; label: string; page: number | null; active: boolean }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number | null;
+    total: number;
+}
+
 interface Filters {
     q: string;
     type: string;
@@ -48,7 +70,7 @@ interface ProgramConfig {
 }
 
 const props = defineProps<{
-    transactions: Transaction[];
+    transactions: TransactionPaginator;
     filters: Filters;
     type_options: string[];
     program: ProgramConfig;
@@ -58,6 +80,11 @@ const search = ref(props.filters.q);
 const type = ref(props.filters.type);
 
 function applyFilters(): void {
+    // Filters always reset to page 1 (we deliberately omit `page`
+    // here so Laravel lands on page 1 of the new filter set). The
+    // page links that Laravel pre-builds already include the
+    // current `?q=…&type=…` via `withQueryString()`, so clicking a
+    // page link preserves the filters.
     const params: Record<string, string> = {};
     if (search.value.trim() !== '') {
         params['q'] = search.value.trim();
@@ -79,7 +106,9 @@ function clearFilters(): void {
     applyFilters();
 }
 
-const hasActiveFilters = computed(() => search.value.trim() !== '' || type.value !== '');
+const hasActiveFilters = computed(
+    () => search.value.trim() !== '' || type.value !== '',
+);
 
 const typeOptions = computed(() => [
     { value: '', label: t('dashboard.transactions.index.type_all') },
@@ -113,26 +142,24 @@ const typeOptions = computed(() => [
                             v-model="search"
                             type="search"
                             name="q"
-                            :placeholder="t('dashboard.transactions.index.search_placeholder')"
+                            :placeholder="
+                                t(
+                                    'dashboard.transactions.index.search_placeholder',
+                                )
+                            "
                             class="pl-9"
                         />
                     </div>
-                    <Select
-                        v-model="type"
-                        name="type"
-                        :options="typeOptions"
-                    />
-                    <Button
-                        type="submit"
-                        class="justify-center"
-                    >
-                        {{ t('dashboard.wallets.index.search_placeholder').split(' ')[0] }}
+                    <Select v-model="type" name="type" :options="typeOptions" />
+                    <Button type="submit" class="justify-center">
+                        {{
+                            t(
+                                'dashboard.wallets.index.search_placeholder',
+                            ).split(' ')[0]
+                        }}
                     </Button>
                 </form>
-                <div
-                    v-if="hasActiveFilters"
-                    class="mt-3 flex justify-end"
-                >
+                <div v-if="hasActiveFilters" class="mt-3 flex justify-end">
                     <button
                         type="button"
                         class="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant transition hover:text-on-surface"
@@ -145,34 +172,43 @@ const typeOptions = computed(() => [
             </section>
 
             <!-- Results -->
-            <section v-if="transactions.length === 0">
-                <div class="surface-card p-6 text-center text-sm text-on-surface-variant">
+            <section v-if="transactions.data.length === 0">
+                <div
+                    class="surface-card p-6 text-center text-sm text-on-surface-variant"
+                >
                     {{ t('dashboard.transactions.index.empty') }}
                 </div>
             </section>
 
             <ul v-else class="space-y-2">
-                <li
-                    v-for="tx in transactions"
-                    :key="tx.id"
-                >
+                <li v-for="tx in transactions.data" :key="tx.id">
                     <component
                         :is="tx.wallet_id ? Link : 'div'"
-                        :href="tx.wallet_id ? `/wallets/${tx.wallet_id}` : undefined"
+                        :href="
+                            tx.wallet_id
+                                ? `/wallets/${tx.wallet_id}`
+                                : undefined
+                        "
                         class="group block surface-card p-4 transition hover:border-primary"
                         :class="{ 'cursor-pointer': !!tx.wallet_id }"
                     >
                         <div class="flex items-start gap-3">
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                                    <span
+                                        class="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary"
+                                    >
                                         {{ typeLabel(tx.type) }}
                                     </span>
-                                    <span class="text-[10px] text-on-surface-variant">
+                                    <span
+                                        class="text-[10px] text-on-surface-variant"
+                                    >
                                         {{ formatDateTime(tx.created_at) }}
                                     </span>
                                 </div>
-                                <p class="mt-1 truncate text-sm font-semibold text-on-surface">
+                                <p
+                                    class="mt-1 truncate text-sm font-semibold text-on-surface"
+                                >
                                     {{ tx.wallet_first_name ?? '—' }}
                                     <span
                                         v-if="tx.wallet_number"
@@ -182,22 +218,38 @@ const typeOptions = computed(() => [
                                     </span>
                                 </p>
                                 <p
-                                    v-if="stampsEqRewards(tx, program.stamps_per_reward_label)"
+                                    v-if="
+                                        stampsEqRewards(
+                                            tx,
+                                            program.stamps_per_reward_label,
+                                        )
+                                    "
                                     class="text-[10px] text-on-surface-variant"
                                 >
-                                    {{ stampsEqRewards(tx, program.stamps_per_reward_label) }}
+                                    {{
+                                        stampsEqRewards(
+                                            tx,
+                                            program.stamps_per_reward_label,
+                                        )
+                                    }}
                                 </p>
                                 <p
                                     v-if="tx.purchase_amount"
                                     class="text-[10px] text-on-surface-variant"
                                 >
-                                    {{ t('dashboard.transactions.index.purchase_amount') }}: {{ tx.purchase_amount }} Kč
+                                    {{
+                                        t(
+                                            'dashboard.transactions.index.purchase_amount',
+                                        )
+                                    }}: {{ tx.purchase_amount }} Kč
                                 </p>
                                 <p
                                     v-if="tx.note"
                                     class="text-[10px] text-on-surface-variant"
                                 >
-                                    {{ t('dashboard.transactions.index.note') }}: {{ tx.note }}
+                                    {{
+                                        t('dashboard.transactions.index.note')
+                                    }}: {{ tx.note }}
                                 </p>
                                 <p
                                     v-if="tx.staff_name"
@@ -209,17 +261,38 @@ const typeOptions = computed(() => [
                             <div class="text-right">
                                 <p
                                     class="text-sm font-semibold tabular-nums"
-                                    :class="Number(tx.amount) >= 0 ? 'text-success' : 'text-error-red'"
+                                    :class="
+                                        Number(tx.amount) >= 0
+                                            ? 'text-success'
+                                            : 'text-error-red'
+                                    "
                                 >
-                                    {{ formatTxAmount(tx, tx.wallet_type, program.stamps_per_reward) }}
+                                    {{
+                                        formatTxAmount(
+                                            tx,
+                                            tx.wallet_type,
+                                            program.stamps_per_reward,
+                                        )
+                                    }}
                                 </p>
                                 <p class="label-eyebrow">
-                                    {{ tx.wallet_type === 'stamps' ? t('dashboard.transactions.index.balance_after_stamps') : t('dashboard.transactions.index.balance_after') }}
+                                    {{
+                                        tx.wallet_type === 'stamps'
+                                            ? t(
+                                                  'dashboard.transactions.index.balance_after_stamps',
+                                              )
+                                            : t(
+                                                  'dashboard.transactions.index.balance_after',
+                                              )
+                                    }}
                                 </p>
-                                <p
-                                    class="text-xs text-on-surface tabular-nums"
-                                >
-                                    {{ formatTxBalance(tx.balance_after, tx.wallet_type) }}
+                                <p class="text-xs text-on-surface tabular-nums">
+                                    {{
+                                        formatTxBalance(
+                                            tx.balance_after,
+                                            tx.wallet_type,
+                                        )
+                                    }}
                                 </p>
                             </div>
                             <ChevronRight
@@ -231,6 +304,11 @@ const typeOptions = computed(() => [
                     </component>
                 </li>
             </ul>
+
+            <Pagination
+                v-if="transactions.data.length > 0"
+                :paginator="transactions"
+            />
         </div>
     </AdminLayout>
 </template>

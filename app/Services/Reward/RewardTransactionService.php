@@ -304,27 +304,6 @@ class RewardTransactionService
     }
 
     /**
-     * Acquire a `SELECT ... FOR UPDATE` lock on the wallet row and
-     * return a fresh instance. Throws if the row no longer exists
-     * (concurrent delete edge case).
-     *
-     * @throws ModelNotFoundException
-     */
-    protected function lockWallet(RewardWallet $wallet): RewardWallet
-    {
-        $locked = RewardWallet::query()
-            ->whereKey($wallet->getKey())
-            ->lockForUpdate()
-            ->first();
-
-        if (! $locked instanceof RewardWallet) {
-            throw (new ModelNotFoundException())->setModel(RewardWallet::class, [$wallet->getKey()]);
-        }
-
-        return $locked;
-    }
-
-    /**
      * Award stamps to a wallet (cashier clicked "Add stamps" N
      * times for N drinks paid at full price).
      *
@@ -350,9 +329,9 @@ class RewardTransactionService
                 'reward_wallet_id' => $locked->getKey(),
                 'user_id' => $user->getKey(),
                 'type' => TransactionTypeEnum::STAMP_EARN->value,
-                'amount' => number_format($count, 2, '.', ''),
-                'balance_before' => number_format($before, 2, '.', ''),
-                'balance_after' => number_format($after, 2, '.', ''),
+                'amount' => \number_format($count, 2, '.', ''),
+                'balance_before' => \number_format($before, 2, '.', ''),
+                'balance_after' => \number_format($after, 2, '.', ''),
             ]);
 
             $locked->forceFill([
@@ -398,9 +377,9 @@ class RewardTransactionService
                 'reward_wallet_id' => $locked->getKey(),
                 'user_id' => $user->getKey(),
                 'type' => TransactionTypeEnum::STAMP_REDEEM->value,
-                'amount' => number_format(-$rewards, 2, '.', ''),
-                'balance_before' => number_format($before, 2, '.', ''),
-                'balance_after' => number_format($after, 2, '.', ''),
+                'amount' => \number_format(-$rewards, 2, '.', ''),
+                'balance_before' => \number_format($before, 2, '.', ''),
+                'balance_after' => \number_format($after, 2, '.', ''),
             ]);
 
             $locked->forceFill([
@@ -410,5 +389,24 @@ class RewardTransactionService
 
             return $transaction;
         });
+    }
+
+    /**
+     * Acquire a `SELECT ... FOR UPDATE` lock on the wallet row and
+     * return a fresh instance. Throws if the row no longer exists
+     * (concurrent delete edge case).
+     */
+    protected function lockWallet(RewardWallet $wallet): RewardWallet
+    {
+        $locked = RewardWallet::query()
+            ->whereKey($wallet->getKey())
+            ->lockForUpdate()
+            ->first();
+
+        if (!$locked instanceof RewardWallet) {
+            throw (new ModelNotFoundException())->setModel(RewardWallet::class, [$wallet->getKey()]);
+        }
+
+        return $locked;
     }
 }

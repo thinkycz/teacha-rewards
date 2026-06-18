@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Services\Settings\SettingsService;
+use DateTimeInterface;
 use Inertia\Inertia;
 use Inertia\Response;
 use Thinkycz\LaravelCore\Support\Resolver;
@@ -52,10 +53,11 @@ class WalletShowController
                 'lifetime_earned' => $wallet->getLifetimeEarned(),
                 'lifetime_redeemed' => $wallet->getLifetimeRedeemed(),
                 'status' => $wallet->getStatus()->value,
-                'last_used_at' => $wallet->getLastUsedAt()?->format(\DateTimeInterface::ATOM),
+                'last_used_at' => $wallet->getLastUsedAt()?->format(DateTimeInterface::ATOM),
             ],
             'transactions' => $recent->map(static function (RewardTransaction $tx) use ($wallet): array {
                 $createdAt = $tx->getAttribute('created_at');
+
                 return [
                     'id' => $tx->getKey(),
                     'type' => $tx->getType()->value,
@@ -67,7 +69,7 @@ class WalletShowController
                     'note' => $tx->getNote(),
                     'wallet_type' => $wallet->getType()->value,
                     'staff_name' => $tx->user?->getName(),
-                    'created_at' => $createdAt instanceof \DateTimeInterface ? $createdAt->format(\DateTimeInterface::ATOM) : null,
+                    'created_at' => $createdAt instanceof DateTimeInterface ? $createdAt->format(DateTimeInterface::ATOM) : null,
                 ];
             })->all(),
             'program' => [

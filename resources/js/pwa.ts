@@ -10,7 +10,11 @@ export function registerServiceWorker(): void {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
         return;
     }
-    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    if (
+        window.location.protocol !== 'https:' &&
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1'
+    ) {
         return;
     }
     window.addEventListener('load', () => {
@@ -18,7 +22,10 @@ export function registerServiceWorker(): void {
             .register('/sw.js', { scope: '/' })
             .catch((error: unknown) => {
                 // eslint-disable-next-line no-console
-                console.warn('Teacha service worker failed to register:', error);
+                console.warn(
+                    'Teacha service worker failed to register:',
+                    error,
+                );
             });
     });
 }

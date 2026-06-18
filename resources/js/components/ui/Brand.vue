@@ -21,17 +21,17 @@ const { t } = useI18n();
 </script>
 
 <template>
-    <Link :href="href" class="flex items-center gap-2.5 font-medium select-none">
+    <Link
+        :href="href"
+        class="flex items-center gap-2.5 font-medium select-none"
+    >
         <img
             :src="'/favicon.svg?v=2'"
             :alt="app.name"
             class="h-9 w-9 shrink-0"
             aria-hidden="true"
-        >
-        <div
-            v-if="variant === 'full'"
-            class="text-left"
-        >
+        />
+        <div v-if="variant === 'full'" class="text-left">
             <h1
                 class="mb-0.5 font-heading text-sm font-bold tracking-tight text-on-surface leading-none"
             >

@@ -52,7 +52,9 @@ const isStamps = computed(() => props.wallet.type === 'stamps');
     <Head :title="t('wallet.activity.title', { name: wallet.first_name })" />
 
     <div class="min-h-screen bg-surface-bg text-on-surface">
-        <header class="mx-auto flex max-w-md items-center justify-between px-6 py-6">
+        <header
+            class="mx-auto flex max-w-md items-center justify-between px-6 py-6"
+        >
             <Link :href="`/w/${wallet.public_token}`">
                 <Brand class="text-2xl" />
             </Link>
@@ -71,7 +73,11 @@ const isStamps = computed(() => props.wallet.type === 'stamps');
                     {{ t('wallet.activity.heading') }}
                 </h1>
                 <p class="mt-2 text-sm text-on-surface-variant">
-                    {{ t('wallet.activity.subheading', { name: wallet.first_name }) }}
+                    {{
+                        t('wallet.activity.subheading', {
+                            name: wallet.first_name,
+                        })
+                    }}
                 </p>
             </div>
 

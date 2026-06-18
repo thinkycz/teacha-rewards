@@ -9,7 +9,17 @@ declare module 'qrcode' {
             light?: string;
         };
     }
-    export function toDataURL(text: string, options?: QRCodeToDataURLOptions): Promise<string>;
-    export function toString(text: string, options?: QRCodeToDataURLOptions): Promise<string>;
-    export function toCanvas(canvas: HTMLCanvasElement, text: string, options?: QRCodeToDataURLOptions): Promise<void>;
+    export function toDataURL(
+        text: string,
+        options?: QRCodeToDataURLOptions,
+    ): Promise<string>;
+    export function toString(
+        text: string,
+        options?: QRCodeToDataURLOptions,
+    ): Promise<string>;
+    export function toCanvas(
+        canvas: HTMLCanvasElement,
+        text: string,
+        options?: QRCodeToDataURLOptions,
+    ): Promise<void>;
 }

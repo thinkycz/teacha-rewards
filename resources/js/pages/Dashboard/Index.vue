@@ -70,18 +70,48 @@ interface Tile {
 
 const tiles = computed<Tile[]>(() => {
     const base: Tile[] = [
-        { label: t('dashboard.dashboard.active_wallets'), value: String(props.stats.active_wallets), icon: Users, accent: 'success' },
-        { label: t('dashboard.dashboard.disabled_wallets'), value: String(props.stats.disabled_wallets), icon: UserX, accent: 'warning' },
+        {
+            label: t('dashboard.dashboard.active_wallets'),
+            value: String(props.stats.active_wallets),
+            icon: Users,
+            accent: 'success',
+        },
+        {
+            label: t('dashboard.dashboard.disabled_wallets'),
+            value: String(props.stats.disabled_wallets),
+            icon: UserX,
+            accent: 'warning',
+        },
     ];
     if (isStamps.value) {
         base.push(
-            { label: t('dashboard.dashboard.today_stamps_earned'), value: String(props.stats.today_stamps_earned), icon: ShoppingBag, accent: 'primary' },
-            { label: t('dashboard.dashboard.today_rewards_redeemed'), value: String(props.stats.today_rewards_redeemed), icon: CircleDollarSign, accent: 'primary' },
+            {
+                label: t('dashboard.dashboard.today_stamps_earned'),
+                value: String(props.stats.today_stamps_earned),
+                icon: ShoppingBag,
+                accent: 'primary',
+            },
+            {
+                label: t('dashboard.dashboard.today_rewards_redeemed'),
+                value: String(props.stats.today_rewards_redeemed),
+                icon: CircleDollarSign,
+                accent: 'primary',
+            },
         );
     } else {
         base.push(
-            { label: t('dashboard.dashboard.today_purchases'), value: String(props.stats.today_purchase_count), icon: ShoppingBag, accent: 'primary' },
-            { label: t('dashboard.dashboard.today_cashback'), value: `${cashbackFormatted.value} Kč`, icon: CircleDollarSign, accent: 'primary' },
+            {
+                label: t('dashboard.dashboard.today_purchases'),
+                value: String(props.stats.today_purchase_count),
+                icon: ShoppingBag,
+                accent: 'primary',
+            },
+            {
+                label: t('dashboard.dashboard.today_cashback'),
+                value: `${cashbackFormatted.value} Kč`,
+                icon: CircleDollarSign,
+                accent: 'primary',
+            },
         );
     }
     return base;
@@ -111,7 +141,10 @@ function tileBg(accent: Tile['accent']): string {
                     {{ t('dashboard.dashboard.heading') }}
                 </h1>
                 <p class="mt-1 label-help">
-                    {{ t('dashboard.dashboard.subtitle') ?? t('dashboard.dashboard.heading') }}
+                    {{
+                        t('dashboard.dashboard.subtitle') ??
+                        t('dashboard.dashboard.heading')
+                    }}
                 </p>
             </header>
 
@@ -125,12 +158,11 @@ function tileBg(accent: Tile['accent']): string {
                         class="flex h-9 w-9 items-center justify-center rounded-xl"
                         :class="tileBg(tile.accent)"
                     >
-                        <component
-                            :is="tile.icon"
-                            :size="18"
-                        />
+                        <component :is="tile.icon" :size="18" />
                     </div>
-                    <p class="mt-3 text-2xl font-bold tracking-tight text-on-surface">
+                    <p
+                        class="mt-3 text-2xl font-bold tracking-tight text-on-surface"
+                    >
                         {{ tile.value }}
                     </p>
                     <p class="label-eyebrow mt-1">
@@ -158,7 +190,10 @@ function tileBg(accent: Tile['accent']): string {
                                 {{ t('dashboard.dashboard.view_wallets') }}
                             </p>
                         </div>
-                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
+                        <ArrowRight
+                            :size="16"
+                            class="text-on-surface-variant transition group-hover:text-primary"
+                        />
                     </Link>
                     <Link
                         href="/store-qr"
@@ -174,7 +209,10 @@ function tileBg(accent: Tile['accent']): string {
                                 {{ t('dashboard.store_qr.title') }}
                             </p>
                         </div>
-                        <ArrowRight :size="16" class="text-on-surface-variant transition group-hover:text-primary" />
+                        <ArrowRight
+                            :size="16"
+                            class="text-on-surface-variant transition group-hover:text-primary"
+                        />
                     </Link>
                 </div>
             </section>

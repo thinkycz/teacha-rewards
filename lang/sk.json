@@ -38,6 +38,7 @@
     "reward.redeemed": "Odmeny uplatnené.",
     "reward.adjusted": "Zostatok upravený.",
     "reward.invalid_phone": "Toto telefónne číslo nevyzerá správne.",
+    "reward.phone_in_use": "Toto telefónne číslo je už pripojené k peňaženke. Použite prosím iné.",
     "reward.stamps_added": "Pečiatky pridané.",
     "reward.stamps_redeemed": "Odmenu uplatnená.",
     "reward.action_unavailable_for_wallet_type": "Táto akcia nie je pre daný typ peňaženky dostupná."

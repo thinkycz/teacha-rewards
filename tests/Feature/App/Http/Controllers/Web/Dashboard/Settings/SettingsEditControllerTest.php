@@ -58,7 +58,7 @@ function fullPayload(): array
 
     $response = $this->actingAs($admin)->post(
         '/settings',
-        fullPayload(),
+        \fullPayload(),
         $this->inertiaHeaders(),
     );
 
@@ -76,7 +76,7 @@ function fullPayload(): array
 \test('POST /settings rejects a cashback rate above 100', function (): void {
     $admin = User::factory()->admin()->create();
 
-    $payload = fullPayload();
+    $payload = \fullPayload();
     $payload['cashback_rate'] = '500';
 
     $response = $this->actingAs($admin)->post(
@@ -93,7 +93,7 @@ function fullPayload(): array
 \test('POST /settings rejects an invalid program_mode', function (): void {
     $admin = User::factory()->admin()->create();
 
-    $payload = fullPayload();
+    $payload = \fullPayload();
     $payload['program_mode'] = 'lottery';
 
     $response = $this->actingAs($admin)->post(
@@ -111,7 +111,7 @@ function fullPayload(): array
 
     $response = $this->actingAs($staff)->post(
         '/settings',
-        fullPayload(),
+        \fullPayload(),
         $this->inertiaHeaders(),
     );
 

@@ -48,10 +48,7 @@ createInertiaApp({
             ],
         });
 
-        root
-            .use(plugin)
-            .use(i18n)
-            .mount(el);
+        root.use(plugin).use(i18n).mount(el);
     },
     progress: {
         color: '#2563eb',

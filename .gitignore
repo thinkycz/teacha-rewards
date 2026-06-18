@@ -70,3 +70,7 @@ yarn-error.log
 /*.sqlite
 /*.sqlite3
 /*.db
+
+# stray local dev artifacts (a developer running migrations against
+# an unconfigured DB ends up with this file at the repo root)
+/rewards

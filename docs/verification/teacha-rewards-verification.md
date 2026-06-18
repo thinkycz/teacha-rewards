@@ -5,15 +5,15 @@
 
 ## Per-phase minimum verification
 
-| Phase | Code | Architecture | Test | Runtime / manual |
-|---|---|---|---|---|
-| 1 Domain + database | `phpstan analyse` clean | all `tests/Architecture/*` green | `pest` migrations test | `php artisan migrate:fresh` runs |
-| 2 Services | `phpstan analyse` clean | unchanged | new unit tests green | n/a |
-| 3 Public flow | `phpstan analyse` clean, `npm run type-check` clean | unchanged | per-controller Pest feature tests green | `php artisan serve` + browser: marketing → create → wallet show works, no auth needed for `/w/{token}` |
-| 4 Staff surface | `phpstan analyse` clean, `npm run type-check` clean | unchanged | per-controller Pest feature tests green | browser: login → scan (manual token) → log purchase → redeem → adjust → settings; verify balance change on customer page |
-| 5 PWA | `npm run build` clean | unchanged | n/a | Lighthouse PWA audit, offline reload shows `/offline`, install banner appears on second visit |
-| 6 Seed + design | `phpstan analyse` clean, `npm run type-check` clean, `npm run build` clean | unchanged | existing Pest + new tests still green | `make local` produces demoable state |
-| 7 Verification + handoff | `make fix && make check` clean | unchanged | full suite green | end-to-end manual run-through, `release-readiness` skill pass |
+| Phase                    | Code                                                                       | Architecture                     | Test                                    | Runtime / manual                                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------- | -------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1 Domain + database      | `phpstan analyse` clean                                                    | all `tests/Architecture/*` green | `pest` migrations test                  | `php artisan migrate:fresh` runs                                                                                         |
+| 2 Services               | `phpstan analyse` clean                                                    | unchanged                        | new unit tests green                    | n/a                                                                                                                      |
+| 3 Public flow            | `phpstan analyse` clean, `npm run type-check` clean                        | unchanged                        | per-controller Pest feature tests green | `php artisan serve` + browser: marketing → create → wallet show works, no auth needed for `/w/{token}`                   |
+| 4 Staff surface          | `phpstan analyse` clean, `npm run type-check` clean                        | unchanged                        | per-controller Pest feature tests green | browser: login → scan (manual token) → log purchase → redeem → adjust → settings; verify balance change on customer page |
+| 5 PWA                    | `npm run build` clean                                                      | unchanged                        | n/a                                     | Lighthouse PWA audit, offline reload shows `/offline`, install banner appears on second visit                            |
+| 6 Seed + design          | `phpstan analyse` clean, `npm run type-check` clean, `npm run build` clean | unchanged                        | existing Pest + new tests still green   | `make local` produces demoable state                                                                                     |
+| 7 Verification + handoff | `make fix && make check` clean                                             | unchanged                        | full suite green                        | end-to-end manual run-through, `release-readiness` skill pass                                                            |
 
 ## Spec acceptance coverage
 

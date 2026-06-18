@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\TransactionTypeEnum;
 use App\Enums\UserRoleEnum;
 use App\Enums\WalletStatusEnum;
-use App\Models\RewardTransaction;
 use App\Models\RewardWallet;
 use App\Models\Setting;
 use App\Models\User;
@@ -18,8 +16,8 @@ use Brick\Math\BigDecimal;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use libphonenumber\NumberParseException;
-use Throwable;
 use Thinkycz\LaravelCore\Support\Config;
+use Throwable;
 
 /**
  * Demo data for the Teacha Rewards stack.
@@ -45,8 +43,8 @@ class TeachaRewardsSeeder extends Seeder
         }
 
         if (
-            Setting::query()->where('key', 'teacha_seeder_v1')->exists()
-            || RewardWallet::query()->exists()
+            Setting::query()->where('key', 'teacha_seeder_v1')->exists() ||
+            RewardWallet::query()->exists()
         ) {
             return;
         }
@@ -150,7 +148,7 @@ class TeachaRewardsSeeder extends Seeder
     }
 
     /**
-     * @param  array<int, RewardWallet>  $customerWallets
+     * @param array<int, RewardWallet> $customerWallets
      */
     private function seedTransactions(
         RewardTransactionService $transactions,

@@ -179,7 +179,7 @@ return [
     */
 
     'secure' => $env->parseNullableBool('SESSION_SECURE_COOKIE')
-        ?? \str_starts_with(\strtolower($env->parseNullableString('APP_URL') ?? ''), 'https://'),
+        ?? \str_starts_with(\mb_strtolower($env->parseNullableString('APP_URL') ?? ''), 'https://'),
 
     /*
     |--------------------------------------------------------------------------

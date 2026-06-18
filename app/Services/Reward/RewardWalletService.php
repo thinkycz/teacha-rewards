@@ -9,6 +9,7 @@ use App\Enums\WalletTypeEnum;
 use App\Models\RewardWallet;
 use App\Services\Settings\SettingsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use libphonenumber\NumberParseException;
 use Propaganistas\LaravelPhone\PhoneNumber;
@@ -25,10 +26,10 @@ use Throwable;
 class RewardWalletService
 {
     /**
-     * @param SettingsService $settings Required so the service can be
-     *                                   used in tests where the
-     *                                   service container isn't
-     *                                   resolved.
+     * @param SettingsService $settings required so the service can be
+     *                                  used in tests where the
+     *                                  service container isn't
+     *                                  resolved
      */
     public function __construct(
         protected SettingsService $settings,
@@ -41,28 +42,35 @@ class RewardWalletService
      * If a wallet exists, `first_name` is updated only when currently
      * empty (plan §5.1 rule).
      *
-     * @throws NumberParseException When `$phone` is not a valid
-     *                              phone number.
+     * The lookup and create run inside a single `DB::transaction` with
+     * `lockForUpdate()` so two concurrent requests for the same number
+     * can't both decide to create. The DB-level `unique` index on
+     * `phone_normalized` is the final safety net; the controller turns
+     * any leaked `QueryException` into a friendly error.
      */
     public function findOrCreateByPhone(string $phone, string $firstName): RewardWallet
     {
-        $normalized = $this->normalizePhone($phone);
+        return DB::transaction(function () use ($phone, $firstName): RewardWallet {
+            $normalized = $this->normalizePhone($phone);
+            $display = $this->formatDisplayPhone($phone);
 
-        $wallet = RewardWallet::query()
-            ->where('phone_normalized', $normalized)
-            ->first();
+            $wallet = RewardWallet::query()
+                ->where('phone_normalized', $normalized)
+                ->lockForUpdate()
+                ->first();
 
-        if ($wallet !== null) {
-            $existingName = \trim($wallet->getFirstName());
+            if ($wallet !== null) {
+                $existingName = \trim($wallet->getFirstName());
 
-            if ($existingName === '' && \trim($firstName) !== '') {
-                $wallet->forceFill(['first_name' => \trim($firstName)])->save();
+                if ($existingName === '' && \trim($firstName) !== '') {
+                    $wallet->forceFill(['first_name' => \trim($firstName)])->save();
+                }
+
+                return $wallet;
             }
 
-            return $wallet;
-        }
-
-        return $this->createWallet($normalized, $phone, \trim($firstName) !== '' ? \trim($firstName) : '');
+            return $this->createWallet($normalized, $display, \trim($firstName) !== '' ? \trim($firstName) : '');
+        });
     }
 
     /**
@@ -70,27 +78,25 @@ class RewardWalletService
      * a valid number.
      *
      * The `Phone` cast from `propaganistas/laravel-phone` is the
-     * canonical normalizer. We pass an explicit `+` prefix when the
-     * caller omitted it, so the customer can type either
-     * `+420 123 456 789` or just `123 456 789` and still succeed.
-     *
-     * @throws NumberParseException
+     * canonical normalizer. The default region is `'CZ'`: a number
+     * without a `+` prefix is treated as Czech; a number with an
+     * explicit `+XXX` prefix is parsed under that country.
      */
     public function normalizePhone(string $phone): string
     {
-        $candidate = \trim($phone);
+        return $this->parsePhone($phone)->formatE164();
+    }
 
-        if ($candidate === '') {
-            throw new NumberParseException(NumberParseException::INVALID_COUNTRY_CODE, 'Phone number is empty.');
-        }
-
-        $instance = new PhoneNumber($candidate, 'CZ');
-
-        if (! $instance->isValid()) {
-            throw new NumberParseException(NumberParseException::NOT_A_NUMBER, $candidate . ' is not a valid phone number.');
-        }
-
-        return $instance->formatE164();
+    /**
+     * Format a phone number for display (international, with
+     * spaces — e.g. `+420 730 969 399`).
+     *
+     * Always derives from a fresh parse so the form is stable
+     * regardless of how the user typed the input.
+     */
+    public function formatDisplayPhone(string $phone): string
+    {
+        return $this->parsePhone($phone)->formatInternational();
     }
 
     /**
@@ -102,9 +108,10 @@ class RewardWalletService
      * that point on.
      *
      * Public — callers that need to upsert by phone should use
-     * `findOrCreateByPhone`. `$displayPhone` is the user-entered form
-     * (e.g. with spaces or formatting); `$normalized` is the E.164
-     * canonical form.
+     * `findOrCreateByPhone`. `$displayPhone` is the standardized
+     * international form (e.g. `+420 730 969 399`, produced by
+     * `formatDisplayPhone`); `$normalized` is the E.164 canonical
+     * form.
      */
     public function createWallet(string $normalized, string $displayPhone, string $firstName): RewardWallet
     {
@@ -124,6 +131,46 @@ class RewardWalletService
     }
 
     /**
+     * Look up a wallet by its public token, or throw.
+     */
+    public function getByPublicToken(string $token): RewardWallet
+    {
+        $wallet = RewardWallet::query()
+            ->where('public_token', $token)
+            ->first();
+
+        if (!$wallet instanceof RewardWallet) {
+            throw (new ModelNotFoundException())->setModel(RewardWallet::class, [$token]);
+        }
+
+        return $wallet;
+    }
+
+    /**
+     * Parse `$phone` against the `'CZ'` default region, throwing if
+     * the result is empty or not a valid number.
+     *
+     * Centralised so `normalizePhone` and `formatDisplayPhone` share
+     * a single source of truth for the parse step.
+     */
+    protected function parsePhone(string $phone): PhoneNumber
+    {
+        $candidate = \trim($phone);
+
+        if ($candidate === '') {
+            throw new NumberParseException(NumberParseException::INVALID_COUNTRY_CODE, 'Phone number is empty.');
+        }
+
+        $instance = new PhoneNumber($candidate, 'CZ');
+
+        if (!$instance->isValid()) {
+            throw new NumberParseException(NumberParseException::NOT_A_NUMBER, $candidate . ' is not a valid phone number.');
+        }
+
+        return $instance;
+    }
+
+    /**
      * Resolve the type a brand-new wallet should be created with.
      *
      * The global `program_mode` setting is the only signal we have
@@ -136,24 +183,6 @@ class RewardWalletService
         $raw = $this->settings->getProgramMode();
 
         return WalletTypeEnum::tryFrom($raw) ?? WalletTypeEnum::CASHBACK;
-    }
-
-    /**
-     * Look up a wallet by its public token, or throw.
-     *
-     * @throws ModelNotFoundException
-     */
-    public function getByPublicToken(string $token): RewardWallet
-    {
-        $wallet = RewardWallet::query()
-            ->where('public_token', $token)
-            ->first();
-
-        if (! $wallet instanceof RewardWallet) {
-            throw (new ModelNotFoundException())->setModel(RewardWallet::class, [$token]);
-        }
-
-        return $wallet;
     }
 
     /**
@@ -192,11 +221,11 @@ class RewardWalletService
      */
     protected function randomFrom(string $alphabet, int $length): string
     {
-        $max = \strlen($alphabet) - 1;
+        $max = \mb_strlen($alphabet) - 1;
         $out = '';
 
-        for ($i = 0; $i < $length; $i++) {
-            $out .= $alphabet[random_int(0, $max)];
+        for ($i = 0; $i < $length; ++$i) {
+            $out .= $alphabet[\random_int(0, $max)];
         }
 
         return $out;

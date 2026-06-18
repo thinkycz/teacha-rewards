@@ -60,6 +60,7 @@ browser session, check:
    the session cookie was set on.
 
 The seeder creates:
+
 - `admin@teacha.cz` / `password` — admin
 - `staff@teacha.cz` / `password` — staff
 - 5 customer wallets (Czech names, E.164 phones); the 5th is
@@ -171,7 +172,7 @@ Three locales: `en`, `cs` (default), `sk`. Locales live in:
   messages, auth strings, etc.)
 - `lang/{en,cs,sk}/validation.php` — Laravel validation overrides
 - `resources/js/i18n/{en,cs,sk}.json` — Vue messages (wallet,
-  marketing, pwa, staff.*)
+  marketing, pwa, staff.\*)
 
 The `tests/Unit/I18nParityTest.php` test enforces that the three
 Vue message trees have the same top-level keys (so a missing
@@ -179,18 +180,19 @@ translation fails CI).
 
 ## Defaults
 
-| Setting          | Default                | Where to change                          |
-| ---------------- | ---------------------- | ---------------------------------------- |
-| `cashback_rate`  | `10`                   | `/dashboard/settings`                    |
-| `currency`       | `CZK`                  | `/dashboard/settings`                    |
-| `program_name`   | `Teacha Rewards`       | `/dashboard/settings`                    |
-| `store_name`     | `Teacha`               | `/dashboard/settings`                    |
-| Default app locale | `cs`                 | `.env` `APP_LOCALE`                      |
-| Wallet public token | 32-char URL-safe (Str::random) | `app/Models/RewardWallet.php`     |
+| Setting             | Default                        | Where to change               |
+| ------------------- | ------------------------------ | ----------------------------- |
+| `cashback_rate`     | `10`                           | `/dashboard/settings`         |
+| `currency`          | `CZK`                          | `/dashboard/settings`         |
+| `program_name`      | `Teacha Rewards`               | `/dashboard/settings`         |
+| `store_name`        | `Teacha`                       | `/dashboard/settings`         |
+| Default app locale  | `cs`                           | `.env` `APP_LOCALE`           |
+| Wallet public token | 32-char URL-safe (Str::random) | `app/Models/RewardWallet.php` |
 
 ## Routes
 
 ### Public
+
 - `GET /` — marketing page
 - `GET /wallet` — open or create a wallet
 - `POST /wallet` — find or create by phone + first name
@@ -200,6 +202,7 @@ translation fails CI).
 - `GET /install` — PWA install guide (iOS-friendly steps)
 
 ### Admin / dashboard (`/dashboard/*`, requires `staff` or `admin`)
+
 - `GET /dashboard` — stats (active/disabled wallets, today's purchases + cashback) + recent activity + quick actions
 - `GET /dashboard/scan` — camera scanner + manual token entry
 - `GET /dashboard/scan/{token}` — wallet summary for the scanned token
@@ -213,11 +216,13 @@ translation fails CI).
 - `GET /dashboard/store-qr` — printable store QR sheet (cashier can print and stick at the till)
 
 ### Admin-only sub-tree (`/dashboard/settings/*`, requires `admin`)
+
 - `GET /dashboard/settings` — program + store settings (cashback rate, currency, program name, store name)
 - `POST /dashboard/settings` — save them
 - `/dashboard/store-qr` is also linked from the settings page for convenience
 
 ### Auth (unchanged from the boilerplate)
+
 - `GET /login`, `POST /login`, `POST /logout`
 - `GET /register`, `POST /register`
 - `GET /forgot-password`, `POST /forgot-password`
@@ -250,24 +255,24 @@ translation fails CI).
 
 ## Where to look in the code
 
-| Want to understand…              | File                                                                  |
-| -------------------------------- | --------------------------------------------------------------------- |
-| Cashback math, rounding, locking | `app/Services/Reward/RewardTransactionService.php`                   |
-| Wallet public token + phone lookup | `app/Services/Reward/RewardWalletService.php`                      |
-| Settings read / write            | `app/Services/Settings/SettingsService.php`                           |
-| Staff form validation            | `app/Validation/Web/Staff/*Validity.php`                              |
-| Customer form validation         | `app/Validation/Web/Wallet/StoreWalletValidity.php`                   |
-| Service container wiring         | `app/Providers/RewardServiceProvider.php`                             |
-| Routes                           | `routes/web.php`                                                      |
-| Staff auth + role guard          | `app/Http/Middleware/EnsureStaffRole.php` + `EnsureAdminRole.php`     |
-| Desktop admin layout             | `resources/js/layouts/AdminLayout.vue`                                |
-| Mobile customer layout           | `resources/js/pages/Wallet/Show.vue` (inline)                         |
-| PWA install banner               | `resources/js/components/pwa/PwaInstallBanner.vue`                    |
-| Customer barcode renderer        | `resources/js/components/reward/BarcodeBlock.vue`                     |
-| Service worker                   | `public/sw.js`                                                        |
-| Seeder                           | `database/seeders/TeachaRewardsSeeder.php`                            |
-| Cashback docs                    | `docs/cashback-calculation.md`                                        |
-| Plan, spec, verification         | `docs/`                                                               |
+| Want to understand…                | File                                                              |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| Cashback math, rounding, locking   | `app/Services/Reward/RewardTransactionService.php`                |
+| Wallet public token + phone lookup | `app/Services/Reward/RewardWalletService.php`                     |
+| Settings read / write              | `app/Services/Settings/SettingsService.php`                       |
+| Staff form validation              | `app/Validation/Web/Staff/*Validity.php`                          |
+| Customer form validation           | `app/Validation/Web/Wallet/StoreWalletValidity.php`               |
+| Service container wiring           | `app/Providers/RewardServiceProvider.php`                         |
+| Routes                             | `routes/web.php`                                                  |
+| Staff auth + role guard            | `app/Http/Middleware/EnsureStaffRole.php` + `EnsureAdminRole.php` |
+| Desktop admin layout               | `resources/js/layouts/AdminLayout.vue`                            |
+| Mobile customer layout             | `resources/js/pages/Wallet/Show.vue` (inline)                     |
+| PWA install banner                 | `resources/js/components/pwa/PwaInstallBanner.vue`                |
+| Customer barcode renderer          | `resources/js/components/reward/BarcodeBlock.vue`                 |
+| Service worker                     | `public/sw.js`                                                    |
+| Seeder                             | `database/seeders/TeachaRewardsSeeder.php`                        |
+| Cashback docs                      | `docs/cashback-calculation.md`                                    |
+| Plan, spec, verification           | `docs/`                                                           |
 
 ## Conventions
 

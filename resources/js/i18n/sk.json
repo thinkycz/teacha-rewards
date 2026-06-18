@@ -11,16 +11,14 @@
         "no": "Nie",
         "not_set": "Nenastavené",
         "open": "Otvoriť",
+        "pagination": {
+            "label": "Stránkovanie",
+            "previous": "Predchádzajúca",
+            "next": "Ďalšia",
+            "showing": "Zobrazené {from}–{to} z {total}"
+        },
         "today": "Dnes",
-        "weekdays": [
-            "Po",
-            "Ut",
-            "St",
-            "Št",
-            "Pi",
-            "So",
-            "Ne"
-        ],
+        "weekdays": ["Po", "Ut", "St", "Št", "Pi", "So", "Ne"],
         "yes": "Áno",
         "stamps": "pečiatky"
     },
@@ -329,10 +327,10 @@
     "marketing": {
         "tagline": "Teacha Rewards",
         "headline": "Odmena za každý drink.",
-        "subheadline": "Získajte odmeny za každý drink. Otvorte si peňaženku za tridsať sekúnd.",
+        "subheadline": "Vytvorte si vernostnú kartičku za tridsať sekúnd a získajte odmenu za každý drink",
         "how_it_works": "Ako to funguje",
-        "step_1": "Otvorte si peňaženku pomocou telefónneho čísla a mena.",
-        "step_2": "Ukážte QR kód na pokladni a získajte cashback z každého nákupu.",
+        "step_1": "Vytvorte si vernostnú kartičku pomocou telefónneho čísla a mena.",
+        "step_2": "Ukážte QR kód na pokladni a získajte razítko z každého nákupu.",
         "step_3": "Kedykoľvek uplatnite svoj zostatok ako zľavu.",
         "cta": "Vytvoriť alebo otvoriť moju peňaženku",
         "privacy": "Žiadne heslo, žiadny e-mail. Vaša peňaženka je identifikovaná iba telefónnym číslom.",

@@ -43,7 +43,7 @@ class RewardTransactionFactory extends Factory
      */
     public function redeem(): static
     {
-        return $this->state(fn (): array => [
+        return $this->state(fn(): array => [
             'type' => TransactionTypeEnum::REDEEM->value,
             'amount' => '-1.00',
             'purchase_amount' => null,
@@ -56,7 +56,7 @@ class RewardTransactionFactory extends Factory
      */
     public function manualAdd(): static
     {
-        return $this->state(fn (): array => [
+        return $this->state(fn(): array => [
             'type' => TransactionTypeEnum::MANUAL_ADD->value,
             'amount' => '5.00',
             'purchase_amount' => null,

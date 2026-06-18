@@ -49,10 +49,7 @@ withDefaults(
         {{ emptyMessage || t('wallet.transactions.empty') }}
     </div>
     <ul v-else class="space-y-2">
-        <li
-            v-for="tx in transactions"
-            :key="tx.id"
-        >
+        <li v-for="tx in transactions" :key="tx.id">
             <TransactionItem
                 :transaction="tx"
                 :show-balance-after="showBalanceAfter"

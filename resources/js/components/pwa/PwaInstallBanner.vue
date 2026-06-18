@@ -6,7 +6,8 @@ import { X, Share, Download } from '@lucide/vue';
 import { usePwaInstall } from '@/composables/usePwaInstall';
 
 const { t } = useI18n();
-const { canShowChromePrompt, isIosSafari, isInstalled, prompt } = usePwaInstall();
+const { canShowChromePrompt, isIosSafari, isInstalled, prompt } =
+    usePwaInstall();
 
 const STORAGE_KEY = 'teacha.install-banner.dismissed-at';
 const VISIBLE_AFTER_DAYS = 7;
@@ -91,10 +92,7 @@ async function install(): Promise<void> {
                         class="mt-3 space-y-1 text-xs text-charcoal-600"
                     >
                         <li class="flex items-start gap-2">
-                            <Share
-                                :size="14"
-                                class="mt-0.5 shrink-0"
-                            />
+                            <Share :size="14" class="mt-0.5 shrink-0" />
                             <span>{{ t('pwa.install.ios_step_1') }}</span>
                         </li>
                         <li class="ml-5">

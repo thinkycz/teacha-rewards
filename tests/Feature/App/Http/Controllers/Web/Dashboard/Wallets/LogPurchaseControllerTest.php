@@ -36,7 +36,7 @@ use App\Models\User;
 });
 
 \test('POST /wallets/{wallet}/purchase applies a custom cashback rate from settings', function (): void {
-    \App\Models\Setting::query()->updateOrCreate(['key' => 'cashback_rate'], ['value' => '25']);
+    App\Models\Setting::query()->updateOrCreate(['key' => 'cashback_rate'], ['value' => '25']);
 
     $staff = User::factory()->staff()->create();
     $wallet = RewardWallet::factory()->create();

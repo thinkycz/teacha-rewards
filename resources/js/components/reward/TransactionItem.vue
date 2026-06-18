@@ -65,14 +65,24 @@ const effectiveWalletType = computed<'cashback' | 'stamps'>(() => {
 });
 
 const formattedAmount = computed(() =>
-    formatAmount(props.transaction, effectiveWalletType.value, props.stampsPerReward),
+    formatAmount(
+        props.transaction,
+        effectiveWalletType.value,
+        props.stampsPerReward,
+    ),
 );
 
 const formattedBalance = computed(() => {
-    if (props.transaction.balance_after === null || props.transaction.balance_after === undefined) {
+    if (
+        props.transaction.balance_after === null ||
+        props.transaction.balance_after === undefined
+    ) {
         return null;
     }
-    return formatBalance(props.transaction.balance_after, effectiveWalletType.value);
+    return formatBalance(
+        props.transaction.balance_after,
+        effectiveWalletType.value,
+    );
 });
 
 const eqRewards = computed(() => {
@@ -88,7 +98,11 @@ const subtitle = computed(() => {
         parts.push(eqRewards.value);
     }
     if (props.transaction.purchase_amount) {
-        parts.push(t('wallet.transactions.purchase', { amount: props.transaction.purchase_amount }));
+        parts.push(
+            t('wallet.transactions.purchase', {
+                amount: props.transaction.purchase_amount,
+            }),
+        );
     }
     if (props.transaction.note) {
         parts.push(props.transaction.note);
@@ -133,7 +147,11 @@ const dateLabel = computed(() => formatDateTime(props.transaction.created_at));
                     v-if="showBalanceAfter && formattedBalance"
                     class="mt-0.5 text-xs text-on-surface-variant/70"
                 >
-                    {{ t('wallet.transactions.balance_after', { amount: formattedBalance }) }}
+                    {{
+                        t('wallet.transactions.balance_after', {
+                            amount: formattedBalance,
+                        })
+                    }}
                 </p>
             </div>
         </div>

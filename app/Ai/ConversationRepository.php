@@ -26,13 +26,11 @@ class ConversationRepository
     public function createForUser(User $user, string $message): Conversation
     {
         /** @var Conversation $conversation */
-        $conversation = Conversation::create([
+        return Conversation::create([
             'id' => Str::uuid()->toString(),
             'user_id' => $this->userId($user),
             'title' => Str::limit($message, 35),
         ]);
-
-        return $conversation;
     }
 
     /**

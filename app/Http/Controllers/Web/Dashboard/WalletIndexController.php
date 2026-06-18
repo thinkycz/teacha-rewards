@@ -8,6 +8,7 @@ use App\Enums\WalletStatusEnum;
 use App\Http\Controllers\Web\Concerns\ValidatesWebRequests;
 use App\Models\RewardWallet;
 use App\Services\Settings\SettingsService;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -58,10 +59,10 @@ class WalletIndexController
             default => $query->orderByDesc('last_used_at')->orderByDesc('id'),
         };
 
-        $wallets = $query->limit(100)->get();
-
-        return Inertia::render('Dashboard/Wallets/Index', [
-            'wallets' => $wallets->map(static fn (RewardWallet $w): array => [
+        $wallets = $query
+            ->paginate(25)
+            ->withQueryString()
+            ->through(static fn(RewardWallet $w): array => [
                 'id' => $w->getKey(),
                 'public_token' => $w->getPublicToken(),
                 'wallet_number' => $w->getWalletNumber(),
@@ -73,8 +74,11 @@ class WalletIndexController
                 'lifetime_earned' => $w->getLifetimeEarned(),
                 'lifetime_redeemed' => $w->getLifetimeRedeemed(),
                 'status' => $w->getStatus()->value,
-                'last_used_at' => $w->getLastUsedAt()?->format(\DateTimeInterface::ATOM),
-            ])->all(),
+                'last_used_at' => $w->getLastUsedAt()?->format(DateTimeInterface::ATOM),
+            ]);
+
+        return Inertia::render('Dashboard/Wallets/Index', [
+            'wallets' => $wallets,
             'filters' => [
                 'q' => $search,
                 'status' => $status,

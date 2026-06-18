@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Validation\Web\Wallet;
 
-use Propaganistas\LaravelPhone\Rules\Phone;
 use Thinkycz\LaravelCore\Validation\AuthValidity;
 use Thinkycz\LaravelCore\Validation\BaseValidity;
 use Thinkycz\LaravelCore\Validation\Validity;
@@ -12,11 +11,11 @@ use Thinkycz\LaravelCore\Validation\Validity;
 /**
  * Validity for the public "create or open my wallet" form.
  *
- * The `phone` rule is `propaganistas/laravel-phone`'s `Phone` rule
- * with the `cz,mobile` country-and-type constraint, so a customer can
- * type any of `+420 601 234 567`, `601234567`, or `00420 601 234 567`
- * and pass validation. Normalization to E.164 happens in
- * `RewardWalletService::normalizePhone` after validation.
+ * The `phone` rule is the custom `MobilePhoneRule`: a number without
+ * a `+` prefix is treated as a Czech mobile, and a number with an
+ * explicit `+XXX` prefix is parsed under that country. Normalization
+ * to E.164 happens in `RewardWalletService::parsePhone` after
+ * validation, using the same `'CZ'` default.
  *
  * `first_name` is a required varchar (re-uses `AuthValidity::name`).
  */
@@ -52,7 +51,7 @@ class StoreWalletValidity
             ->make()
             ->varchar()
             ->required()
-            ->addRule('phone:cz,mobile');
+            ->addRule(new MobilePhoneRule());
     }
 
     /**
