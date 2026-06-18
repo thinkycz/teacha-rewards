@@ -6,7 +6,6 @@ use App\Http\Controllers\Web\Auth\EmailVerificationConfirmController;
 use App\Http\Controllers\Web\Auth\ForgotPasswordController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\LogoutController;
-use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Auth\ResetPasswordController;
 use App\Http\Controllers\Web\Auth\VerifyEmailController;
 use App\Http\Controllers\Web\Dashboard\AdjustController;
@@ -68,8 +67,6 @@ Resolver::resolveRouteRegistrar()
     ->group(static function (Router $router): void {
         $router->get('login', [LoginController::class, 'create']);
         $router->post('login', [LoginController::class, 'store']);
-        $router->get('register', [RegisterController::class, 'create']);
-        $router->post('register', [RegisterController::class, 'store']);
         $router->get('forgot-password', [ForgotPasswordController::class, 'create']);
         $router->post('forgot-password', [ForgotPasswordController::class, 'store']);
         $router->get('reset-password', [ResetPasswordController::class, 'create']);

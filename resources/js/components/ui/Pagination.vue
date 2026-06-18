@@ -16,7 +16,12 @@ type Paginator = {
     from: number | null;
     last_page: number;
     last_page_url: string | null;
-    links: Array<{ url: string | null; label: string; page: number | null; active: boolean }>;
+    links: Array<{
+        url: string | null;
+        label: string;
+        page: number | null;
+        active: boolean;
+    }>;
     next_page_url: string | null;
     path: string;
     per_page: number;
@@ -66,9 +71,18 @@ const to = computed<number>(() => props.paginator.to ?? 0);
         :aria-label="t('common.pagination.label')"
     >
         <p class="text-xs text-on-surface-variant">
-            {{ t('common.pagination.showing', { from, to, total: paginator.total }) }}
+            {{
+                t('common.pagination.showing', {
+                    from,
+                    to,
+                    total: paginator.total,
+                })
+            }}
         </p>
-        <ul v-if="paginator.last_page > 1" class="flex flex-wrap items-center gap-1 text-sm">
+        <ul
+            v-if="paginator.last_page > 1"
+            class="flex flex-wrap items-center gap-1 text-sm"
+        >
             <li>
                 <a
                     v-if="paginator.prev_page_url"
@@ -91,17 +105,20 @@ const to = computed<number>(() => props.paginator.to ?? 0);
                     v-if="page === 'ellipsis'"
                     aria-hidden="true"
                     class="px-2 text-on-surface-variant/60"
-                >…</span>
+                    >…</span
+                >
                 <span
                     v-else-if="page === paginator.current_page"
                     aria-current="page"
                     class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg bg-primary px-2 font-semibold text-on-primary"
-                >{{ page }}</span>
+                    >{{ page }}</span
+                >
                 <a
                     v-else
                     :href="`?page=${page}`"
                     class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-outline-glass px-2 font-medium text-on-surface transition hover:border-primary hover:bg-primary/5"
-                >{{ page }}</a>
+                    >{{ page }}</a
+                >
             </li>
             <li>
                 <a

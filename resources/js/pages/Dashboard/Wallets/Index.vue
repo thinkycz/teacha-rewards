@@ -39,7 +39,12 @@ interface WalletPaginator {
     from: number | null;
     last_page: number;
     last_page_url: string | null;
-    links: Array<{ url: string | null; label: string; page: number | null; active: boolean }>;
+    links: Array<{
+        url: string | null;
+        label: string;
+        page: number | null;
+        active: boolean;
+    }>;
     next_page_url: string | null;
     path: string;
     per_page: number;
@@ -312,10 +317,7 @@ function formatAmount(value: string): string {
                 </li>
             </ul>
 
-            <Pagination
-                v-if="wallets.data.length > 0"
-                :paginator="wallets"
-            />
+            <Pagination v-if="wallets.data.length > 0" :paginator="wallets" />
         </div>
     </AdminLayout>
 </template>

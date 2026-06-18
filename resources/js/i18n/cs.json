@@ -45,14 +45,7 @@
             "subtitle": "Pro pokračování zadejte své přihlašovací údaje.",
             "submit": "Přihlásit se",
             "forgot_link": "Zapomněli jste heslo?",
-            "back_link": "Zpět na přihlášení",
-            "register_link": "Nemáte účet?"
-        },
-        "register": {
-            "title": "Vytvořit účet",
-            "subtitle": "Začněte s autentizovaným Inertia pracovním prostorem.",
-            "submit": "Registrovat",
-            "login_link": "Máte již účet?"
+            "back_link": "Zpět na přihlášení"
         },
         "forgot": {
             "title": "Zapomenuté heslo",
